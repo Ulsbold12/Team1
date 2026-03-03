@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 export function AIInsightBanner() {
   return (
     <section className="bg-[#5048e5]/5 rounded-xl border border-[#5048e5]/10 p-6 flex flex-col md:flex-row items-center gap-6">
-      <div className="w-12 h-12 rounded-full bg-[#5048e5]/20 flex items-center justify-center text-[#5048e5] flex-shrink-0">
+      <div className="w-12 h-12 rounded-full bg-[#5048e5]/20 flex items-center justify-center text-[#5048e5] shrink-0">
         <Lightbulb className="w-5 h-5" />
       </div>
       <div className="flex-1">

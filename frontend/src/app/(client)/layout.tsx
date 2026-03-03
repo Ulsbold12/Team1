@@ -1,7 +1,7 @@
 "use client";
 
-import { AppSidebar } from "@/app/(client)/_components/dashboard/Sidebar";
-import { TopBar } from "@/app/(client)/_components/dashboard/TopBar";
+import { AppSidebar } from "@/app/(client)/dashboard/_components/dashboard/Sidebar";
+import { TopBar } from "@/app/(client)/dashboard/_components/dashboard/TopBar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 export default function ClientLayout({
