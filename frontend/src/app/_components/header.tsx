@@ -1,5 +1,6 @@
 "use client";
 
+<<<<<<< HEAD
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -37,4 +38,8 @@ export const Header = () => {
       </div>
     </header>
   );
+=======
+export const header = () => {
+  return;
+>>>>>>> bce6004 (bugs fixed)
 };
