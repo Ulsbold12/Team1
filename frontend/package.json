@@ -8,7 +8,10 @@
     "start": "next start"
   },
   "dependencies": {
+<<<<<<< HEAD
     "axios": "^1.13.6",
+=======
+>>>>>>> 4808ccf (first)
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.576.0",
