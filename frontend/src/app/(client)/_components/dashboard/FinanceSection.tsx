@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import { Wallet } from "lucide-react";
 import { SectionHeader } from "./SectionHeader";
 
@@ -64,12 +67,15 @@ function GrowthCard() {
 }
 
 export function FinanceSection() {
+  const router = useRouter();
+
   return (
     <section className="space-y-4">
       <SectionHeader
         icon={Wallet}
         title="Санхүүгийн тойм"
         linkLabel="Дэлгэрэнгүй харах"
+        onLinkClick={() => router.push("/finance")}
       />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <BalanceCard />

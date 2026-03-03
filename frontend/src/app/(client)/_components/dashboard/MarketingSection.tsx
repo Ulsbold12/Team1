@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import { Rocket } from "lucide-react";
 import { SectionHeader } from "./SectionHeader";
 
@@ -125,12 +128,15 @@ function ContentProgress() {
 }
 
 export function MarketingSection() {
+  const router = useRouter();
+
   return (
     <section className="space-y-4">
       <SectionHeader
         icon={Rocket}
         title="Маркетингийн гүйцэтгэл"
         linkLabel="Контент студи"
+        onLinkClick={() => router.push("/marketing")}
       />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <RecentPosts />

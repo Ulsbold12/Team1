@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 interface SectionHeaderProps {
   icon: React.ComponentType<{ className?: string }>;
   title: string;
-  linkLabel: string;
+  linkLabel?: string;
   onLinkClick?: () => void;
 }
 
@@ -14,13 +14,15 @@ export function SectionHeader({ icon: Icon, title, linkLabel, onLinkClick }: Sec
         <Icon className="w-5 h-5 text-[#5048e5]" />
         {title}
       </h3>
-      <Button
-        variant="link"
-        className="text-[#5048e5] p-0 h-auto font-semibold"
-        onClick={onLinkClick}
-      >
-        {linkLabel}
-      </Button>
+      {linkLabel && onLinkClick && (
+        <Button
+          variant="link"
+          className="text-[#5048e5] p-0 h-auto font-semibold"
+          onClick={onLinkClick}
+        >
+          {linkLabel}
+        </Button>
+      )}
     </div>
   );
 }

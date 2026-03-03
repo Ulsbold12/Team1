@@ -25,17 +25,18 @@ export function TopBar() {
 
       {/* Actions */}
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" className="relative text-muted-foreground">
+        <Button variant="ghost" size="icon" className="relative text-muted-foreground" aria-label="Мэдэгдэлүүд">
           <Bell className="w-5 h-5" />
           <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-background" />
         </Button>
-        <Button variant="ghost" size="icon" className="text-muted-foreground">
+        <Button variant="ghost" size="icon" className="text-muted-foreground" aria-label="Тусламж">
           <HelpCircle className="w-5 h-5" />
         </Button>
         <Button
           variant="ghost"
           size="icon"
           className="text-muted-foreground"
+          aria-label={theme === "dark" ? "Цайвар горим руу шилжих" : "Харанхуй горим руу шилжих"}
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
         >
           <Sun className="w-5 h-5 dark:hidden" />
