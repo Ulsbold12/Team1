@@ -11,4 +11,5 @@
 export type * from './models/Organization'
 export type * from './models/Client'
 export type * from './models/Finance'
+export type * from './models/Post'
 export type * from './commonInputTypes'

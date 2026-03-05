@@ -43,7 +43,9 @@ export type FinanceSumAggregateOutputType = {
 }
 
 export type FinanceMinAggregateOutputType = {
+  id: string | null
   orgId: string | null
+  month: Date | null
   balance: number | null
   revenue: number | null
   expense: number | null
@@ -52,7 +54,9 @@ export type FinanceMinAggregateOutputType = {
 }
 
 export type FinanceMaxAggregateOutputType = {
+  id: string | null
   orgId: string | null
+  month: Date | null
   balance: number | null
   revenue: number | null
   expense: number | null
@@ -61,7 +65,9 @@ export type FinanceMaxAggregateOutputType = {
 }
 
 export type FinanceCountAggregateOutputType = {
+  id: number
   orgId: number
+  month: number
   balance: number
   revenue: number
   expense: number
@@ -88,7 +94,9 @@ export type FinanceSumAggregateInputType = {
 }
 
 export type FinanceMinAggregateInputType = {
+  id?: true
   orgId?: true
+  month?: true
   balance?: true
   revenue?: true
   expense?: true
@@ -97,7 +105,9 @@ export type FinanceMinAggregateInputType = {
 }
 
 export type FinanceMaxAggregateInputType = {
+  id?: true
   orgId?: true
+  month?: true
   balance?: true
   revenue?: true
   expense?: true
@@ -106,7 +116,9 @@ export type FinanceMaxAggregateInputType = {
 }
 
 export type FinanceCountAggregateInputType = {
+  id?: true
   orgId?: true
+  month?: true
   balance?: true
   revenue?: true
   expense?: true
@@ -202,7 +214,9 @@ export type FinanceGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 export type FinanceGroupByOutputType = {
+  id: string
   orgId: string
+  month: Date
   balance: number
   revenue: number
   expense: number
@@ -234,40 +248,48 @@ export type FinanceWhereInput = {
   AND?: Prisma.FinanceWhereInput | Prisma.FinanceWhereInput[]
   OR?: Prisma.FinanceWhereInput[]
   NOT?: Prisma.FinanceWhereInput | Prisma.FinanceWhereInput[]
+  id?: Prisma.StringFilter<"Finance"> | string
   orgId?: Prisma.StringFilter<"Finance"> | string
+  month?: Prisma.DateTimeFilter<"Finance"> | Date | string
   balance?: Prisma.IntFilter<"Finance"> | number
   revenue?: Prisma.IntFilter<"Finance"> | number
   expense?: Prisma.IntFilter<"Finance"> | number
   netProfit?: Prisma.IntFilter<"Finance"> | number
   margin?: Prisma.IntFilter<"Finance"> | number
-  company?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
+  org?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
 }
 
 export type FinanceOrderByWithRelationInput = {
+  id?: Prisma.SortOrder
   orgId?: Prisma.SortOrder
+  month?: Prisma.SortOrder
   balance?: Prisma.SortOrder
   revenue?: Prisma.SortOrder
   expense?: Prisma.SortOrder
   netProfit?: Prisma.SortOrder
   margin?: Prisma.SortOrder
-  company?: Prisma.OrganizationOrderByWithRelationInput
+  org?: Prisma.OrganizationOrderByWithRelationInput
 }
 
 export type FinanceWhereUniqueInput = Prisma.AtLeast<{
-  orgId?: string
+  id?: string
   AND?: Prisma.FinanceWhereInput | Prisma.FinanceWhereInput[]
   OR?: Prisma.FinanceWhereInput[]
   NOT?: Prisma.FinanceWhereInput | Prisma.FinanceWhereInput[]
+  orgId?: Prisma.StringFilter<"Finance"> | string
+  month?: Prisma.DateTimeFilter<"Finance"> | Date | string
   balance?: Prisma.IntFilter<"Finance"> | number
   revenue?: Prisma.IntFilter<"Finance"> | number
   expense?: Prisma.IntFilter<"Finance"> | number
   netProfit?: Prisma.IntFilter<"Finance"> | number
   margin?: Prisma.IntFilter<"Finance"> | number
-  company?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
-}, "orgId">
+  org?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
+}, "id">
 
 export type FinanceOrderByWithAggregationInput = {
+  id?: Prisma.SortOrder
   orgId?: Prisma.SortOrder
+  month?: Prisma.SortOrder
   balance?: Prisma.SortOrder
   revenue?: Prisma.SortOrder
   expense?: Prisma.SortOrder
@@ -284,7 +306,9 @@ export type FinanceScalarWhereWithAggregatesInput = {
   AND?: Prisma.FinanceScalarWhereWithAggregatesInput | Prisma.FinanceScalarWhereWithAggregatesInput[]
   OR?: Prisma.FinanceScalarWhereWithAggregatesInput[]
   NOT?: Prisma.FinanceScalarWhereWithAggregatesInput | Prisma.FinanceScalarWhereWithAggregatesInput[]
+  id?: Prisma.StringWithAggregatesFilter<"Finance"> | string
   orgId?: Prisma.StringWithAggregatesFilter<"Finance"> | string
+  month?: Prisma.DateTimeWithAggregatesFilter<"Finance"> | Date | string
   balance?: Prisma.IntWithAggregatesFilter<"Finance"> | number
   revenue?: Prisma.IntWithAggregatesFilter<"Finance"> | number
   expense?: Prisma.IntWithAggregatesFilter<"Finance"> | number
@@ -293,16 +317,20 @@ export type FinanceScalarWhereWithAggregatesInput = {
 }
 
 export type FinanceCreateInput = {
+  id?: string
+  month: Date | string
   balance: number
   revenue: number
   expense: number
   netProfit: number
   margin: number
-  company: Prisma.OrganizationCreateNestedOneWithoutFinanceDataInput
+  org: Prisma.OrganizationCreateNestedOneWithoutFinanceDataInput
 }
 
 export type FinanceUncheckedCreateInput = {
+  id?: string
   orgId: string
+  month: Date | string
   balance: number
   revenue: number
   expense: number
@@ -311,16 +339,20 @@ export type FinanceUncheckedCreateInput = {
 }
 
 export type FinanceUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  month?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   balance?: Prisma.IntFieldUpdateOperationsInput | number
   revenue?: Prisma.IntFieldUpdateOperationsInput | number
   expense?: Prisma.IntFieldUpdateOperationsInput | number
   netProfit?: Prisma.IntFieldUpdateOperationsInput | number
   margin?: Prisma.IntFieldUpdateOperationsInput | number
-  company?: Prisma.OrganizationUpdateOneRequiredWithoutFinanceDataNestedInput
+  org?: Prisma.OrganizationUpdateOneRequiredWithoutFinanceDataNestedInput
 }
 
 export type FinanceUncheckedUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
+  month?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   balance?: Prisma.IntFieldUpdateOperationsInput | number
   revenue?: Prisma.IntFieldUpdateOperationsInput | number
   expense?: Prisma.IntFieldUpdateOperationsInput | number
@@ -329,7 +361,9 @@ export type FinanceUncheckedUpdateInput = {
 }
 
 export type FinanceCreateManyInput = {
+  id?: string
   orgId: string
+  month: Date | string
   balance: number
   revenue: number
   expense: number
@@ -338,6 +372,8 @@ export type FinanceCreateManyInput = {
 }
 
 export type FinanceUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  month?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   balance?: Prisma.IntFieldUpdateOperationsInput | number
   revenue?: Prisma.IntFieldUpdateOperationsInput | number
   expense?: Prisma.IntFieldUpdateOperationsInput | number
@@ -346,7 +382,9 @@ export type FinanceUpdateManyMutationInput = {
 }
 
 export type FinanceUncheckedUpdateManyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
+  month?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   balance?: Prisma.IntFieldUpdateOperationsInput | number
   revenue?: Prisma.IntFieldUpdateOperationsInput | number
   expense?: Prisma.IntFieldUpdateOperationsInput | number
@@ -365,7 +403,9 @@ export type FinanceOrderByRelationAggregateInput = {
 }
 
 export type FinanceCountOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   orgId?: Prisma.SortOrder
+  month?: Prisma.SortOrder
   balance?: Prisma.SortOrder
   revenue?: Prisma.SortOrder
   expense?: Prisma.SortOrder
@@ -382,7 +422,9 @@ export type FinanceAvgOrderByAggregateInput = {
 }
 
 export type FinanceMaxOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   orgId?: Prisma.SortOrder
+  month?: Prisma.SortOrder
   balance?: Prisma.SortOrder
   revenue?: Prisma.SortOrder
   expense?: Prisma.SortOrder
@@ -391,7 +433,9 @@ export type FinanceMaxOrderByAggregateInput = {
 }
 
 export type FinanceMinOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   orgId?: Prisma.SortOrder
+  month?: Prisma.SortOrder
   balance?: Prisma.SortOrder
   revenue?: Prisma.SortOrder
   expense?: Prisma.SortOrder
@@ -407,45 +451,45 @@ export type FinanceSumOrderByAggregateInput = {
   margin?: Prisma.SortOrder
 }
 
-export type FinanceCreateNestedManyWithoutCompanyInput = {
-  create?: Prisma.XOR<Prisma.FinanceCreateWithoutCompanyInput, Prisma.FinanceUncheckedCreateWithoutCompanyInput> | Prisma.FinanceCreateWithoutCompanyInput[] | Prisma.FinanceUncheckedCreateWithoutCompanyInput[]
-  connectOrCreate?: Prisma.FinanceCreateOrConnectWithoutCompanyInput | Prisma.FinanceCreateOrConnectWithoutCompanyInput[]
-  createMany?: Prisma.FinanceCreateManyCompanyInputEnvelope
+export type FinanceCreateNestedManyWithoutOrgInput = {
+  create?: Prisma.XOR<Prisma.FinanceCreateWithoutOrgInput, Prisma.FinanceUncheckedCreateWithoutOrgInput> | Prisma.FinanceCreateWithoutOrgInput[] | Prisma.FinanceUncheckedCreateWithoutOrgInput[]
+  connectOrCreate?: Prisma.FinanceCreateOrConnectWithoutOrgInput | Prisma.FinanceCreateOrConnectWithoutOrgInput[]
+  createMany?: Prisma.FinanceCreateManyOrgInputEnvelope
   connect?: Prisma.FinanceWhereUniqueInput | Prisma.FinanceWhereUniqueInput[]
 }
 
-export type FinanceUncheckedCreateNestedManyWithoutCompanyInput = {
-  create?: Prisma.XOR<Prisma.FinanceCreateWithoutCompanyInput, Prisma.FinanceUncheckedCreateWithoutCompanyInput> | Prisma.FinanceCreateWithoutCompanyInput[] | Prisma.FinanceUncheckedCreateWithoutCompanyInput[]
-  connectOrCreate?: Prisma.FinanceCreateOrConnectWithoutCompanyInput | Prisma.FinanceCreateOrConnectWithoutCompanyInput[]
-  createMany?: Prisma.FinanceCreateManyCompanyInputEnvelope
+export type FinanceUncheckedCreateNestedManyWithoutOrgInput = {
+  create?: Prisma.XOR<Prisma.FinanceCreateWithoutOrgInput, Prisma.FinanceUncheckedCreateWithoutOrgInput> | Prisma.FinanceCreateWithoutOrgInput[] | Prisma.FinanceUncheckedCreateWithoutOrgInput[]
+  connectOrCreate?: Prisma.FinanceCreateOrConnectWithoutOrgInput | Prisma.FinanceCreateOrConnectWithoutOrgInput[]
+  createMany?: Prisma.FinanceCreateManyOrgInputEnvelope
   connect?: Prisma.FinanceWhereUniqueInput | Prisma.FinanceWhereUniqueInput[]
 }
 
-export type FinanceUpdateManyWithoutCompanyNestedInput = {
-  create?: Prisma.XOR<Prisma.FinanceCreateWithoutCompanyInput, Prisma.FinanceUncheckedCreateWithoutCompanyInput> | Prisma.FinanceCreateWithoutCompanyInput[] | Prisma.FinanceUncheckedCreateWithoutCompanyInput[]
-  connectOrCreate?: Prisma.FinanceCreateOrConnectWithoutCompanyInput | Prisma.FinanceCreateOrConnectWithoutCompanyInput[]
-  upsert?: Prisma.FinanceUpsertWithWhereUniqueWithoutCompanyInput | Prisma.FinanceUpsertWithWhereUniqueWithoutCompanyInput[]
-  createMany?: Prisma.FinanceCreateManyCompanyInputEnvelope
+export type FinanceUpdateManyWithoutOrgNestedInput = {
+  create?: Prisma.XOR<Prisma.FinanceCreateWithoutOrgInput, Prisma.FinanceUncheckedCreateWithoutOrgInput> | Prisma.FinanceCreateWithoutOrgInput[] | Prisma.FinanceUncheckedCreateWithoutOrgInput[]
+  connectOrCreate?: Prisma.FinanceCreateOrConnectWithoutOrgInput | Prisma.FinanceCreateOrConnectWithoutOrgInput[]
+  upsert?: Prisma.FinanceUpsertWithWhereUniqueWithoutOrgInput | Prisma.FinanceUpsertWithWhereUniqueWithoutOrgInput[]
+  createMany?: Prisma.FinanceCreateManyOrgInputEnvelope
   set?: Prisma.FinanceWhereUniqueInput | Prisma.FinanceWhereUniqueInput[]
   disconnect?: Prisma.FinanceWhereUniqueInput | Prisma.FinanceWhereUniqueInput[]
   delete?: Prisma.FinanceWhereUniqueInput | Prisma.FinanceWhereUniqueInput[]
   connect?: Prisma.FinanceWhereUniqueInput | Prisma.FinanceWhereUniqueInput[]
-  update?: Prisma.FinanceUpdateWithWhereUniqueWithoutCompanyInput | Prisma.FinanceUpdateWithWhereUniqueWithoutCompanyInput[]
-  updateMany?: Prisma.FinanceUpdateManyWithWhereWithoutCompanyInput | Prisma.FinanceUpdateManyWithWhereWithoutCompanyInput[]
+  update?: Prisma.FinanceUpdateWithWhereUniqueWithoutOrgInput | Prisma.FinanceUpdateWithWhereUniqueWithoutOrgInput[]
+  updateMany?: Prisma.FinanceUpdateManyWithWhereWithoutOrgInput | Prisma.FinanceUpdateManyWithWhereWithoutOrgInput[]
   deleteMany?: Prisma.FinanceScalarWhereInput | Prisma.FinanceScalarWhereInput[]
 }
 
-export type FinanceUncheckedUpdateManyWithoutCompanyNestedInput = {
-  create?: Prisma.XOR<Prisma.FinanceCreateWithoutCompanyInput, Prisma.FinanceUncheckedCreateWithoutCompanyInput> | Prisma.FinanceCreateWithoutCompanyInput[] | Prisma.FinanceUncheckedCreateWithoutCompanyInput[]
-  connectOrCreate?: Prisma.FinanceCreateOrConnectWithoutCompanyInput | Prisma.FinanceCreateOrConnectWithoutCompanyInput[]
-  upsert?: Prisma.FinanceUpsertWithWhereUniqueWithoutCompanyInput | Prisma.FinanceUpsertWithWhereUniqueWithoutCompanyInput[]
-  createMany?: Prisma.FinanceCreateManyCompanyInputEnvelope
+export type FinanceUncheckedUpdateManyWithoutOrgNestedInput = {
+  create?: Prisma.XOR<Prisma.FinanceCreateWithoutOrgInput, Prisma.FinanceUncheckedCreateWithoutOrgInput> | Prisma.FinanceCreateWithoutOrgInput[] | Prisma.FinanceUncheckedCreateWithoutOrgInput[]
+  connectOrCreate?: Prisma.FinanceCreateOrConnectWithoutOrgInput | Prisma.FinanceCreateOrConnectWithoutOrgInput[]
+  upsert?: Prisma.FinanceUpsertWithWhereUniqueWithoutOrgInput | Prisma.FinanceUpsertWithWhereUniqueWithoutOrgInput[]
+  createMany?: Prisma.FinanceCreateManyOrgInputEnvelope
   set?: Prisma.FinanceWhereUniqueInput | Prisma.FinanceWhereUniqueInput[]
   disconnect?: Prisma.FinanceWhereUniqueInput | Prisma.FinanceWhereUniqueInput[]
   delete?: Prisma.FinanceWhereUniqueInput | Prisma.FinanceWhereUniqueInput[]
   connect?: Prisma.FinanceWhereUniqueInput | Prisma.FinanceWhereUniqueInput[]
-  update?: Prisma.FinanceUpdateWithWhereUniqueWithoutCompanyInput | Prisma.FinanceUpdateWithWhereUniqueWithoutCompanyInput[]
-  updateMany?: Prisma.FinanceUpdateManyWithWhereWithoutCompanyInput | Prisma.FinanceUpdateManyWithWhereWithoutCompanyInput[]
+  update?: Prisma.FinanceUpdateWithWhereUniqueWithoutOrgInput | Prisma.FinanceUpdateWithWhereUniqueWithoutOrgInput[]
+  updateMany?: Prisma.FinanceUpdateManyWithWhereWithoutOrgInput | Prisma.FinanceUpdateManyWithWhereWithoutOrgInput[]
   deleteMany?: Prisma.FinanceScalarWhereInput | Prisma.FinanceScalarWhereInput[]
 }
 
@@ -457,7 +501,9 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type FinanceCreateWithoutCompanyInput = {
+export type FinanceCreateWithoutOrgInput = {
+  id?: string
+  month: Date | string
   balance: number
   revenue: number
   expense: number
@@ -465,7 +511,9 @@ export type FinanceCreateWithoutCompanyInput = {
   margin: number
 }
 
-export type FinanceUncheckedCreateWithoutCompanyInput = {
+export type FinanceUncheckedCreateWithoutOrgInput = {
+  id?: string
+  month: Date | string
   balance: number
   revenue: number
   expense: number
@@ -473,37 +521,39 @@ export type FinanceUncheckedCreateWithoutCompanyInput = {
   margin: number
 }
 
-export type FinanceCreateOrConnectWithoutCompanyInput = {
+export type FinanceCreateOrConnectWithoutOrgInput = {
   where: Prisma.FinanceWhereUniqueInput
-  create: Prisma.XOR<Prisma.FinanceCreateWithoutCompanyInput, Prisma.FinanceUncheckedCreateWithoutCompanyInput>
+  create: Prisma.XOR<Prisma.FinanceCreateWithoutOrgInput, Prisma.FinanceUncheckedCreateWithoutOrgInput>
 }
 
-export type FinanceCreateManyCompanyInputEnvelope = {
-  data: Prisma.FinanceCreateManyCompanyInput | Prisma.FinanceCreateManyCompanyInput[]
+export type FinanceCreateManyOrgInputEnvelope = {
+  data: Prisma.FinanceCreateManyOrgInput | Prisma.FinanceCreateManyOrgInput[]
   skipDuplicates?: boolean
 }
 
-export type FinanceUpsertWithWhereUniqueWithoutCompanyInput = {
+export type FinanceUpsertWithWhereUniqueWithoutOrgInput = {
   where: Prisma.FinanceWhereUniqueInput
-  update: Prisma.XOR<Prisma.FinanceUpdateWithoutCompanyInput, Prisma.FinanceUncheckedUpdateWithoutCompanyInput>
-  create: Prisma.XOR<Prisma.FinanceCreateWithoutCompanyInput, Prisma.FinanceUncheckedCreateWithoutCompanyInput>
+  update: Prisma.XOR<Prisma.FinanceUpdateWithoutOrgInput, Prisma.FinanceUncheckedUpdateWithoutOrgInput>
+  create: Prisma.XOR<Prisma.FinanceCreateWithoutOrgInput, Prisma.FinanceUncheckedCreateWithoutOrgInput>
 }
 
-export type FinanceUpdateWithWhereUniqueWithoutCompanyInput = {
+export type FinanceUpdateWithWhereUniqueWithoutOrgInput = {
   where: Prisma.FinanceWhereUniqueInput
-  data: Prisma.XOR<Prisma.FinanceUpdateWithoutCompanyInput, Prisma.FinanceUncheckedUpdateWithoutCompanyInput>
+  data: Prisma.XOR<Prisma.FinanceUpdateWithoutOrgInput, Prisma.FinanceUncheckedUpdateWithoutOrgInput>
 }
 
-export type FinanceUpdateManyWithWhereWithoutCompanyInput = {
+export type FinanceUpdateManyWithWhereWithoutOrgInput = {
   where: Prisma.FinanceScalarWhereInput
-  data: Prisma.XOR<Prisma.FinanceUpdateManyMutationInput, Prisma.FinanceUncheckedUpdateManyWithoutCompanyInput>
+  data: Prisma.XOR<Prisma.FinanceUpdateManyMutationInput, Prisma.FinanceUncheckedUpdateManyWithoutOrgInput>
 }
 
 export type FinanceScalarWhereInput = {
   AND?: Prisma.FinanceScalarWhereInput | Prisma.FinanceScalarWhereInput[]
   OR?: Prisma.FinanceScalarWhereInput[]
   NOT?: Prisma.FinanceScalarWhereInput | Prisma.FinanceScalarWhereInput[]
+  id?: Prisma.StringFilter<"Finance"> | string
   orgId?: Prisma.StringFilter<"Finance"> | string
+  month?: Prisma.DateTimeFilter<"Finance"> | Date | string
   balance?: Prisma.IntFilter<"Finance"> | number
   revenue?: Prisma.IntFilter<"Finance"> | number
   expense?: Prisma.IntFilter<"Finance"> | number
@@ -511,7 +561,9 @@ export type FinanceScalarWhereInput = {
   margin?: Prisma.IntFilter<"Finance"> | number
 }
 
-export type FinanceCreateManyCompanyInput = {
+export type FinanceCreateManyOrgInput = {
+  id?: string
+  month: Date | string
   balance: number
   revenue: number
   expense: number
@@ -519,7 +571,9 @@ export type FinanceCreateManyCompanyInput = {
   margin: number
 }
 
-export type FinanceUpdateWithoutCompanyInput = {
+export type FinanceUpdateWithoutOrgInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  month?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   balance?: Prisma.IntFieldUpdateOperationsInput | number
   revenue?: Prisma.IntFieldUpdateOperationsInput | number
   expense?: Prisma.IntFieldUpdateOperationsInput | number
@@ -527,7 +581,9 @@ export type FinanceUpdateWithoutCompanyInput = {
   margin?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
-export type FinanceUncheckedUpdateWithoutCompanyInput = {
+export type FinanceUncheckedUpdateWithoutOrgInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  month?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   balance?: Prisma.IntFieldUpdateOperationsInput | number
   revenue?: Prisma.IntFieldUpdateOperationsInput | number
   expense?: Prisma.IntFieldUpdateOperationsInput | number
@@ -535,7 +591,9 @@ export type FinanceUncheckedUpdateWithoutCompanyInput = {
   margin?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
-export type FinanceUncheckedUpdateManyWithoutCompanyInput = {
+export type FinanceUncheckedUpdateManyWithoutOrgInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  month?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   balance?: Prisma.IntFieldUpdateOperationsInput | number
   revenue?: Prisma.IntFieldUpdateOperationsInput | number
   expense?: Prisma.IntFieldUpdateOperationsInput | number
@@ -546,37 +604,45 @@ export type FinanceUncheckedUpdateManyWithoutCompanyInput = {
 
 
 export type FinanceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
   orgId?: boolean
+  month?: boolean
   balance?: boolean
   revenue?: boolean
   expense?: boolean
   netProfit?: boolean
   margin?: boolean
-  company?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  org?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["finance"]>
 
 export type FinanceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
   orgId?: boolean
+  month?: boolean
   balance?: boolean
   revenue?: boolean
   expense?: boolean
   netProfit?: boolean
   margin?: boolean
-  company?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  org?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["finance"]>
 
 export type FinanceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
   orgId?: boolean
+  month?: boolean
   balance?: boolean
   revenue?: boolean
   expense?: boolean
   netProfit?: boolean
   margin?: boolean
-  company?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  org?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["finance"]>
 
 export type FinanceSelectScalar = {
+  id?: boolean
   orgId?: boolean
+  month?: boolean
   balance?: boolean
   revenue?: boolean
   expense?: boolean
@@ -584,24 +650,26 @@ export type FinanceSelectScalar = {
   margin?: boolean
 }
 
-export type FinanceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"orgId" | "balance" | "revenue" | "expense" | "netProfit" | "margin", ExtArgs["result"]["finance"]>
+export type FinanceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orgId" | "month" | "balance" | "revenue" | "expense" | "netProfit" | "margin", ExtArgs["result"]["finance"]>
 export type FinanceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  company?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  org?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }
 export type FinanceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  company?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  org?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }
 export type FinanceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  company?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  org?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }
 
 export type $FinancePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Finance"
   objects: {
-    company: Prisma.$OrganizationPayload<ExtArgs>
+    org: Prisma.$OrganizationPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
+    id: string
     orgId: string
+    month: Date
     balance: number
     revenue: number
     expense: number
@@ -690,8 +758,8 @@ export interface FinanceDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * // Get first 10 Finances
    * const finances = await prisma.finance.findMany({ take: 10 })
    * 
-   * // Only select the `orgId`
-   * const financeWithOrgIdOnly = await prisma.finance.findMany({ select: { orgId: true } })
+   * // Only select the `id`
+   * const financeWithIdOnly = await prisma.finance.findMany({ select: { id: true } })
    * 
    */
   findMany<T extends FinanceFindManyArgs>(args?: Prisma.SelectSubset<T, FinanceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FinancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -735,9 +803,9 @@ export interface FinanceDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   ]
    * })
    * 
-   * // Create many Finances and only return the `orgId`
-   * const financeWithOrgIdOnly = await prisma.finance.createManyAndReturn({
-   *   select: { orgId: true },
+   * // Create many Finances and only return the `id`
+   * const financeWithIdOnly = await prisma.finance.createManyAndReturn({
+   *   select: { id: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -826,9 +894,9 @@ export interface FinanceDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   ]
    * })
    * 
-   * // Update zero or more Finances and only return the `orgId`
-   * const financeWithOrgIdOnly = await prisma.finance.updateManyAndReturn({
-   *   select: { orgId: true },
+   * // Update zero or more Finances and only return the `id`
+   * const financeWithIdOnly = await prisma.finance.updateManyAndReturn({
+   *   select: { id: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -1001,7 +1069,7 @@ readonly fields: FinanceFieldRefs;
  */
 export interface Prisma__FinanceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  company<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  org<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1031,7 +1099,9 @@ export interface Prisma__FinanceClient<T, Null = never, ExtArgs extends runtime.
  * Fields of the Finance model
  */
 export interface FinanceFieldRefs {
+  readonly id: Prisma.FieldRef<"Finance", 'String'>
   readonly orgId: Prisma.FieldRef<"Finance", 'String'>
+  readonly month: Prisma.FieldRef<"Finance", 'DateTime'>
   readonly balance: Prisma.FieldRef<"Finance", 'Int'>
   readonly revenue: Prisma.FieldRef<"Finance", 'Int'>
   readonly expense: Prisma.FieldRef<"Finance", 'Int'>

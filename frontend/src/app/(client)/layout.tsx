@@ -3,12 +3,27 @@
 import { AppSidebar } from "@/app/(client)/dashboard/_components/dashboard/Sidebar";
 import { TopBar } from "@/app/(client)/dashboard/_components/dashboard/TopBar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function ClientLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { user, isLoaded } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    if (!user?.publicMetadata?.onboardingComplete) {
+      router.replace("/onboarding");
+    }
+  }, [isLoaded, user, router]);
+
+  if (!isLoaded || !user?.publicMetadata?.onboardingComplete) return null;
+
   return (
     <SidebarProvider>
       <AppSidebar />

@@ -32,3 +32,8 @@ export type Client = Prisma.ClientModel
  * 
  */
 export type Finance = Prisma.FinanceModel
+/**
+ * Model Post
+ * 
+ */
+export type Post = Prisma.PostModel
