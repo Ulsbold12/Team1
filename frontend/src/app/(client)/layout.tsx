@@ -6,6 +6,9 @@ import { useEffect } from "react";
 import { AppSidebar } from "@/app/(client)/_components/dashboard/Sidebar";
 import { TopBar } from "@/app/(client)/_components/dashboard/TopBar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function ClientLayout({
   children,

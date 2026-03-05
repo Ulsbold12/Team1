@@ -393,11 +393,16 @@ export const ModelName = {
   Organization: 'Organization',
   Client: 'Client',
 <<<<<<< HEAD
+<<<<<<< HEAD
   Finance: 'Finance',
   Post: 'Post'
 =======
   Finance: 'Finance'
 >>>>>>> 755705e (woefbef)
+=======
+  Finance: 'Finance',
+  Post: 'Post'
+>>>>>>> 987feec (3 clerk auth setup (#11))
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -414,10 +419,14 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
   }
   meta: {
 <<<<<<< HEAD
+<<<<<<< HEAD
     modelProps: "organization" | "client" | "finance" | "post"
 =======
     modelProps: "organization" | "client" | "finance"
 >>>>>>> 755705e (woefbef)
+=======
+    modelProps: "organization" | "client" | "finance" | "post"
+>>>>>>> 987feec (3 clerk auth setup (#11))
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -644,6 +653,9 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
       }
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 987feec (3 clerk auth setup (#11))
     Post: {
       payload: Prisma.$PostPayload<ExtArgs>
       fields: Prisma.PostFieldRefs
@@ -718,8 +730,11 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+<<<<<<< HEAD
 =======
 >>>>>>> 755705e (woefbef)
+=======
+>>>>>>> 987feec (3 clerk auth setup (#11))
   }
 } & {
   other: {
@@ -779,11 +794,16 @@ export const ClientScalarFieldEnum = {
   email: 'email',
   firstname: 'firstname',
 <<<<<<< HEAD
+<<<<<<< HEAD
   lastname: 'lastname',
   createdAt: 'createdAt'
 =======
   lastname: 'lastname'
 >>>>>>> 755705e (woefbef)
+=======
+  lastname: 'lastname',
+  createdAt: 'createdAt'
+>>>>>>> 987feec (3 clerk auth setup (#11))
 } as const
 
 export type ClientScalarFieldEnum = (typeof ClientScalarFieldEnum)[keyof typeof ClientScalarFieldEnum]
@@ -791,12 +811,18 @@ export type ClientScalarFieldEnum = (typeof ClientScalarFieldEnum)[keyof typeof 
 
 export const FinanceScalarFieldEnum = {
 <<<<<<< HEAD
+<<<<<<< HEAD
   id: 'id',
   orgId: 'orgId',
   month: 'month',
 =======
   orgId: 'orgId',
 >>>>>>> 755705e (woefbef)
+=======
+  id: 'id',
+  orgId: 'orgId',
+  month: 'month',
+>>>>>>> 987feec (3 clerk auth setup (#11))
   balance: 'balance',
   revenue: 'revenue',
   expense: 'expense',
@@ -808,6 +834,9 @@ export type FinanceScalarFieldEnum = (typeof FinanceScalarFieldEnum)[keyof typeo
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 987feec (3 clerk auth setup (#11))
 export const PostScalarFieldEnum = {
   id: 'id',
   orgId: 'orgId',
@@ -820,8 +849,11 @@ export const PostScalarFieldEnum = {
 export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 755705e (woefbef)
+=======
+>>>>>>> 987feec (3 clerk auth setup (#11))
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1029,9 +1061,13 @@ export type GlobalOmitConfig = {
   client?: Prisma.ClientOmit
   finance?: Prisma.FinanceOmit
 <<<<<<< HEAD
+<<<<<<< HEAD
   post?: Prisma.PostOmit
 =======
 >>>>>>> 755705e (woefbef)
+=======
+  post?: Prisma.PostOmit
+>>>>>>> 987feec (3 clerk auth setup (#11))
 }
 
 /* Types for Logging */
