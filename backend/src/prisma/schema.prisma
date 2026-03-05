@@ -20,6 +20,7 @@ model Organization {
   industry    Industry
   financeData Finance[]
   createdAt   DateTime  @default(now())
+  posts Post[]
 }
 
 enum Industry {
@@ -49,8 +50,10 @@ enum MemberAccessType {
 }
 
 model Finance {
-  company   Organization @relation(fields: [orgId], references: [id])
-  orgId     String       @id
+  id        String       @id @default(cuid())  // ← @id болгох
+  org       Organization @relation(fields: [orgId], references: [id])
+  orgId     String                              // ← @id хасах
+  month     DateTime                            // ← нэмэх
   balance   Int
   revenue   Int
   expense   Int
@@ -63,4 +66,14 @@ enum ExpenseType {
   ТЭЭВЭР
   УРСГАЛ_ЗАРДАЛ
   ЦАЛИН
+}
+
+model Post {
+  id          String       @id @default(cuid())
+  org         Organization @relation(fields: [orgId], references: [id])
+  orgId       String
+  title       String
+  platform    String
+  reach       Int
+  publishedAt DateTime     @default(now())
 }

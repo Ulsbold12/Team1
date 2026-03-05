@@ -51,7 +51,8 @@ export const AnyNull = runtime.objectEnumValues.instances.AnyNull
 export const ModelName = {
   Organization: 'Organization',
   Client: 'Client',
-  Finance: 'Finance'
+  Finance: 'Finance',
+  Post: 'Post'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -85,14 +86,17 @@ export const ClientScalarFieldEnum = {
   role: 'role',
   email: 'email',
   firstname: 'firstname',
-  lastname: 'lastname'
+  lastname: 'lastname',
+  createdAt: 'createdAt'
 } as const
 
 export type ClientScalarFieldEnum = (typeof ClientScalarFieldEnum)[keyof typeof ClientScalarFieldEnum]
 
 
 export const FinanceScalarFieldEnum = {
+  id: 'id',
   orgId: 'orgId',
+  month: 'month',
   balance: 'balance',
   revenue: 'revenue',
   expense: 'expense',
@@ -101,6 +105,18 @@ export const FinanceScalarFieldEnum = {
 } as const
 
 export type FinanceScalarFieldEnum = (typeof FinanceScalarFieldEnum)[keyof typeof FinanceScalarFieldEnum]
+
+
+export const PostScalarFieldEnum = {
+  id: 'id',
+  orgId: 'orgId',
+  title: 'title',
+  platform: 'platform',
+  reach: 'reach',
+  publishedAt: 'publishedAt'
+} as const
+
+export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
 
 
 export const SortOrder = {

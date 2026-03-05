@@ -31,6 +31,7 @@ export type ClientMinAggregateOutputType = {
   email: string | null
   firstname: string | null
   lastname: string | null
+  createdAt: Date | null
 }
 
 export type ClientMaxAggregateOutputType = {
@@ -40,6 +41,7 @@ export type ClientMaxAggregateOutputType = {
   email: string | null
   firstname: string | null
   lastname: string | null
+  createdAt: Date | null
 }
 
 export type ClientCountAggregateOutputType = {
@@ -49,6 +51,7 @@ export type ClientCountAggregateOutputType = {
   email: number
   firstname: number
   lastname: number
+  createdAt: number
   _all: number
 }
 
@@ -60,6 +63,7 @@ export type ClientMinAggregateInputType = {
   email?: true
   firstname?: true
   lastname?: true
+  createdAt?: true
 }
 
 export type ClientMaxAggregateInputType = {
@@ -69,6 +73,7 @@ export type ClientMaxAggregateInputType = {
   email?: true
   firstname?: true
   lastname?: true
+  createdAt?: true
 }
 
 export type ClientCountAggregateInputType = {
@@ -78,6 +83,7 @@ export type ClientCountAggregateInputType = {
   email?: true
   firstname?: true
   lastname?: true
+  createdAt?: true
   _all?: true
 }
 
@@ -160,6 +166,7 @@ export type ClientGroupByOutputType = {
   email: string
   firstname: string
   lastname: string
+  createdAt: Date
   _count: ClientCountAggregateOutputType | null
   _min: ClientMinAggregateOutputType | null
   _max: ClientMaxAggregateOutputType | null
@@ -190,6 +197,7 @@ export type ClientWhereInput = {
   email?: Prisma.StringFilter<"Client"> | string
   firstname?: Prisma.StringFilter<"Client"> | string
   lastname?: Prisma.StringFilter<"Client"> | string
+  createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   ofOrg?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
 }
 
@@ -200,6 +208,7 @@ export type ClientOrderByWithRelationInput = {
   email?: Prisma.SortOrder
   firstname?: Prisma.SortOrder
   lastname?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   ofOrg?: Prisma.OrganizationOrderByWithRelationInput
 }
 
@@ -213,6 +222,7 @@ export type ClientWhereUniqueInput = Prisma.AtLeast<{
   email?: Prisma.StringFilter<"Client"> | string
   firstname?: Prisma.StringFilter<"Client"> | string
   lastname?: Prisma.StringFilter<"Client"> | string
+  createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   ofOrg?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
 }, "id" | "id">
 
@@ -223,6 +233,7 @@ export type ClientOrderByWithAggregationInput = {
   email?: Prisma.SortOrder
   firstname?: Prisma.SortOrder
   lastname?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   _count?: Prisma.ClientCountOrderByAggregateInput
   _max?: Prisma.ClientMaxOrderByAggregateInput
   _min?: Prisma.ClientMinOrderByAggregateInput
@@ -238,6 +249,7 @@ export type ClientScalarWhereWithAggregatesInput = {
   email?: Prisma.StringWithAggregatesFilter<"Client"> | string
   firstname?: Prisma.StringWithAggregatesFilter<"Client"> | string
   lastname?: Prisma.StringWithAggregatesFilter<"Client"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Client"> | Date | string
 }
 
 export type ClientCreateInput = {
@@ -246,6 +258,7 @@ export type ClientCreateInput = {
   email: string
   firstname: string
   lastname: string
+  createdAt?: Date | string
   ofOrg: Prisma.OrganizationCreateNestedOneWithoutMembersInput
 }
 
@@ -256,6 +269,7 @@ export type ClientUncheckedCreateInput = {
   email: string
   firstname: string
   lastname: string
+  createdAt?: Date | string
 }
 
 export type ClientUpdateInput = {
@@ -264,6 +278,7 @@ export type ClientUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   firstname?: Prisma.StringFieldUpdateOperationsInput | string
   lastname?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ofOrg?: Prisma.OrganizationUpdateOneRequiredWithoutMembersNestedInput
 }
 
@@ -274,6 +289,7 @@ export type ClientUncheckedUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   firstname?: Prisma.StringFieldUpdateOperationsInput | string
   lastname?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ClientCreateManyInput = {
@@ -283,6 +299,7 @@ export type ClientCreateManyInput = {
   email: string
   firstname: string
   lastname: string
+  createdAt?: Date | string
 }
 
 export type ClientUpdateManyMutationInput = {
@@ -291,6 +308,7 @@ export type ClientUpdateManyMutationInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   firstname?: Prisma.StringFieldUpdateOperationsInput | string
   lastname?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ClientUncheckedUpdateManyInput = {
@@ -300,6 +318,7 @@ export type ClientUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   firstname?: Prisma.StringFieldUpdateOperationsInput | string
   lastname?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ClientListRelationFilter = {
@@ -319,6 +338,7 @@ export type ClientCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   firstname?: Prisma.SortOrder
   lastname?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type ClientMaxOrderByAggregateInput = {
@@ -328,6 +348,7 @@ export type ClientMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   firstname?: Prisma.SortOrder
   lastname?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type ClientMinOrderByAggregateInput = {
@@ -337,6 +358,7 @@ export type ClientMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   firstname?: Prisma.SortOrder
   lastname?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type ClientCreateNestedManyWithoutOfOrgInput = {
@@ -391,6 +413,7 @@ export type ClientCreateWithoutOfOrgInput = {
   email: string
   firstname: string
   lastname: string
+  createdAt?: Date | string
 }
 
 export type ClientUncheckedCreateWithoutOfOrgInput = {
@@ -399,6 +422,7 @@ export type ClientUncheckedCreateWithoutOfOrgInput = {
   email: string
   firstname: string
   lastname: string
+  createdAt?: Date | string
 }
 
 export type ClientCreateOrConnectWithoutOfOrgInput = {
@@ -437,6 +461,7 @@ export type ClientScalarWhereInput = {
   email?: Prisma.StringFilter<"Client"> | string
   firstname?: Prisma.StringFilter<"Client"> | string
   lastname?: Prisma.StringFilter<"Client"> | string
+  createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
 }
 
 export type ClientCreateManyOfOrgInput = {
@@ -445,6 +470,7 @@ export type ClientCreateManyOfOrgInput = {
   email: string
   firstname: string
   lastname: string
+  createdAt?: Date | string
 }
 
 export type ClientUpdateWithoutOfOrgInput = {
@@ -453,6 +479,7 @@ export type ClientUpdateWithoutOfOrgInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   firstname?: Prisma.StringFieldUpdateOperationsInput | string
   lastname?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ClientUncheckedUpdateWithoutOfOrgInput = {
@@ -461,6 +488,7 @@ export type ClientUncheckedUpdateWithoutOfOrgInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   firstname?: Prisma.StringFieldUpdateOperationsInput | string
   lastname?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ClientUncheckedUpdateManyWithoutOfOrgInput = {
@@ -469,6 +497,7 @@ export type ClientUncheckedUpdateManyWithoutOfOrgInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   firstname?: Prisma.StringFieldUpdateOperationsInput | string
   lastname?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -480,6 +509,7 @@ export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   email?: boolean
   firstname?: boolean
   lastname?: boolean
+  createdAt?: boolean
   ofOrg?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["client"]>
 
@@ -490,6 +520,7 @@ export type ClientSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   email?: boolean
   firstname?: boolean
   lastname?: boolean
+  createdAt?: boolean
   ofOrg?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["client"]>
 
@@ -500,6 +531,7 @@ export type ClientSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   email?: boolean
   firstname?: boolean
   lastname?: boolean
+  createdAt?: boolean
   ofOrg?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["client"]>
 
@@ -510,9 +542,10 @@ export type ClientSelectScalar = {
   email?: boolean
   firstname?: boolean
   lastname?: boolean
+  createdAt?: boolean
 }
 
-export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orgId" | "role" | "email" | "firstname" | "lastname", ExtArgs["result"]["client"]>
+export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orgId" | "role" | "email" | "firstname" | "lastname" | "createdAt", ExtArgs["result"]["client"]>
 export type ClientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ofOrg?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }
@@ -535,6 +568,7 @@ export type $ClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     email: string
     firstname: string
     lastname: string
+    createdAt: Date
   }, ExtArgs["result"]["client"]>
   composites: {}
 }
@@ -965,6 +999,7 @@ export interface ClientFieldRefs {
   readonly email: Prisma.FieldRef<"Client", 'String'>
   readonly firstname: Prisma.FieldRef<"Client", 'String'>
   readonly lastname: Prisma.FieldRef<"Client", 'String'>
+  readonly createdAt: Prisma.FieldRef<"Client", 'DateTime'>
 }
     
 
