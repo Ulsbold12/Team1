@@ -9,18 +9,18 @@ const Hero = () => {
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <p className="inline-block mb-4 rounded-full bg-indigo-100 px-4 py-1 text-sm font-medium text-indigo-600">
+            <p className="inline-block mb-4 text-black rounded-full bg-indigo-100 px-4 py-1 text-sm font-medium text-indigo-600">
               Шинэ: AI-д суурилсан аналитик
             </p>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-black">
               AI-д суурилсан санхүү болон маркетингийн тусламжтайгаар{" "}
               <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 бизнесээ өргөжүүл
               </span>
             </h1>
 
-            <p className="mt-6 text-lg text-muted-foreground max-w-xl">
+            <p className="mt-6 text-lg text-muted-foreground max-w-xl text-black">
               Манай AI платформоор мөнгөн урсгалаа оновчтой болгож, өсөлтөө
               автоматжуул. Таамаглал, дүн шинжилгээ, бодит цагийн тайлан.
             </p>
@@ -31,14 +31,17 @@ const Hero = () => {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
 
-              <Button size="lg" variant="outline" className="rounded-xl">
+              <Button
+                size="lg"
+                variant="outline"
+                className="rounded-xl text-black">
                 Demo үзэх
               </Button>
             </div>
           </div>
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-tr from-indigo-200 to-purple-200 blur-3xl opacity-40 rounded-full" />
-            
+
             <img
               src="https://images.unsplash.com/photo-1551288049-bebda4e38f71"
               alt="Dashboard Preview"

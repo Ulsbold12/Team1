@@ -8,7 +8,7 @@ const Footer = () => {
           <div className="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold">
             ✦
           </div>
-          <span className="font-semibold text-lg">Flow Ai</span>
+          <span className="font-semibold text-lg text-black">Flow Ai</span>
         </div>
         <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600">
           <Link href="#" className="hover:text-indigo-600 transition">
@@ -22,9 +22,9 @@ const Footer = () => {
           </Link>
         </div>
         <p className="text-sm text-gray-500 text-center md:text-right">
-          © {new Date().getFullYear()} SaaS AI Inc. Бүх эрх хуулиар хамгаалагдсан.
+          © {new Date().getFullYear()} SaaS AI Inc. Бүх эрх хуулиар
+          хамгаалагдсан.
         </p>
-
       </div>
     </footer>
   );

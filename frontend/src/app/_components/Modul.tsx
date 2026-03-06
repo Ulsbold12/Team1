@@ -17,13 +17,15 @@ export default function Modul() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <Card className="rounded-2xl shadow-sm">
+          <Card className="rounded-2xl shadow-sm bg-white">
             <CardContent className="p-6">
               <div className="mb-4 flex items-center justify-center w-10 h-10 rounded-xl bg-indigo-100">
                 <Wallet className="text-indigo-600" />
               </div>
 
-              <h3 className="text-xl font-semibold mb-2">Санхүүгийн AI</h3>
+              <h3 className="text-xl font-semibold mb-2 text-black">
+                Санхүүгийн AI
+              </h3>
               <p className="text-gray-500 mb-6">
                 Predictive bookkeeping and automated expense tracking. Get
                 real-time runway alerts and intelligent cash flow forecasting.
