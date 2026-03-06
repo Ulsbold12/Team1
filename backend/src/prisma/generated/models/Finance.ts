@@ -216,12 +216,12 @@ export type FinanceGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type FinanceGroupByOutputType = {
   id: string
   orgId: string
-  month: Date
-  balance: number
-  revenue: number
-  expense: number
-  netProfit: number
-  margin: number
+  month: Date | null
+  balance: number | null
+  revenue: number | null
+  expense: number | null
+  netProfit: number | null
+  margin: number | null
   _count: FinanceCountAggregateOutputType | null
   _avg: FinanceAvgAggregateOutputType | null
   _sum: FinanceSumAggregateOutputType | null
@@ -250,24 +250,24 @@ export type FinanceWhereInput = {
   NOT?: Prisma.FinanceWhereInput | Prisma.FinanceWhereInput[]
   id?: Prisma.StringFilter<"Finance"> | string
   orgId?: Prisma.StringFilter<"Finance"> | string
-  month?: Prisma.DateTimeFilter<"Finance"> | Date | string
-  balance?: Prisma.IntFilter<"Finance"> | number
-  revenue?: Prisma.IntFilter<"Finance"> | number
-  expense?: Prisma.IntFilter<"Finance"> | number
-  netProfit?: Prisma.IntFilter<"Finance"> | number
-  margin?: Prisma.IntFilter<"Finance"> | number
+  month?: Prisma.DateTimeNullableFilter<"Finance"> | Date | string | null
+  balance?: Prisma.IntNullableFilter<"Finance"> | number | null
+  revenue?: Prisma.IntNullableFilter<"Finance"> | number | null
+  expense?: Prisma.IntNullableFilter<"Finance"> | number | null
+  netProfit?: Prisma.IntNullableFilter<"Finance"> | number | null
+  margin?: Prisma.IntNullableFilter<"Finance"> | number | null
   org?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
 }
 
 export type FinanceOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   orgId?: Prisma.SortOrder
-  month?: Prisma.SortOrder
-  balance?: Prisma.SortOrder
-  revenue?: Prisma.SortOrder
-  expense?: Prisma.SortOrder
-  netProfit?: Prisma.SortOrder
-  margin?: Prisma.SortOrder
+  month?: Prisma.SortOrderInput | Prisma.SortOrder
+  balance?: Prisma.SortOrderInput | Prisma.SortOrder
+  revenue?: Prisma.SortOrderInput | Prisma.SortOrder
+  expense?: Prisma.SortOrderInput | Prisma.SortOrder
+  netProfit?: Prisma.SortOrderInput | Prisma.SortOrder
+  margin?: Prisma.SortOrderInput | Prisma.SortOrder
   org?: Prisma.OrganizationOrderByWithRelationInput
 }
 
@@ -277,24 +277,24 @@ export type FinanceWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.FinanceWhereInput[]
   NOT?: Prisma.FinanceWhereInput | Prisma.FinanceWhereInput[]
   orgId?: Prisma.StringFilter<"Finance"> | string
-  month?: Prisma.DateTimeFilter<"Finance"> | Date | string
-  balance?: Prisma.IntFilter<"Finance"> | number
-  revenue?: Prisma.IntFilter<"Finance"> | number
-  expense?: Prisma.IntFilter<"Finance"> | number
-  netProfit?: Prisma.IntFilter<"Finance"> | number
-  margin?: Prisma.IntFilter<"Finance"> | number
+  month?: Prisma.DateTimeNullableFilter<"Finance"> | Date | string | null
+  balance?: Prisma.IntNullableFilter<"Finance"> | number | null
+  revenue?: Prisma.IntNullableFilter<"Finance"> | number | null
+  expense?: Prisma.IntNullableFilter<"Finance"> | number | null
+  netProfit?: Prisma.IntNullableFilter<"Finance"> | number | null
+  margin?: Prisma.IntNullableFilter<"Finance"> | number | null
   org?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
 }, "id">
 
 export type FinanceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   orgId?: Prisma.SortOrder
-  month?: Prisma.SortOrder
-  balance?: Prisma.SortOrder
-  revenue?: Prisma.SortOrder
-  expense?: Prisma.SortOrder
-  netProfit?: Prisma.SortOrder
-  margin?: Prisma.SortOrder
+  month?: Prisma.SortOrderInput | Prisma.SortOrder
+  balance?: Prisma.SortOrderInput | Prisma.SortOrder
+  revenue?: Prisma.SortOrderInput | Prisma.SortOrder
+  expense?: Prisma.SortOrderInput | Prisma.SortOrder
+  netProfit?: Prisma.SortOrderInput | Prisma.SortOrder
+  margin?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.FinanceCountOrderByAggregateInput
   _avg?: Prisma.FinanceAvgOrderByAggregateInput
   _max?: Prisma.FinanceMaxOrderByAggregateInput
@@ -308,88 +308,88 @@ export type FinanceScalarWhereWithAggregatesInput = {
   NOT?: Prisma.FinanceScalarWhereWithAggregatesInput | Prisma.FinanceScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Finance"> | string
   orgId?: Prisma.StringWithAggregatesFilter<"Finance"> | string
-  month?: Prisma.DateTimeWithAggregatesFilter<"Finance"> | Date | string
-  balance?: Prisma.IntWithAggregatesFilter<"Finance"> | number
-  revenue?: Prisma.IntWithAggregatesFilter<"Finance"> | number
-  expense?: Prisma.IntWithAggregatesFilter<"Finance"> | number
-  netProfit?: Prisma.IntWithAggregatesFilter<"Finance"> | number
-  margin?: Prisma.IntWithAggregatesFilter<"Finance"> | number
+  month?: Prisma.DateTimeNullableWithAggregatesFilter<"Finance"> | Date | string | null
+  balance?: Prisma.IntNullableWithAggregatesFilter<"Finance"> | number | null
+  revenue?: Prisma.IntNullableWithAggregatesFilter<"Finance"> | number | null
+  expense?: Prisma.IntNullableWithAggregatesFilter<"Finance"> | number | null
+  netProfit?: Prisma.IntNullableWithAggregatesFilter<"Finance"> | number | null
+  margin?: Prisma.IntNullableWithAggregatesFilter<"Finance"> | number | null
 }
 
 export type FinanceCreateInput = {
   id?: string
-  month: Date | string
-  balance: number
-  revenue: number
-  expense: number
-  netProfit: number
-  margin: number
+  month?: Date | string | null
+  balance?: number | null
+  revenue?: number | null
+  expense?: number | null
+  netProfit?: number | null
+  margin?: number | null
   org: Prisma.OrganizationCreateNestedOneWithoutFinanceDataInput
 }
 
 export type FinanceUncheckedCreateInput = {
   id?: string
   orgId: string
-  month: Date | string
-  balance: number
-  revenue: number
-  expense: number
-  netProfit: number
-  margin: number
+  month?: Date | string | null
+  balance?: number | null
+  revenue?: number | null
+  expense?: number | null
+  netProfit?: number | null
+  margin?: number | null
 }
 
 export type FinanceUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  month?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  balance?: Prisma.IntFieldUpdateOperationsInput | number
-  revenue?: Prisma.IntFieldUpdateOperationsInput | number
-  expense?: Prisma.IntFieldUpdateOperationsInput | number
-  netProfit?: Prisma.IntFieldUpdateOperationsInput | number
-  margin?: Prisma.IntFieldUpdateOperationsInput | number
+  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balance?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revenue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expense?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  netProfit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  margin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   org?: Prisma.OrganizationUpdateOneRequiredWithoutFinanceDataNestedInput
 }
 
 export type FinanceUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
-  month?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  balance?: Prisma.IntFieldUpdateOperationsInput | number
-  revenue?: Prisma.IntFieldUpdateOperationsInput | number
-  expense?: Prisma.IntFieldUpdateOperationsInput | number
-  netProfit?: Prisma.IntFieldUpdateOperationsInput | number
-  margin?: Prisma.IntFieldUpdateOperationsInput | number
+  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balance?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revenue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expense?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  netProfit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  margin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type FinanceCreateManyInput = {
   id?: string
   orgId: string
-  month: Date | string
-  balance: number
-  revenue: number
-  expense: number
-  netProfit: number
-  margin: number
+  month?: Date | string | null
+  balance?: number | null
+  revenue?: number | null
+  expense?: number | null
+  netProfit?: number | null
+  margin?: number | null
 }
 
 export type FinanceUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  month?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  balance?: Prisma.IntFieldUpdateOperationsInput | number
-  revenue?: Prisma.IntFieldUpdateOperationsInput | number
-  expense?: Prisma.IntFieldUpdateOperationsInput | number
-  netProfit?: Prisma.IntFieldUpdateOperationsInput | number
-  margin?: Prisma.IntFieldUpdateOperationsInput | number
+  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balance?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revenue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expense?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  netProfit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  margin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type FinanceUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orgId?: Prisma.StringFieldUpdateOperationsInput | string
-  month?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  balance?: Prisma.IntFieldUpdateOperationsInput | number
-  revenue?: Prisma.IntFieldUpdateOperationsInput | number
-  expense?: Prisma.IntFieldUpdateOperationsInput | number
-  netProfit?: Prisma.IntFieldUpdateOperationsInput | number
-  margin?: Prisma.IntFieldUpdateOperationsInput | number
+  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balance?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revenue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expense?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  netProfit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  margin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type FinanceListRelationFilter = {
@@ -493,8 +493,12 @@ export type FinanceUncheckedUpdateManyWithoutOrgNestedInput = {
   deleteMany?: Prisma.FinanceScalarWhereInput | Prisma.FinanceScalarWhereInput[]
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
   increment?: number
   decrement?: number
   multiply?: number
@@ -503,22 +507,22 @@ export type IntFieldUpdateOperationsInput = {
 
 export type FinanceCreateWithoutOrgInput = {
   id?: string
-  month: Date | string
-  balance: number
-  revenue: number
-  expense: number
-  netProfit: number
-  margin: number
+  month?: Date | string | null
+  balance?: number | null
+  revenue?: number | null
+  expense?: number | null
+  netProfit?: number | null
+  margin?: number | null
 }
 
 export type FinanceUncheckedCreateWithoutOrgInput = {
   id?: string
-  month: Date | string
-  balance: number
-  revenue: number
-  expense: number
-  netProfit: number
-  margin: number
+  month?: Date | string | null
+  balance?: number | null
+  revenue?: number | null
+  expense?: number | null
+  netProfit?: number | null
+  margin?: number | null
 }
 
 export type FinanceCreateOrConnectWithoutOrgInput = {
@@ -553,52 +557,52 @@ export type FinanceScalarWhereInput = {
   NOT?: Prisma.FinanceScalarWhereInput | Prisma.FinanceScalarWhereInput[]
   id?: Prisma.StringFilter<"Finance"> | string
   orgId?: Prisma.StringFilter<"Finance"> | string
-  month?: Prisma.DateTimeFilter<"Finance"> | Date | string
-  balance?: Prisma.IntFilter<"Finance"> | number
-  revenue?: Prisma.IntFilter<"Finance"> | number
-  expense?: Prisma.IntFilter<"Finance"> | number
-  netProfit?: Prisma.IntFilter<"Finance"> | number
-  margin?: Prisma.IntFilter<"Finance"> | number
+  month?: Prisma.DateTimeNullableFilter<"Finance"> | Date | string | null
+  balance?: Prisma.IntNullableFilter<"Finance"> | number | null
+  revenue?: Prisma.IntNullableFilter<"Finance"> | number | null
+  expense?: Prisma.IntNullableFilter<"Finance"> | number | null
+  netProfit?: Prisma.IntNullableFilter<"Finance"> | number | null
+  margin?: Prisma.IntNullableFilter<"Finance"> | number | null
 }
 
 export type FinanceCreateManyOrgInput = {
   id?: string
-  month: Date | string
-  balance: number
-  revenue: number
-  expense: number
-  netProfit: number
-  margin: number
+  month?: Date | string | null
+  balance?: number | null
+  revenue?: number | null
+  expense?: number | null
+  netProfit?: number | null
+  margin?: number | null
 }
 
 export type FinanceUpdateWithoutOrgInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  month?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  balance?: Prisma.IntFieldUpdateOperationsInput | number
-  revenue?: Prisma.IntFieldUpdateOperationsInput | number
-  expense?: Prisma.IntFieldUpdateOperationsInput | number
-  netProfit?: Prisma.IntFieldUpdateOperationsInput | number
-  margin?: Prisma.IntFieldUpdateOperationsInput | number
+  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balance?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revenue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expense?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  netProfit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  margin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type FinanceUncheckedUpdateWithoutOrgInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  month?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  balance?: Prisma.IntFieldUpdateOperationsInput | number
-  revenue?: Prisma.IntFieldUpdateOperationsInput | number
-  expense?: Prisma.IntFieldUpdateOperationsInput | number
-  netProfit?: Prisma.IntFieldUpdateOperationsInput | number
-  margin?: Prisma.IntFieldUpdateOperationsInput | number
+  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balance?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revenue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expense?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  netProfit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  margin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type FinanceUncheckedUpdateManyWithoutOrgInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  month?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  balance?: Prisma.IntFieldUpdateOperationsInput | number
-  revenue?: Prisma.IntFieldUpdateOperationsInput | number
-  expense?: Prisma.IntFieldUpdateOperationsInput | number
-  netProfit?: Prisma.IntFieldUpdateOperationsInput | number
-  margin?: Prisma.IntFieldUpdateOperationsInput | number
+  month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  balance?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revenue?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  expense?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  netProfit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  margin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
@@ -669,12 +673,12 @@ export type $FinancePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     orgId: string
-    month: Date
-    balance: number
-    revenue: number
-    expense: number
-    netProfit: number
-    margin: number
+    month: Date | null
+    balance: number | null
+    revenue: number | null
+    expense: number | null
+    netProfit: number | null
+    margin: number | null
   }, ExtArgs["result"]["finance"]>
   composites: {}
 }
