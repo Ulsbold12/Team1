@@ -10,6 +10,7 @@ export default function Finance() {
       <Dashboard />
       <AISection />
       <GraphicSection />
+      <FileUpload />
 
     </div>
   );
