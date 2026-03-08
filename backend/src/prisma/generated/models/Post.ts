@@ -425,6 +425,14 @@ export type PostUncheckedUpdateManyWithoutOrgNestedInput = {
   deleteMany?: Prisma.PostScalarWhereInput | Prisma.PostScalarWhereInput[]
 }
 
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type PostCreateWithoutOrgInput = {
   id?: string
   title: string

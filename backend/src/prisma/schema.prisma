@@ -16,7 +16,7 @@ datasource db {
 
 model Organization {
   id          String    @id @unique
-  name String
+  name        String
   members     Client[]
   industry    Industry
   financeData Finance[]
