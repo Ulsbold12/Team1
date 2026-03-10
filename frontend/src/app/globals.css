@@ -124,3 +124,6 @@
     @apply bg-background text-foreground;
   }
 }
+.chatBubble {
+  z-index: 9999;
+}
