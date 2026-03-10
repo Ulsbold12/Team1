@@ -4,6 +4,7 @@ import { ArrowUp, LoaderCircle, MessageCircle, Target, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { LoadingVisual } from "./ChatLoadingVisuals";
 
 type Message = {
   role: "user" | "assistant";
@@ -28,12 +29,13 @@ const ChatSection = ({
   return (
     <>
       <Card
-        className={`absolute top-10 right-5 w-1/3 max-w-2xl aspect-3/5 rounded-2xl shadow-xl shadow-gray-300`}
+        className={`absolute top-20 right-5  min-w-1/4 max-w-sm aspect-3/5 rounded-2xl shadow-xl shadow-gray-300 p-0`}
       >
-        <div className="w-full h-full relative">
-          <div className={`px-5 flex gap-2 items-center`}>
+        <div className="w-full h-full ">
+          <div className={`p-2 flex gap-2 items-center`}>
             <Button
               size={"icon"}
+              variant={"ghost"}
               className={`rounded-full`}
               onClick={() => {
                 setopen(false);
@@ -41,26 +43,25 @@ const ChatSection = ({
             >
               <X />
             </Button>
-            <p className="text-xl font-medium">AI Assistant</p>
+            <p className="lg:text-xl text-xl font-medium">AI Assistant</p>
           </div>
 
-          <CardContent className={`w-full h-full flex flex-col gap-2 `}>
+          <CardContent
+            className={`w-full h-[80%] flex-col flex gap-2 overflow-y-scroll `}
+          >
             {chat.length !== 0 ? (
               <>
-                {loading ? (
-                  <LoaderCircle className={`animate-spin duration-1000`} />
-                ) : (
-                  <>
-                    {chat.map((c, index) => (
-                      <div
-                        key={index}
-                        className={`rounded-2xl px-3 py-1 w-fit ${c.role === "assistant" ? "bg-gray-200 shadow-gray-400 shadow-xl " : "bg-gray-500 self-end"}`}
-                      >
-                        {c.content}
-                      </div>
-                    ))}
-                  </>
-                )}
+                {chat.map((c, index) => (
+                  <div
+                    key={index}
+                    className={`rounded-2xl px-3 py-1 h-fit w-fit min-h-8 flex items-center max-w-sm shadow-md ${c.role === "assistant" ? "bg-gray-700 shadow-gray-400  text-white" : "bg-gray-200 shadow-gray-300 self-end "}`}
+                  >
+                    <p>{c.content}</p>
+                  </div>
+                ))}
+                <>
+                  <div className="self-start">{loading && <LoadingVisual />}</div>
+                </>
               </>
             ) : (
               <div
@@ -70,14 +71,21 @@ const ChatSection = ({
               </div>
             )}
           </CardContent>
-          <div className={`absolute bottom-2 w-full p-2`}>
-            <div className={`w-full p-2 flex gap-2`}>
+          <div className={` w-full p-2`}>
+            <div className={`w-full  flex gap-2`}>
               <Input
-                placeholder="Ask anything..."
+                value={input}
+                placeholder="Лавлах зүйлээ энд бичээд ENTER дарна уу"
                 className={``}
                 onChange={(e) => {
                   setInput(e.target.value);
                   e.preventDefault();
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    GenerateMsg(input);
+                    setInput("");
+                  }
                 }}
               />
               <Button
@@ -85,6 +93,7 @@ const ChatSection = ({
                 size={"icon"}
                 onClick={() => {
                   GenerateMsg(input);
+                  setInput("");
                 }}
               >
                 <ArrowUp />
