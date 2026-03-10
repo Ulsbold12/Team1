@@ -34,7 +34,8 @@ const Hero = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="rounded-xl text-black">
+                className="rounded-xl text-black"
+              >
                 Demo үзэх
               </Button>
             </div>
