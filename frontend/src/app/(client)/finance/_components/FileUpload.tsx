@@ -6,6 +6,7 @@ import { UploadCloud, FileSpreadsheet } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 interface Transaction {
     [key: string]: string | number;
@@ -14,6 +15,8 @@ interface Transaction {
 export default function FileUpload() {
     const [data, setData] = useState<Transaction[]>([]);
     const [fileName, setFileName] = useState<string | null>(null);
+    const [aiResult, setAiResult]=useState<any>(null);
+    const [isLoading, setIsLoading] =useState(false);
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -37,6 +40,26 @@ export default function FileUpload() {
         reader.readAsArrayBuffer(file);
     };
 
+    const analyzeWithAI= async()=>{
+        if(data.length ===0) return;
+        setIsLoading(true);
+
+        try{
+            const response =await fetch ("/api/finance-analyze", {
+                method:"POST",
+                headers:{"Content-type":"application/json"},
+                body:JSON.stringify({transactions:data})
+            })
+            const result= await response.json();
+            setAiResult(result);
+            console.log("AI Хариу:", result);
+        } catch (error) {
+            console.error("Алдаа гарлаа:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <div className="w-screen flex space-y-6 mt-10">
             <Card className="w-full">
@@ -58,28 +81,21 @@ export default function FileUpload() {
                     </div>
 
                     {fileName && (
+                        <div className="flex flex-col gap-4">
+
                         <p className="text-sm text-muted-foreground flex items-center gap-2">
                             <FileSpreadsheet className="h-4 w-4" />
                             {fileName} амжилттай уншигдлаа.
                         </p>
+                        <Button onClick={analyzeWithAI}
+                        disabled={isLoading || data.length===0}
+                        className="w-fit">
+                            {isLoading ? "Шинжилж байна..." : " AI-аар шинжлүүлэх"}
+                        </Button>
+                        </div>
                     )}
                 </CardContent>
             </Card>
-
-            {/* Уншсан датаг дэлгэцэнд шалгах зорилгоор хэвлэх */}
-            {data.length > 0 && (
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="text-lg">Уншсан өгөгдөл ({data.length} мөр)</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        {/* <div className="bg-zinc-950 text-green-400 p-4 rounded-lg overflow-x-auto max-h-96 overflow-y-auto text-xs font-mono">
-                            <pre>{JSON.stringify(data.slice(0, 5), null, 2)}</pre>
-                            {data.length > 5 && <p className="mt-2 text-zinc-500">// ... цааш үргэлжилнэ</p>}
-                        </div> */}
-                    </CardContent>
-                </Card>
-            )}
         </div>
     );
 }
