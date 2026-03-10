@@ -34,6 +34,7 @@ export default function OnboardingPage() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
+          name: form.name,
           industry: form.businessType,
           email: user?.primaryEmailAddress?.emailAddress,
           firstname: user?.firstName ?? "",
