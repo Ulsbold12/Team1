@@ -1,9 +1,6 @@
 
-<<<<<<< HEAD
 "use client"
 
-=======
->>>>>>> 987feec (3 clerk auth setup (#11))
 import { Header } from "@/app/_components/header";
 import Hero from "@/app/_components/Hero";
 import Trusted from "./_components/Trusted";

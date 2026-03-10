@@ -1,9 +1,5 @@
 "use client";
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 987feec (3 clerk auth setup (#11))
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -41,11 +37,4 @@ export const Header = () => {
       </div>
     </header>
   );
-<<<<<<< HEAD
-=======
-export const header = () => {
-  return;
->>>>>>> bce6004 (bugs fixed)
-=======
->>>>>>> 987feec (3 clerk auth setup (#11))
 };
