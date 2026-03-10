@@ -23,7 +23,7 @@ const config: runtime.GetPrismaClientConfig = {
       "value": "prisma-client"
     },
     "output": {
-      "value": "/Users/ulsbold/project/FlowAI/flowai/backend/src/prisma/generated",
+      "value": "/Users/25lp2877/Team1/backend/src/prisma/generated",
       "fromEnvVar": null
     },
     "config": {
@@ -37,7 +37,7 @@ const config: runtime.GetPrismaClientConfig = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/ulsbold/project/FlowAI/flowai/backend/src/prisma/schema.prisma",
+    "sourceFilePath": "/Users/25lp2877/Team1/backend/src/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativePath": "..",
