@@ -13,10 +13,11 @@ export default function Finance() {
   return (
     <div>
       <HeadSection />
+      <FileUpload />
       <Dashboard />
       <AISection />
       <GraphicSection />
-      <FileUpload />
+      
 
     </div>
   );
