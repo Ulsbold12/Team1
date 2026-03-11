@@ -1,11 +1,12 @@
 import type { RequestHandler } from "express";
+import auth
 import { GoogleGenAI } from "@google/genai";
 const apiKey = process.env.GENAI_API_KEY;
 type Message = {
   role: "user" | "assistant";
   content: string;
 };
-
+const fixedData = "Манай веб сайт нь жижиг дунд худалдаа үйлдвэр бизнес эрхлэгчдэд голчлон зориулагдсан санхүү ба маркетингийн зөвлөгөө өгдөг хиймэл оюунд суурилсан платформ юм. Долоо хоног, сар жилийн орлого зарлага санхүүгийн мэдээллийг тань ашиглан статистик мэдээлэл гаргаж, завгүй бизнес эрхлэгчдэд туслалцаа үзүүлэх зорилготой. Хэрэв хэрэглэгч бүртгэлгүй/ нэвтрээгүй бол ${signuplink} рүү орж нэвтрэхийг урамшуул. Хэрэв хэрэглэгчийн нэр дээрх компанийн мэдээлэл олдоогүй бол санхүү стратеги болон маркетийн зөвлөгөө бүү өг, харин хэрэглэгчийг байгууллагаа бүртгүүлээд, хэрэгтэй дата мэдээллээ бөглөж өгөхийг уриалаарай"
 export const Chat: RequestHandler = async (req, res) => {
   const { chats } = req.body as { chats: Message[] };
 
@@ -24,11 +25,12 @@ export const Chat: RequestHandler = async (req, res) => {
     const ai = new GoogleGenAI({ apiKey });
     const chat = ai.chats.create({
       model: "gemini-2.5-flash",
+
       history,
       config: {
         systemInstruction:
-          "Та бизнесийн AI зөвлөгч, манай байгууллагыг төлөөлж хэрэглэгчдэд хариу өгнө. Санхүү, маркетингийн асуултад Монгол хэлээр хариулна. Хариултаа 10 үгэнд маш товч тодорхой өгөөрэй",
-        maxOutputTokens: 1024,
+          "Та бизнесийн AI зөвлөгч, манай байгууллагыг төлөөлж хэрэглэгчдэд хариу өгнө. Санхүү, маркетингийн асуултад Монгол хэлээр хариулна. Хариултаа товч тодорхой өгөөрэй",
+        temperature: 0.2
       },
     });
 

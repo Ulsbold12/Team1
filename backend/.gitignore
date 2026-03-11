@@ -3,7 +3,7 @@
 
 src/generated/prisma
 src/prisma/generated
-
+backend/src/prisma/generated
 /generated/prisma
 /disk
 
