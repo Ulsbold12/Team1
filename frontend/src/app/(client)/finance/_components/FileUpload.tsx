@@ -68,7 +68,7 @@ export default function FileUpload() {
     }
 
     const analyzeWithAI= async()=>{
-        if(uploadedFiles.length ===0) return;
+        if(uploadedFiles.length === 0) return;
         setIsLoading(true);
 
         const allTransactions=uploadedFiles.flatMap(file=>file.data)

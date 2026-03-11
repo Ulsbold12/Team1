@@ -29,16 +29,16 @@ const data = [
 
 export const Dashboard = () => {
   return (
-    <div className="bg-gray-100 w-screen flex flex-row gap-10 p-5 flex-wrap flex-1">
-      {data.map((item) => (
-        <RevenueCard
-          key={item.id}
-          title={item.title}
-          amount={item.amount}
-          percentage={item.percentage}
-          progress={item.progress}
-        />
-      ))}
-    </div>
+    <div className="bg-gray-100 dark:bg-slate-900 w-full flex flex-row gap-4 md:gap-10 p-4 md:p-5 flex-wrap flex-1 transition-colors">
+  {data.map((item) => (
+    <RevenueCard
+      key={item.id}
+      title={item.title}
+      amount={item.amount}
+      percentage={item.percentage}
+      progress={item.progress}
+    />
+  ))}
+</div>
   );
 };
