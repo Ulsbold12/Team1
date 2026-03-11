@@ -1,4 +1,5 @@
-"use client";
+
+"use client"
 
 import { Header } from "@/app/_components/header";
 import Hero from "@/app/_components/Hero";
@@ -9,7 +10,7 @@ import Cta from "./_components/Cta";
 
 export default function Home() {
   return (
-    <div className="">
+    <div className="relative w-screen h-screen">
       <Header />
       <Hero />
       <Trusted />

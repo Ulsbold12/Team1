@@ -4,6 +4,7 @@ import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import ChatBubble from "./ChatBubble";
 
 export const Header = () => {
   return (
@@ -17,6 +18,7 @@ export const Header = () => {
         </Link>
 
         <div className="flex items-center gap-3">
+          <ChatBubble />
           <SignedOut>
             <SignInButton mode="modal">
               <Button className="bg-[#5048e5] hover:bg-[#4038d4] text-black rounded-xl">
