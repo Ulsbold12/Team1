@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Sparkles, Home, Landmark, Megaphone, Settings, ShieldCheck } from "lucide-react";
+import {
+  Sparkles,
+  Home,
+  Landmark,
+  Megaphone,
+  Settings,
+  ShieldCheck,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -16,7 +23,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const navItems = [
-  { label: "Нүүр", icon: Home, href: "/" },
+  { label: "Нүүр", icon: Home, href: "/dashboard" },
   { label: "Санхүү AI", icon: Landmark, href: "/finance" },
   { label: "Маркетинг AI", icon: Megaphone, href: "/marketing" },
   { label: "Тохиргоо", icon: Settings, href: "/settings" },
@@ -52,9 +59,13 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.label}>
                   <SidebarMenuButton
                     asChild
-                    isActive={item.href === "/" ? pathname === "/" : pathname === item.href || pathname.startsWith(item.href + "/")}
-                    className="data-[active=true]:bg-[#5048e5]/10 data-[active=true]:text-[#5048e5]"
-                  >
+                    isActive={
+                      item.href === "/"
+                        ? pathname === "/"
+                        : pathname === item.href ||
+                          pathname.startsWith(item.href + "/")
+                    }
+                    className="data-[active=true]:bg-[#5048e5]/10 data-[active=true]:text-[#5048e5]">
                     <Link href={item.href}>
                       <item.icon />
                       <span>{item.label}</span>
@@ -78,7 +89,9 @@ export function AppSidebar() {
           </div>
           <div className="flex flex-col overflow-hidden">
             <p className="text-xs font-bold truncate">Алекс Морган</p>
-            <p className="text-[10px] text-sidebar-foreground/50 truncate">Про Данс</p>
+            <p className="text-[10px] text-sidebar-foreground/50 truncate">
+              Про Данс
+            </p>
           </div>
         </div>
       </SidebarFooter>
