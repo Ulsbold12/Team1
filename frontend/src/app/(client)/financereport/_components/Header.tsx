@@ -22,7 +22,7 @@ export const Header = () => {
       </div>
 
       <Card className="max-w-8xl mx-auto shadow-lg ">
-        <CardContent className="">
+        <CardContent className="  ">
           <div className="flex justify-between mb-10">
             <div>
               <p className="text-indigo-600 font-semibold mb-2">FlowAI</p>
@@ -107,15 +107,17 @@ export const Header = () => {
             </div>
           </div>
 
-          <div>
-            <h3 className="font-semibold mb-4">Дэлгэрэнгүй гүйлгээнүүд</h3>
+          <div className="">
+            <h3 className="font-semibold mb-4 text-indigo-600 border-b-2 border-indigo-200 pb-2">
+              Дэлгэрэнгүй гүйлгээнүүд
+            </h3>
 
             <table className="w-full text-sm">
-              <thead className="text-gray-500">
-                <tr className="border-b">
+              <thead className="bg-gray-100 text-gray-500">
+                <tr className="border-b ">
                   <th className="text-left py-3">Огноо</th>
                   <th className="text-left">Тайлбар</th>
-                  <th className="text-left">Харилцагч</th>
+                  <th className="text-left">Мерчант/Харилцагч</th>
                   <th className="text-left">Ангилал</th>
                   <th className="text-right">Дүн</th>
                 </tr>
@@ -138,7 +140,7 @@ export const Header = () => {
                   <td>Project X Inc.</td>
                   <td>
                     <Badge className="bg-green-100 text-green-700">
-                      Орлого
+                      Үйлчилгээний орлого
                     </Badge>
                   </td>
                   <td className="text-green-600 text-right">+0</td>
@@ -154,6 +156,14 @@ export const Header = () => {
                   <td className="text-red-500 text-right">-$0</td>
                 </tr>
               </tbody>
+
+              <thead className="w-full bg-gray-100 ">
+                <th></th>
+                <th></th>
+                <th></th>
+                <th className="text-left py-3">Цэвэр өөрчлөлт</th>
+                <td className="text-indigo-600 text-right">-$0</td>
+              </thead>
             </table>
           </div>
         </CardContent>
