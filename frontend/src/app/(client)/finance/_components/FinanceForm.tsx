@@ -35,6 +35,7 @@ export default function FinanceForm({ onClose }: { onClose: () => void }) {
           month: new Date(form.date).toISOString(),
           revenue: isIncome ? Number(form.amount) : 0,
           expense: !isIncome ? Number(form.amount) : 0,
+          netProfit: isIncome ? Number(form.amount) : -Number(form.amount),
         }),
       });
       onClose();

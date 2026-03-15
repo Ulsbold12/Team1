@@ -45,6 +45,7 @@ export const getAnalyses: RequestHandler = async (req, res) => {
 export const createFinance: RequestHandler = async (req, res) => {
   const orgId = req.clerkUserId!;
   const { month, balance, revenue, expense, netProfit, margin } = req.body;
+  const computedNetProfit = netProfit ?? ((revenue ?? 0) - (expense ?? 0));
   try {
     const record = await prisma.finance.create({
       data: {
@@ -53,7 +54,7 @@ export const createFinance: RequestHandler = async (req, res) => {
         balance,
         revenue,
         expense,
-        netProfit,
+        netProfit: computedNetProfit,
         margin,
       },
     });

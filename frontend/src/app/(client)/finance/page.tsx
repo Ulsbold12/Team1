@@ -3,7 +3,6 @@ import { useState } from "react";
 import { AISection } from "./_components/AISection";
 import { Dashboard } from "./_components/Dashboard";
 import FileUpload from "./_components/FileUpload";
-import { GraphicSection } from "./_components/GraphicSection";
 import { HeadSection } from "./_components/HeadSection";
 import FinanceForm from "./_components/FinanceForm";
 import { Button } from "@/components/ui/button";
@@ -31,9 +30,8 @@ export default function Finance() {
       </div>
       {showForm && <FinanceForm onClose={() => setShowForm(false)} />}
       <FileUpload onResult={(cats) => setCategories(cats)} />
-      <Dashboard />
+      <Dashboard categories={categories} />
       <AISection />
-      <GraphicSection categories={categories} />
     </div>
   );
 }
