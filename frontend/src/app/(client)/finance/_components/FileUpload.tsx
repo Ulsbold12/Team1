@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 import * as XLSX from "xlsx";
 import { UploadCloud, FileSpreadsheet, Trash, Lightbulb, AlertTriangle, Sparkles, TrendingDown, TrendingUp, CheckCircle2, Plus, PenLine, Download } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -138,6 +139,7 @@ const getMonthLabel = (key: string): string => {
 };
 
 export default function FileUpload({ onResult }: FileUploadProps) {
+  const { getToken } = useAuth();
   const [uploadedFiles, setUploadeddFiles] = useState<UploadedFile[]>([]);
   const [manualTransactions, setManualTransactions] = useState<Transaction[]>([]);
   const [showManualForm, setShowManualForm] = useState(false);
@@ -354,16 +356,38 @@ export default function FileUpload({ onResult }: FileUploadProps) {
       setActiveTab("нийт");
       onResult?.(result);
 
+      const token = await getToken();
+      const authHeader = { "Content-type": "application/json", Authorization: `Bearer ${token}` };
+
       await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/finance/analysis`, {
         method: "POST",
-        headers: { "Content-type": "application/json" },
-        credentials: "include",
+        headers: authHeader,
         body: JSON.stringify({
           summary: result.summary,
           categories: result.categories,
           tips: result.tips,
         }),
       });
+
+      const monthly: { month: string; revenue: number; expense: number; netProfit: number }[] =
+        Array.isArray(result.monthly) && result.monthly.length > 0
+          ? result.monthly
+          : result.revenue != null || result.expense != null
+          ? [{ month: new Date().toISOString(), revenue: result.revenue ?? 0, expense: result.expense ?? 0, netProfit: result.netProfit ?? (result.revenue ?? 0) - (result.expense ?? 0) }]
+          : [];
+
+      for (const m of monthly) {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/finance`, {
+          method: "POST",
+          headers: authHeader,
+          body: JSON.stringify({
+            month: new Date(m.month).toISOString(),
+            revenue: m.revenue ?? 0,
+            expense: m.expense ?? 0,
+            netProfit: m.netProfit ?? (m.revenue ?? 0) - (m.expense ?? 0),
+          }),
+        });
+      }
     } catch (error) {
       console.error("Алдаа гарлаа:", error);
     } finally {
