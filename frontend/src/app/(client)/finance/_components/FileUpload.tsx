@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import * as XLSX from "xlsx";
 import { UploadCloud, FileSpreadsheet, Trash, Lightbulb, AlertTriangle, Sparkles, TrendingDown, TrendingUp, CheckCircle2, Plus, PenLine, Download } from "lucide-react";
@@ -8,6 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Dashboard } from "./Dashboard";
+import { GraphicSection } from "./GraphicSection";
 
 interface Transaction {
   [key: string]: string | number;
@@ -351,7 +353,12 @@ export default function FileUpload({ onResult }: FileUploadProps) {
         headers: { "Content-type": "application/json" },
         body: JSON.stringify({ transactions: transactionsWithMonth }),
       });
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`API алдаа (${response.status}): ${text.slice(0, 200)}`);
+      }
       const result = await response.json();
+      console.log("aiResult:", result);
       setAiResult(result);
       setActiveTab("нийт");
       onResult?.(result);
@@ -369,22 +376,21 @@ export default function FileUpload({ onResult }: FileUploadProps) {
         }),
       });
 
-      const monthly: { month: string; revenue: number; expense: number; netProfit: number }[] =
-        Array.isArray(result.monthly) && result.monthly.length > 0
-          ? result.monthly
-          : result.revenue != null || result.expense != null
-          ? [{ month: new Date().toISOString(), revenue: result.revenue ?? 0, expense: result.expense ?? 0, netProfit: result.netProfit ?? (result.revenue ?? 0) - (result.expense ?? 0) }]
-          : [];
+      const monthly: { month: string; income: { total: number }[]; expenses: { total: number }[] }[] =
+        Array.isArray(result.monthly) && result.monthly.length > 0 ? result.monthly : [];
 
       for (const m of monthly) {
+        const revenue = (m.income ?? []).reduce((s: number, c: { total: number }) => s + (c.total ?? 0), 0);
+        const expense = (m.expenses ?? []).reduce((s: number, c: { total: number }) => s + (c.total ?? 0), 0);
+        const netProfit = revenue - expense;
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/finance`, {
           method: "POST",
           headers: authHeader,
           body: JSON.stringify({
             month: new Date(m.month).toISOString(),
-            revenue: m.revenue ?? 0,
-            expense: m.expense ?? 0,
-            netProfit: m.netProfit ?? (m.revenue ?? 0) - (m.expense ?? 0),
+            revenue,
+            expense,
+            netProfit,
           }),
         });
       }
@@ -395,7 +401,7 @@ export default function FileUpload({ onResult }: FileUploadProps) {
     }
   };
 
-  return (
+  return (<>
     <div className="w-full flex flex-col lg:flex-row gap-6 mt-10 items-start">
       <Card className="w-full lg:w-[420px] shrink-0 self-stretch">
         <CardHeader>
@@ -626,7 +632,7 @@ export default function FileUpload({ onResult }: FileUploadProps) {
       </Card>
 
       {aiResult && (
-        <div ref={pdfRef} className="flex-1 flex flex-col gap-4 bg-white dark:bg-slate-900 p-2 rounded-lg self-stretch overflow-y-auto">
+        <div ref={pdfRef} className="flex-1 flex flex-col gap-4 bg-background dark:bg-sidebar p-2 rounded-lg self-stretch overflow-y-auto">
             {/* Ерөнхий дүгнэлт */}
             <Card className="w-full border-blue-100 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20">
               <CardHeader className="pb-2">
@@ -754,5 +760,10 @@ export default function FileUpload({ onResult }: FileUploadProps) {
         </div>
       )}
     </div>
+      <div>
+      <Dashboard aiResult={aiResult}/>
+      <GraphicSection aiResult={aiResult}/>
+      </div>
+      </>
   );
 }
