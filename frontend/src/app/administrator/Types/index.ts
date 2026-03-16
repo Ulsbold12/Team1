@@ -36,7 +36,7 @@ export type Post = {
 export interface OrganizationInterface {
   id: string;
   name: string;
-  members: ClientType[];
+  members?: ClientType[];
   industry:
     | "TECH"
     | "FINANCE"
