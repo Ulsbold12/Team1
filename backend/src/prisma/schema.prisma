@@ -15,14 +15,14 @@ datasource db {
 }
 
 model Organization {
-  id          String    @id @unique
-  name        String    @default("")   // ← @default нэмэх
-  members     Client[]
-  industry    Industry
-  financeData      Finance[]
-  financeAnalyses  FinanceAnalysis[]
-  posts            Post[]
-  createdAt   DateTime  @default(now())
+  id              String            @id @unique
+  name            String            @default("") // ← @default нэмэх
+  members         Client[]
+  industry        Industry
+  financeData     Finance[]
+  financeAnalyses FinanceAnalysis[]
+  posts           Post[]
+  createdAt       DateTime          @default(now())
 }
 
 enum Industry {
@@ -52,10 +52,10 @@ enum MemberAccessType {
 }
 
 model Finance {
-  id        String       @id @default(cuid())  // ← @id болгох
+  id        String       @id @default(cuid()) // ← @id болгох
   org       Organization @relation(fields: [orgId], references: [id])
-  orgId     String                              // ← @id хасах
-  month     DateTime?                          // ← нэмэх
+  orgId     String // ← @id хасах
+  month     DateTime? // ← нэмэх
   balance   Int?
   revenue   Int?
   expense   Int?
@@ -89,4 +89,13 @@ model Post {
   platform    String
   reach       Int          @default(0)
   publishedAt DateTime     @default(now())
+}
+
+model Administrator {
+  id             String   @id @unique
+  email          String
+  username       String   @unique
+  password       String
+  createdAt      DateTime @default(now())
+  lastAccessTime DateTime @default(now())
 }
