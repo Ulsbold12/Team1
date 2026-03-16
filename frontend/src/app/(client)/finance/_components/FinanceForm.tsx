@@ -1,10 +1,48 @@
 import { useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 
-type TransactionType = "income" | "expense";
+export default function FinanceForm({ onClose }: { onClose: () => void }) {
+  const { getToken } = useAuth();
+  const [form, setForm] = useState({
+    title: "",
+    amount: "",
+    type: "income",
+    category: "",
+    date: "",
+  });
+  const [saving, setSaving] = useState(false);
 
-interface FinanceFormProps {
-  onClose: () => void;
-}
+  const handleChange = (e: any) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    if (!form.title || !form.amount || !form.date) return;
+    setSaving(true);
+    try {
+      const token = await getToken();
+      const isIncome = form.type === "income";
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/finance`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          month: new Date(form.date).toISOString(),
+          revenue: isIncome ? Number(form.amount) : 0,
+          expense: !isIncome ? Number(form.amount) : 0,
+          netProfit: isIncome ? Number(form.amount) : -Number(form.amount),
+        }),
+      });
+      onClose();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSaving(false);
+    }
+  };
 
 interface CategoryDetail {
   amount: string;
@@ -130,125 +168,13 @@ export default function FinanceForm({ onClose }: FinanceFormProps) {
           ))}
         </div>
 
-        {/* ✅ Нийт дүн — автоматаар тооцооно, readonly */}
-        <div className="mb-4">
-          <label className="block text-[10px] font-black text-white/30 uppercase tracking-widest mb-2">
-            Нийт дүн
-          </label>
-          <div
-            className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl border transition-all duration-300 ${
-              totalAmount > 0
-                ? isIncome
-                  ? "bg-emerald-400/8 border-emerald-400/30"
-                  : "bg-rose-400/8 border-rose-400/30"
-                : "bg-white/[0.03] border-white/[0.06]"
-            }`}
-          >
-            <span
-              className={`font-black text-lg transition-colors duration-500 ${
-                totalAmount > 0
-                  ? isIncome
-                    ? "text-emerald-400"
-                    : "text-rose-400"
-                  : "text-white/20"
-              }`}
+            <button
+              type="submit"
+              disabled={saving}
+              className="px-3 py-1 bg-blue-500 text-white rounded disabled:opacity-60"
             >
-              ₮
-            </span>
-            <span
-              className={`font-black text-2xl tracking-tight transition-all duration-300 ${
-                totalAmount > 0 ? "text-[#eeeef5]" : "text-white/20"
-              }`}
-            >
-              {totalAmount > 0 ? totalAmount.toLocaleString() : "0"}
-            </span>
-            {totalAmount > 0 && (
-              <span className="ml-auto text-[11px] text-white/30 font-semibold">
-                {selectedCategories.length} ангилал
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Description */}
-        <div className="mb-4">
-          <label className="block text-[10px] font-black text-white/30 uppercase tracking-widest mb-2">
-            Тайлбар
-          </label>
-          <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm opacity-40">
-              ✏️
-            </span>
-            <input
-              type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Тайлбар оруулах..."
-              className={`w-full bg-white/[0.05] border border-white/[0.08] rounded-2xl pl-10 pr-4 py-3.5 text-sm font-semibold text-[#eeeef5] outline-none ring-4 ring-transparent transition-all duration-200 ${focusRing} placeholder:text-white/20`}
-            />
-          </div>
-        </div>
-
-        {/* Categories */}
-        <div className="mb-4">
-          <div className="flex items-center justify-between mb-2">
-            <label className="block text-[10px] font-black text-white/30 uppercase tracking-widest">
-              Ангилал
-            </label>
-            {selectedCategories.length > 0 && (
-              <span
-                className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                  isIncome
-                    ? "bg-emerald-400/15 text-emerald-400"
-                    : "bg-rose-400/15 text-rose-400"
-                }`}
-              >
-                {selectedCategories.length} сонгогдсон
-              </span>
-            )}
-          </div>
-
-          {/* Category grid */}
-          <div className="grid grid-cols-3 gap-2 mb-3">
-            {CATEGORIES[type].map(({ emoji, label }) => {
-              const selected = !!categoryDetails[label];
-              const detail = categoryDetails[label];
-              return (
-                <button
-                  key={label}
-                  onClick={() => toggleCategory(label)}
-                  className={`relative flex flex-col items-center gap-1 py-3 px-2 rounded-xl border text-xs font-bold transition-all duration-200 ${
-                    selected
-                      ? isIncome
-                        ? "bg-emerald-400/15 border-emerald-400/40 text-emerald-300 scale-[1.03]"
-                        : "bg-rose-400/15 border-rose-400/40 text-rose-300 scale-[1.03]"
-                      : "bg-white/[0.03] border-white/[0.06] text-white/40 hover:bg-white/[0.07] hover:text-white/70"
-                  }`}
-                >
-                  {selected && (
-                    <span
-                      className={`absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full text-[9px] flex items-center justify-center font-black ${
-                        isIncome
-                          ? "bg-emerald-400 text-[#041a0a]"
-                          : "bg-rose-400 text-white"
-                      }`}
-                    >
-                      ✓
-                    </span>
-                  )}
-                  <span className="text-lg">{emoji}</span>
-                  <span className="leading-tight text-center">{label}</span>
-                  {/* ✅ Дүн бөглөсөн бол жижигхэн харуулна */}
-                  {selected && detail?.amount && (
-                    <span
-                      className={`text-[10px] font-black mt-0.5 ${isIncome ? "text-emerald-400" : "text-rose-400"}`}
-                    >
-                      ₮{parseFloat(detail.amount).toLocaleString()}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
+              {saving ? "Хадгалж байна..." : "Хадгалах"}
+            </button>
           </div>
 
           {/* Accordion list */}

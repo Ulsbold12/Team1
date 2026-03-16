@@ -6,10 +6,26 @@ import FileUpload from "./_components/FileUpload";
 import { GraphicSection } from "./_components/GraphicSection";
 import { HeadSection } from "./_components/HeadSection";
 import FinanceForm from "./_components/FinanceForm";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 export interface AiCategory {
   name: string;
   total: number;
+}
+
+export interface AiMonthly {
+  month: string;
+  income: AiCategory[];
+  expenses: AiCategory[];
+}
+
+export interface AiResult {
+  summary: string;
+  monthly: AiMonthly[];
+  income: AiCategory[];
+  expenses: AiCategory[];
+  tips: string[];
 }
 
 export default function Finance() {
