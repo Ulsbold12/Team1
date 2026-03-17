@@ -1,4 +1,7 @@
 "use client";
+//this page is for superadmin control.
+//access type includes create, read, update, delete. full control over the database. but cannot read senstive finance data of organizations.
+//control reach -> only on general info drelated to system.
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

@@ -21,7 +21,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-
+import { useUser } from "@clerk/nextjs";
 const navItems = [
   { label: "Нүүр", icon: Home, href: "/dashboard" },
   { label: "Санхүү AI", icon: Landmark, href: "/finance" },
@@ -32,7 +32,7 @@ const navItems = [
 
 export function AppSidebar() {
   const pathname = usePathname();
-
+  const { user } = useUser();
   return (
     <Sidebar>
       <SidebarHeader className="p-6">
@@ -65,7 +65,8 @@ export function AppSidebar() {
                         : pathname === item.href ||
                           pathname.startsWith(item.href + "/")
                     }
-                    className="data-[active=true]:bg-[#5048e5]/10 data-[active=true]:text-[#5048e5]">
+                    className="data-[active=true]:bg-[#5048e5]/10 data-[active=true]:text-[#5048e5]"
+                  >
                     <Link href={item.href}>
                       <item.icon />
                       <span>{item.label}</span>
@@ -88,7 +89,9 @@ export function AppSidebar() {
             />
           </div>
           <div className="flex flex-col overflow-hidden">
-            <p className="text-xs font-bold truncate">Алекс Морган</p>
+            <p className="text-xs font-bold truncate">
+              {user?.firstName} {user?.lastName}
+            </p>
             <p className="text-[10px] text-sidebar-foreground/50 truncate">
               Про Данс
             </p>

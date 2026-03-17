@@ -100,7 +100,7 @@ export default function OnboardingPage() {
 
         {existing === true && (
           <>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleRegisterMember} className="space-y-4">
               <div>
                 <label className="text-sm font-medium">Компани ID *</label>
                 <input
