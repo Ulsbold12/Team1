@@ -32,26 +32,46 @@ const AdminPage = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col justify-center items-center">
-      <div className="rounded-2xl shadow-xl shadow-[#5048e5] bg-[#dddbff] p-4 flex flex-col gap-4">
-        <h1 className="text-2xl font-bold">Welcome back!</h1>
-        <p>Enter your credentials to access the Super Admin Page.</p>
+    <div className="w-full h-screen flex flex-col justify-center items-center bg-muted/30">
+      <div className="bg-card border border-border rounded-xl shadow-sm p-8 flex flex-col gap-6 w-full max-w-sm">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-[#5048e5] flex items-center justify-center text-white shrink-0">
+            <span className="text-lg font-bold">S</span>
+          </div>
+          <div>
+            <h1 className="text-lg font-bold text-foreground leading-none">Super Admin</h1>
+            <p className="text-xs text-muted-foreground mt-0.5">Flow AI</p>
+          </div>
+        </div>
 
-        <div className="flex flex-col gap-2">
+        <div>
+          <h2 className="text-2xl font-black text-foreground tracking-tight">Welcome back</h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            Enter your credentials to access the Super Admin panel.
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-3">
           <Input
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Your admin username"
+            placeholder="Admin username"
+            className="bg-muted border-none focus-visible:ring-[#5048e5]/50"
           />
           <Input
             type="password"
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            className="bg-muted border-none focus-visible:ring-[#5048e5]/50"
           />
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
-          <Button variant={"ghost"} onClick={handleClick} disabled={loading}>
-            {loading ? "Loading..." : "Next"}
+          <Button
+            onClick={handleClick}
+            disabled={loading}
+            className="bg-[#5048e5] hover:bg-[#4038d4] text-white w-full mt-1"
+          >
+            {loading ? "Loading..." : "Sign in"}
           </Button>
         </div>
       </div>
