@@ -45,19 +45,47 @@ export const getAnalyses: RequestHandler = async (req, res) => {
 export const createFinance: RequestHandler = async (req, res) => {
   const orgId = req.clerkUserId!;
   const { month, balance, revenue, expense, netProfit, margin } = req.body;
-  const computedNetProfit = netProfit ?? ((revenue ?? 0) - (expense ?? 0));
+
+  // Сарын эхний өдрөөр normalize хийнэ (2025-03-15 → 2025-03-01)
+  const date = new Date(month);
+  const monthStart = new Date(date.getFullYear(), date.getMonth(), 1);
+  const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 1);
+
   try {
-    const record = await prisma.finance.create({
-      data: {
-        orgId,
-        month: new Date(month),
-        balance,
-        revenue,
-        expense,
-        netProfit: computedNetProfit,
-        margin,
-      },
+    const existing = await prisma.finance.findFirst({
+      where: { orgId, month: { gte: monthStart, lt: monthEnd } },
     });
+
+    let record;
+    if (existing) {
+      // Ижил сар байвал нийлүүлнэ
+      const newRevenue = (existing.revenue ?? 0) + (revenue ?? 0);
+      const newExpense = (existing.expense ?? 0) + (expense ?? 0);
+      record = await prisma.finance.update({
+        where: { id: existing.id },
+        data: {
+          revenue: newRevenue,
+          expense: newExpense,
+          netProfit: netProfit ?? (newRevenue - newExpense),
+          ...(balance != null && { balance }),
+          ...(margin != null && { margin }),
+        },
+      });
+    } else {
+      // Шинэ сар бол үүсгэнэ
+      record = await prisma.finance.create({
+        data: {
+          orgId,
+          month: monthStart,
+          balance,
+          revenue,
+          expense,
+          netProfit: netProfit ?? ((revenue ?? 0) - (expense ?? 0)),
+          margin,
+        },
+      });
+    }
+
     return res.status(201).json({ success: true, data: record });
   } catch (e) {
     return res.status(500).json({ success: false, message: e });

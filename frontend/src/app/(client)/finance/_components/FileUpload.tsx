@@ -514,9 +514,9 @@ export default function FileUpload({ onResult }: FileUploadProps) {
             : [];
 
       for (const m of monthly) {
-        const revenue = (m.income ?? []).reduce((s: number, c: { total: number }) => s + (c.total ?? 0), 0);
-        const expense = (m.expenses ?? []).reduce((s: number, c: { total: number }) => s + (c.total ?? 0), 0);
-        const netProfit = revenue - expense;
+        const revenue = (m as any).revenue ?? (m as any).income ?? 0;
+        const expense = (m as any).expense ?? (m as any).expenses ?? 0;
+        const netProfit = (m as any).netProfit ?? (revenue - expense);
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/finance`, {
           method: "POST",
           headers: authHeader,

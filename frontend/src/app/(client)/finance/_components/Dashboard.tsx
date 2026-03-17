@@ -37,6 +37,28 @@ export const Dashboard = ({ aiResult }: { aiResult?: any }) => {
   const [revenue, setRevenue] = useState(0);
   const [expense, setExpense] = useState(0);
 
+  useEffect(() => {
+    async function fetchFinance() {
+      try {
+        const token = await getToken();
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/finance`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        if (data.success && Array.isArray(data.data)) {
+          setRecords(data.data);
+          const totalRevenue = data.data.reduce((s: number, r: FinanceRecord) => s + (r.revenue ?? 0), 0);
+          const totalExpense = data.data.reduce((s: number, r: FinanceRecord) => s + (r.expense ?? 0), 0);
+          setRevenue(totalRevenue);
+          setExpense(totalExpense);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    fetchFinance();
+  }, []);
+
   const displayRevenue = aiResult?.income
     ? aiResult.income.reduce((s: number, c: AiCategory) => s + (c.total ?? 0), 0)
     : revenue;

@@ -7,6 +7,7 @@ import { registerPatron } from "./routes/client";
 import { getFinance, createFinance, saveAnalysis, getAnalyses } from "./routes/finance";
 import { getPosts, createPost } from "./routes/posts";
 import { Chat } from "./routes/ai/chat";
+import { getCompany, updateCompany } from "./routes/company/updateOrganization";
 const app = express();
 app.use(cors({
   origin: process.env.FRONTEND_URL || "http://localhost:3000",
@@ -25,6 +26,8 @@ app.get("/api/finance/analysis", requireAuth, getAnalyses);
 app.post("/api/finance/analysis", requireAuth, saveAnalysis);
 app.get("/api/posts", requireAuth, getPosts);
 app.post("/api/posts", requireAuth, createPost);
+app.get("/api/company", requireAuth, getCompany);
+app.put("/api/company", requireAuth, updateCompany);
 
 
 const PORT = 8888;
