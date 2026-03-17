@@ -4,17 +4,25 @@ import "dotenv/config";
 import { clerkMiddleware } from "@clerk/express";
 import { requireAuth } from "./middleware/requireAuth";
 import { registerPatron, registerMember } from "./routes/client";
-import { getFinance, createFinance, saveAnalysis, getAnalyses } from "./routes/finance";
+import {
+  getFinance,
+  createFinance,
+  saveAnalysis,
+  getAnalyses,
+} from "./routes/finance";
 import { getPosts, createPost } from "./routes/posts";
 import { Chat } from "./routes/ai/chat";
 import { getCompanyData, getUsersData, adminAccess } from "./routes/admin";
 import { AdminAuth } from "./middleware/adminAuth";
+import { registerOrganization } from "./routes/client/regitserOrganization";
 
 const app = express();
-app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 app.post("/api/chat", Chat);
@@ -22,7 +30,8 @@ app.post("/api/chat", Chat);
 app.use(clerkMiddleware());
 
 app.post("/api/onboarding", requireAuth, registerPatron);
-app.post("/api/onboarding/org", requireAuth, registerMember); //the route to register member under company name.
+app.post("/api/onboarding/member", requireAuth, registerMember);
+app.post("/api/onboarding/org", requireAuth, registerOrganization);
 
 app.get("/api/finance", requireAuth, getFinance);
 app.post("/api/finance", requireAuth, createFinance);
@@ -31,9 +40,9 @@ app.post("/api/finance/analysis", requireAuth, saveAnalysis);
 app.get("/api/posts", requireAuth, getPosts);
 app.post("/api/posts", requireAuth, createPost);
 
-app.post('/api/admin', adminAccess)
-app.get('/api/admin/companies', AdminAuth, getCompanyData)
-app.get('/api/admin/clients', AdminAuth, getUsersData)
+app.post("/api/admin", adminAccess);
+app.get("/api/admin/companies", AdminAuth, getCompanyData);
+app.get("/api/admin/clients", AdminAuth, getUsersData);
 
 const PORT = 8888;
 app.listen(PORT, () => {

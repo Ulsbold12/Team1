@@ -32,6 +32,7 @@ export default function OnboardingPage() {
     role: "",
     optKey: "",
   });
+
   const { user } = useUser();
 
   async function handleSubmit(e: React.FormEvent) {
@@ -41,7 +42,7 @@ export default function OnboardingPage() {
     const token = await getToken();
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/onboarding`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/onboarding/org`,
       {
         method: "POST",
         headers: {
@@ -73,7 +74,7 @@ export default function OnboardingPage() {
     setLoading(true);
     const token = await getToken();
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/onboarding/org`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/onboarding/member`,
       {
         method: "POST",
         headers: {
@@ -87,6 +88,7 @@ export default function OnboardingPage() {
         }),
       },
     );
+    console.log(res)
   }
   return (
     <div className="relative flex min-h-screen items-center justify-center">
