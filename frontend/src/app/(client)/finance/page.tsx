@@ -59,7 +59,7 @@ export default function Finance() {
       <FileUpload onResult={(result) => setAiResult(result)} />
       <Dashboard aiResult={aiResult} />
       <AISection aiResult={aiResult} />
-      <GraphicSection aiResult={aiResult} />
+      {/* <GraphicSection aiResult={aiResult} /> */}
     </div>
   );
 }
