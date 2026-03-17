@@ -24,7 +24,7 @@ export const registerPatron: RequestHandler = async (req, res) => {
     const result = await prisma.$transaction(async (tx) => {
       const organization = await tx.organization.create({
         data: {
-          id: clerkId, // Clerk user ID = Organization ID
+          id: clerkId, //
           name: data.name,
           industry: data.industry,
           createdAt: new Date(),

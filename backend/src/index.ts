@@ -3,7 +3,7 @@ import cors from "cors";
 import "dotenv/config";
 import { clerkMiddleware } from "@clerk/express";
 import { requireAuth } from "./middleware/requireAuth";
-import { registerPatron } from "./routes/client";
+import { registerPatron, registerMember } from "./routes/client";
 import { getFinance, createFinance, saveAnalysis, getAnalyses } from "./routes/finance";
 import { getPosts, createPost } from "./routes/posts";
 import { Chat } from "./routes/ai/chat";
@@ -22,6 +22,8 @@ app.post("/api/chat", Chat);
 app.use(clerkMiddleware());
 
 app.post("/api/onboarding", requireAuth, registerPatron);
+app.post("/api/onboarding/org", requireAuth, registerMember); //the route to register member under company name.
+
 app.get("/api/finance", requireAuth, getFinance);
 app.post("/api/finance", requireAuth, createFinance);
 app.get("/api/finance/analysis", requireAuth, getAnalyses);

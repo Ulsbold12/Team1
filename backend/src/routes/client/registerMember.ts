@@ -1,13 +1,15 @@
 import type { RequestHandler } from "express";
 import prisma from "../../lib/prisma";
+import { clerkClient } from "../../lib/clerkClient";
 export const registerMember: RequestHandler = async (req, res) => {
-  const { orgId } = req.headers;
-  const { clerkId } = req.headers;
+  const { orgId } = req.body;
+
   const data = req.body;
   if (!orgId) {
     return res.status(500).json({ message: "organizationId not found" });
   }
   try {
+    const  clerkId  = req.clerkUserId;
     const belongingOrg = await prisma.organization.findUnique({
       where: { id: orgId as string },
     });

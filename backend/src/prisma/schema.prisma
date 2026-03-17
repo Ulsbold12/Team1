@@ -37,8 +37,8 @@ enum Industry {
 
 model Client {
   id         String           @id @unique
-  ofOrg      Organization     @relation(fields: [orgId], references: [id])
-  orgId      String
+  ofOrg      Organization?    @relation(fields: [orgId], references: [id])
+  orgId      String?
   role       MemberAccessType
   email      String
   firstname  String
