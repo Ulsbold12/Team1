@@ -468,6 +468,74 @@ export default function FileUpload({ onResult }: FileUploadProps) {
         "Content-type": "application/json",
         Authorization: `Bearer ${token}`,
       };
+
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/finance/analysis`, {
+        method: "POST",
+        headers: authHeader,
+        body: JSON.stringify({
+          summary: result.summary,
+          categories: result.categories,
+          monthly: result.monthly ?? null,
+          tips: result.tips,
+        }),
+      });
+
+      const monthly: {
+        month: string;
+        revenue: number;
+        expense: number;
+        netProfit: number;
+      }[] =
+        Array.isArray(result.monthly) && result.monthly.length > 0
+          ? result.monthly
+          : result.revenue != null || result.expense != null
+            ? [
+                {
+                  month: new Date().toISOString(),
+                  revenue: result.revenue ?? 0,
+                  expense: result.expense ?? 0,
+                  netProfit:
+                    result.netProfit ??
+                    (result.revenue ?? 0) - (result.expense ?? 0),
+                },
+              ]
+            : [];
+
+      for (const m of monthly) {
+        const raw = m as any;
+        // income/expenses can be arrays (from AI) or plain numbers
+        const revenue =
+          typeof raw.revenue === "number"
+            ? raw.revenue
+            : Array.isArray(raw.income)
+              ? (raw.income as { total: number }[]).reduce((s, c) => s + (c.total ?? 0), 0)
+              : typeof raw.income === "number"
+                ? raw.income
+                : 0;
+        const expense =
+          typeof raw.expense === "number"
+            ? raw.expense
+            : Array.isArray(raw.expenses)
+              ? (raw.expenses as { total: number }[]).reduce((s, c) => s + (c.total ?? 0), 0)
+              : typeof raw.expenses === "number"
+                ? raw.expenses
+                : 0;
+        const netProfit = raw.netProfit ?? (revenue - expense);
+        // "2025-01" → "2025-01-01" so Date parses correctly
+        const monthStr = typeof raw.month === "string" && raw.month.length === 7
+          ? raw.month + "-01"
+          : raw.month;
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/finance`, {
+          method: "POST",
+          headers: authHeader,
+          body: JSON.stringify({
+            month: new Date(monthStr).toISOString(),
+            revenue,
+            expense,
+            netProfit,
+          }),
+        });
+      }
     } catch (error) {
       console.error("Алдаа гарлаа:", error);
     } finally {
