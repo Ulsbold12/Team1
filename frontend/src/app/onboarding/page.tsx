@@ -35,6 +35,17 @@ export default function OnboardingPage() {
 
   const { user } = useUser();
 
+  const redirecting = useRef(false);
+
+  useEffect(() => {
+    if (user?.publicMetadata.onboardingComplete && !redirecting.current) {
+      redirecting.current = true;
+      session?.reload().then(() => {
+        window.location.href = "/dashboard";
+      });
+    }
+  }, [user, session]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -65,6 +76,7 @@ export default function OnboardingPage() {
     if (res.ok) {
       await session?.reload();
       window.location.href = "/dashboard";
+    } else alert(`Алдаа: ${JSON.stringify(data)}`);
     } else alert(`Алдаа: ${JSON.stringify(data)}`);
     setLoading(false);
   }

@@ -16,6 +16,7 @@ import { getCompanyData, getUsersData, adminAccess } from "./routes/admin";
 import { AdminAuth } from "./middleware/adminAuth";
 import { registerOrganization } from "./routes/client/regitserOrganization";
 
+import { getCompany, updateCompany } from "./routes/company/updateOrganization";
 const app = express();
 app.use(
   cors({
@@ -41,6 +42,8 @@ app.get("/api/finance/analysis", requireAuth, getAnalyses);
 app.post("/api/finance/analysis", requireAuth, saveAnalysis);
 app.get("/api/posts", requireAuth, getPosts);
 app.post("/api/posts", requireAuth, createPost);
+app.get("/api/company", requireAuth, getCompany);
+app.put("/api/company", requireAuth, updateCompany);
 
 app.post("/api/admin", adminAccess);
 app.get("/api/admin/companies", AdminAuth, getCompanyData);
