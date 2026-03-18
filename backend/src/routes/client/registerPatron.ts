@@ -21,15 +21,16 @@ export const registerPatron: RequestHandler = async (req, res) => {
       return res.status(200).json({ success: true, data: existingUser });
     }
 
-    // const result = await prisma.$transaction(async (tx) => {
-    // const organization = await tx.organization.create({
-    //   data: {
-    //     id: clerkId, //
-    //     name: data.name,
-    //     industry: data.industry,
-    //     createdAt: new Date(),
-    //   },
-    // });
+    const result = await prisma.$transaction(async (tx) => {
+      const organization = await tx.organization.create({
+        data: {
+          id: clerkId,
+          name: data.name,
+          industry: data.industry,
+          patronage: "BASIC",
+          createdAt: new Date(),
+        },
+      });
 
     const newClient = await prisma.client.create({
       data: {
