@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { UserPlus, Settings, Activity, Users } from "lucide-react";
 import { loginAdmin } from "@/lib/adminApi";
 import { SectionHeader } from "@/app/(client)/dashboard/_components/dashboard/SectionHeader";
+import { useAuth } from "@clerk/nextjs";
 
 const AdminPage = () => {
   const router = useRouter();
@@ -15,23 +16,24 @@ const AdminPage = () => {
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-
-  const handleClick = async () => {
+  const { getToken } = useAuth();
+  const handleGetCode = async () => {
+    const token = await getToken();
     try {
-      setLoading(true);
-      setError("");
-      const res = await loginAdmin(username, password);
-      console.log(res);
-      if (res.data.success) {
-        const token = res.data.res;
-        localStorage.setItem("accessToken", token);
-        alert("Youkoso, Supa-Dupa Admin-Sama!");
-        router.push("/admin/dashboard");
-      }
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/onboarding/getcode`,
+        {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      const data = await res.json();
+      console.log(data);
     } catch (e) {
-      setError("Invalid username or password");
-    } finally {
-      setLoading(false);
+      console.log(e);
     }
   };
 
@@ -52,7 +54,12 @@ const AdminPage = () => {
           <p className="text-sm text-muted-foreground">
             Authorize new member registry under your organization
           </p>
-          <Button className="bg-[#5048e5] hover:bg-[#4038d4] text-white">
+          <Button
+            className="bg-[#5048e5] hover:bg-[#4038d4] text-white"
+            onClick={() => {
+              handleGetCode();
+            }}
+          >
             Get Code
           </Button>
         </div>
