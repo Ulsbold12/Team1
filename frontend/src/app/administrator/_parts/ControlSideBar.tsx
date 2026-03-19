@@ -17,11 +17,11 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 const navItems = [
-  { label: "Хяналтын Сбмбр", icon: LayoutDashboard, href: "/admin/dashboard" },
-  { label: "Компаниуд", icon: TableProperties, href: "/admin/companies" },
-  { label: "Хэрэглэгчид", icon: Users, href: "/admin/users" },
-  { label: "Админ", icon: ShieldUser, href: "/admin/about-me" },
-  { label: "Тохиргоо", icon: Settings, href: "/admin/settings" },
+  { label: "Хяналтын Сбмбр", icon: LayoutDashboard, href: "/administrator/dashboard" },
+  { label: "Компаниуд", icon: TableProperties, href: "/administrator/companies" },
+  { label: "Хэрэглэгчид", icon: Users, href: "/administrator/users" },
+  { label: "Админ", icon: ShieldUser, href: "/administrator/about-me" },
+  { label: "Тохиргоо", icon: Settings, href: "/administrator/settings" },
 ];
 export function ControlSideBar() {
   const pathname = usePathname();

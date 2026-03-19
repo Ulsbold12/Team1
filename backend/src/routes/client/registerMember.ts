@@ -5,10 +5,18 @@ import { customAlphabet } from "nanoid";
 export const getCodeForMember: RequestHandler = async (req, res) => {
   try {
     const clerkId = req.clerkUserId;
-    const { orgId } = req.body; 
+    const org = await prisma.client.findFirst({
+      where: { id: clerkId },
+      select: { orgId: true },
+    });
+    if (!clerkId || !org) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Info not found" });
+    }
+    const { orgId } = org;
 
     if (!clerkId || !orgId) {
-
       return res.status(404).json({ message: "ID issue" });
     }
 

@@ -25,7 +25,7 @@ const AdminPage = () => {
         const token = res.data.res;
         localStorage.setItem("accessToken", token);
         alert("Youkoso, Supa-Dupa Admin-Sama!");
-        router.push("/admin/dashboard");
+        router.push("/administrator/dashboard");
       }
     } catch (e) {
       setError("Invalid username or password");

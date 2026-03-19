@@ -1,10 +1,7 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
-import {
-  clerkMiddleware,
-
-} from "@clerk/express";
+import { clerkMiddleware } from "@clerk/express";
 import { requireAuth } from "./middleware/requireAuth";
 import {
   registerPatron,
@@ -25,6 +22,8 @@ import { AdminAuth } from "./middleware/adminAuth";
 import { registerOrganization } from "./routes/client/regitserOrganization";
 
 import { getCompany, updateCompany } from "./routes/company/updateOrganization";
+import { UpdateMember, DeleteMember, getMembersInfo } from "./routes/company";
+
 const app = express();
 app.use(
   cors({
@@ -37,16 +36,22 @@ app.use(express.json());
 app.post("/api/chat", Chat);
 
 app.use(clerkMiddleware());
-
+//onboarding routes
 app.post("/api/onboarding", requireAuth, registerPatron);
 app.post("/api/onboarding/member", requireAuth, registerMember);
 app.get("/api/onboarding/getcode", requireAuth, getCodeForMember);
 app.post("/api/onboarding/org", requireAuth, registerOrganization);
+//org executive personnel routes
+app.get("/api/company/members", requireAuth, getMembersInfo);
+app.delete("api/company/members", requireAuth, DeleteMember);
+app.post("/api/company/members", requireAuth, UpdateMember);
+//finance routes
 
 app.get("/api/finance", requireAuth, getFinance);
 app.post("/api/finance", requireAuth, createFinance);
 app.get("/api/finance/analysis", requireAuth, getAnalyses);
 app.post("/api/finance/analysis", requireAuth, saveAnalysis);
+//automation marketin routes?
 app.get("/api/posts", requireAuth, getPosts);
 app.post("/api/posts", requireAuth, createPost);
 app.get("/api/company", requireAuth, getCompany);

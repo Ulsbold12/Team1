@@ -48,6 +48,10 @@ export interface OrganizationInterface {
   financeAnalyses?: FAnalysesType[];
   posts?: Post[];
   createdAt: Date;
+  emailAddress: Date;
+  description: String;
+  patronage: "BASIC" | "PRO";
+  PhoneNumber: String;
 }
 export type AdminType = {
   id: string;
@@ -56,4 +60,9 @@ export type AdminType = {
   password?: string;
   createdAt: Date;
   lastAccessTime: Date;
+};
+
+export type InvCode = {
+  optKey: Number;
+  expiresAt: Date;
 };

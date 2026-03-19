@@ -1,14 +1,18 @@
 import type { RequestHandler } from "express";
 import prisma from "../../lib/prisma";
 
-
 export const getMembersInfo: RequestHandler = async (req, res) => {
   try {
     const clerkId = req.clerkUserId;
-    const { orgId } = req.body;
-    if (!clerkId || !orgId) {
+    const org = await prisma.client.findFirst({
+      where: { id: clerkId },
+      select: { orgId: true },
+    });
+
+    if (!clerkId || !org) {
       return res.status(404).json({ message: "info not matchable" });
     }
+    const { orgId } = org;
     const members = await prisma.client.findMany({
       where: {
         orgId: orgId as string,
