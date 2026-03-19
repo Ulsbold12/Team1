@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useAuth } from "@clerk/nextjs";
 import ContentForm, { GeneratedPreview } from "./components/ContentForm";
 import Calendar from "./components/Calendar";
 import PostPreview from "./components/PostPreview";

@@ -7,7 +7,7 @@ function requireApiKey(req: Request, res: Response, next: Function) {
   const key = Array.isArray(req.headers["x-api-key"])
     ? req.headers["x-api-key"][0]
     : req.headers["x-api-key"];
-  if (!process.env.N8N_API_KEY || key !== process.env.N8N_API_KEY) {
+if (!process.env.N8N_API_KEY || key !== process.env.N8N_API_KEY) {
     return res.status(401).json({ error: "Unauthorized" });
   }
   next();
@@ -112,7 +112,8 @@ export const publishNow: RequestHandler = async (req, res) => {
 
     return res.json({ success: true });
   } catch (e) {
-    return res.status(500).json({ success: false, message: e });
+    console.error("createPost алдаа:", e);
+    return res.status(500).json({ success: false, message: String(e) });
   }
 };
 
