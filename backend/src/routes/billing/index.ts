@@ -10,7 +10,7 @@ function getStripe() {
 // GET /api/billing/status
 export async function getBillingStatus(req: Request, res: Response) {
   try {
-    const userId = (req as any).userId;
+    const userId = req.clerkUserId;
     const client = await prisma.client.findUnique({ where: { id: userId } });
     if (!client?.orgId) return res.json({ success: true, patronage: "BASIC" });
 
@@ -26,12 +26,13 @@ export async function getBillingStatus(req: Request, res: Response) {
 export async function createCheckout(req: Request, res: Response) {
   try {
     const stripe = getStripe();
-    const userId = (req as any).userId;
+    const userId = req.clerkUserId;
     const client = await prisma.client.findUnique({ where: { id: userId } });
-    if (!client?.orgId) return res.status(400).json({ error: "Org not found" });
+    if (!client) return res.status(400).json({ error: "Client not found", userId });
+    if (!client.orgId) return res.status(400).json({ error: "Client has no orgId", userId });
 
     const org = await prisma.organization.findUnique({ where: { id: client.orgId } });
-    if (!org) return res.status(400).json({ error: "Org not found" });
+    if (!org) return res.status(400).json({ error: "Org not found", orgId: client.orgId });
 
     let customerId = org.stripeCustomerId;
     if (!customerId) {
@@ -110,7 +111,7 @@ export async function stripeWebhook(req: Request, res: Response) {
 export async function createPortal(req: Request, res: Response) {
   try {
     const stripe = getStripe();
-    const userId = (req as any).userId;
+    const userId = req.clerkUserId;
     const client = await prisma.client.findUnique({ where: { id: userId } });
     if (!client?.orgId) return res.status(400).json({ error: "Org not found" });
 

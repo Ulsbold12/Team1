@@ -17,7 +17,7 @@ export const addFinance: RequestHandler = async (req, res) => {
         .json({ success: false, message: "org failed to load" });
     }
     const updateOrg = await prisma.organization.update({
-      select: { id: orgId as string },
+      where: { id: orgId as string },
       data: {
         financeData: {
           update: financeData,
