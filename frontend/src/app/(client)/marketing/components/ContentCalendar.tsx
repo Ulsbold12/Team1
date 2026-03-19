@@ -88,13 +88,13 @@ export function ContentCalendar({ posts, visiblePosts, images, onSaved, onReset 
                     onClick={() => handleDayClick(day)}
                     className={[
                       "flex flex-col items-center justify-center rounded-lg py-1 text-sm transition-colors",
-                      isSelected ? "bg-blue-600 text-white font-semibold"
-                        : isToday ? "bg-blue-50 text-blue-700 font-semibold"
+                      isSelected ? "bg-[#5048e5] text-white font-semibold"
+                        : isToday ? "bg-[#5048e5]/10 text-[#5048e5] font-semibold"
                         : "hover:bg-slate-100 text-slate-700",
                     ].join(" ")}>
                     <span>{day}</span>
                     {hasPost && (
-                      <span className={["mt-0.5 size-1.5 rounded-full", isSelected ? "bg-white" : "bg-blue-500"].join(" ")} />
+                      <span className={["mt-0.5 size-1.5 rounded-full", isSelected ? "bg-white" : "bg-[#5048e5]"].join(" ")} />
                     )}
                   </button>
                 );

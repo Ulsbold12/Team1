@@ -76,7 +76,7 @@ export default function PostPreview({
             Постын дэлгэрэнгүй
           </span>
           {preview && (
-            <span className="text-[9px] font-bold px-2 py-0.5 bg-indigo-100 text-indigo-600 rounded-full tracking-wide">
+            <span className="text-[9px] font-bold px-2 py-0.5 bg-[#5048e5]/10 text-[#5048e5] rounded-full tracking-wide">
               АВТО ПОСТ
             </span>
           )}
@@ -84,7 +84,7 @@ export default function PostPreview({
         {preview && (
           <button
             onClick={copy}
-            className="text-[11px] px-2.5 py-1 rounded-lg border border-gray-200 text-gray-500 hover:border-indigo-300 hover:text-indigo-600 transition-all"
+            className="text-[11px] px-2.5 py-1 rounded-lg border border-gray-200 text-gray-500 hover:border-[#5048e5]/40 hover:text-[#5048e5] transition-all"
           >
             {copied ? "✓ Хуулагдлаа" : "Хуулах"}
           </button>
@@ -131,7 +131,7 @@ export default function PostPreview({
                 {autoPost && (
                   <div className="ml-auto flex items-center gap-1.5">
                     <span className="text-[10px] text-gray-400">Авто пост</span>
-                    <div className="w-8 h-4 bg-indigo-500 rounded-full flex items-center justify-end pr-0.5">
+                    <div className="w-8 h-4 bg-[#5048e5] rounded-full flex items-center justify-end pr-0.5">
                       <div className="w-3 h-3 bg-white rounded-full shadow" />
                     </div>
                   </div>
@@ -207,7 +207,7 @@ export default function PostPreview({
                     strokeLinecap="round"
                   />
                 </svg>
-                <span className="font-semibold text-indigo-600">
+                <span className="font-semibold text-[#5048e5]">
                   {scheduledDate}-р сарын {scheduledTime}-д автоматаар
                   нийтлэгдэнэ
                 </span>
@@ -227,14 +227,14 @@ export default function PostPreview({
             </div>
 
             {/* AI advice */}
-            <div className="bg-blue-50 border border-blue-100 rounded-xl p-3">
+            <div className="bg-[#5048e5]/5 border border-[#5048e5]/15 rounded-xl p-3">
               <div className="flex items-center gap-1.5 mb-1.5">
                 <span className="text-sm">ℹ️</span>
-                <span className="text-[11px] font-bold text-blue-700">
+                <span className="text-[11px] font-bold text-[#5048e5]">
                   AI зөвлөгөө
                 </span>
               </div>
-              <p className="text-[11px] text-blue-600 leading-relaxed">
+              <p className="text-[11px] text-[#5048e5]/80 leading-relaxed">
                 {aiAdvice}
               </p>
             </div>
@@ -250,7 +250,7 @@ export default function PostPreview({
         <button
           className="flex-1 py-2.5 rounded-xl text-[12px] font-bold text-white flex items-center justify-center gap-1.5"
           style={{
-            background: "linear-gradient(135deg, #7C3AED 0%, #6366f1 100%)",
+            background: "#5048e5",
           }}
         >
           <svg width="11" height="11" viewBox="0 0 24 24" fill="white">

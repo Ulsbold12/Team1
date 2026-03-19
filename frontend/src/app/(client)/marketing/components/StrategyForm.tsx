@@ -89,11 +89,11 @@ export function StrategyForm({
             onDrop={(e) => { e.preventDefault(); setDragging(false); onImageFiles(e.dataTransfer.files); }}
             className={[
               "flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed p-5 cursor-pointer transition-colors text-center",
-              dragging ? "border-blue-400 bg-blue-50" : "border-slate-200 hover:border-blue-300 hover:bg-slate-50",
+              dragging ? "border-[#5048e5] bg-[#5048e5]/5" : "border-slate-200 hover:border-[#5048e5]/40 hover:bg-slate-50",
             ].join(" ")}>
             <ImagePlus className="size-6 text-slate-400" />
             <p className="text-xs text-slate-500">
-              Зураг чирж тавих эсвэл <span className="text-blue-600 font-medium">сонгох</span>
+              Зураг чирж тавих эсвэл <span className="text-[#5048e5] font-medium">сонгох</span>
             </p>
             <input
               ref={fileInputRef}
@@ -129,18 +129,18 @@ export function StrategyForm({
         </div>
 
         <Button
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+          className="w-full bg-[#5048e5] hover:bg-[#4038d4] text-white"
           onClick={onGenerate}
           disabled={loading}>
           {loading ? (loadingStep ?? "Үүсгэж байна...") : "Контент стратеги гаргах"}
         </Button>
 
         {advice && (
-          <div className="flex gap-3 rounded-xl bg-blue-50 border border-blue-100 p-4 mt-1">
-            <Lightbulb className="size-5 text-blue-500 shrink-0 mt-0.5" />
+          <div className="flex gap-3 rounded-xl bg-[#5048e5]/5 border border-[#5048e5]/15 p-4 mt-1">
+            <Lightbulb className="size-5 text-[#5048e5] shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-semibold text-blue-700 mb-1">AI зөвлөгөө</p>
-              <p className="text-sm text-blue-800 leading-relaxed">{advice}</p>
+              <p className="text-sm font-semibold text-[#5048e5] mb-1">AI зөвлөгөө</p>
+              <p className="text-sm text-[#5048e5]/80 leading-relaxed">{advice}</p>
             </div>
           </div>
         )}

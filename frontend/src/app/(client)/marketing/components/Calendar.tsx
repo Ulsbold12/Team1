@@ -136,7 +136,7 @@ export default function Calendar({
               key={idx}
               onClick={() => isCur && onSelectDate(key)}
               className={`border-b border-r border-gray-100 p-1.5 cursor-pointer overflow-hidden transition-colors
-                ${!isCur ? "bg-gray-50/60" : sel ? "bg-indigo-50/70" : "hover:bg-gray-50"}
+                ${!isCur ? "bg-gray-50/60" : sel ? "bg-[#5048e5]/10" : "hover:bg-gray-50"}
               `}
               style={{ minHeight: 72 }}
             >
@@ -144,12 +144,12 @@ export default function Calendar({
               <div className="flex items-center justify-between mb-1">
                 <span
                   className={`text-[11px] font-semibold w-5 h-5 flex items-center justify-center rounded-full
-                  ${tod ? "bg-indigo-600 text-white" : isCur ? "text-gray-700" : "text-gray-300"}`}
+                  ${tod ? "bg-[#5048e5] text-white" : isCur ? "text-gray-700" : "text-gray-300"}`}
                 >
                   {day}
                 </span>
                 {dayEvs.some((e) => e.auto) && (
-                  <span className="text-[8px] font-bold text-indigo-400">
+                  <span className="text-[8px] font-bold text-[#5048e5]">
                     ⚡
                   </span>
                 )}
