@@ -358,14 +358,14 @@ function PostCard({ post }: { post: Post }) {
     <div className="rounded-xl border border-slate-200 p-4 flex flex-col gap-3">
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <span
+          translate="no"
           className={[
             "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold",
             badgeClass,
           ].join(" ")}>
-          {post.platform === "LinkedIn" && (
-            <span className="font-bold leading-none">in</span>
-          )}
-          {post.platform}
+          {post.platform === "LinkedIn" ? (
+            <><span className="font-bold leading-none">in</span> {post.platform}</>
+          ) : post.platform}
         </span>
         <span className="text-xs text-slate-400">{post.scheduledDate}</span>
       </div>
