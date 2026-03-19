@@ -3,36 +3,30 @@ import cors from "cors";
 import "dotenv/config";
 import { clerkMiddleware } from "@clerk/express";
 import { requireAuth } from "./middleware/requireAuth";
-import {
-  registerPatron,
-  registerMember,
-  getCodeForMember,
-} from "./routes/client";
-
-import {
-  getFinance,
-  createFinance,
-  saveAnalysis,
-  getAnalyses,
-} from "./routes/finance";
-import { getPosts, createPost } from "./routes/posts";
+import { registerPatron } from "./routes/client";
+import { getFinance, createFinance, saveAnalysis, getAnalyses } from "./routes/finance";
+import { getPosts, createPost, updatePost, deletePost, getPendingPosts, markPublished, requireApiKey, publishNow } from "./routes/posts";
+import { getMarketingStrategy, saveMarketingStrategy } from "./routes/marketing";
 import { Chat } from "./routes/ai/chat";
 import { getCompanyData, getUsersData, adminAccess } from "./routes/admin";
 import { AdminAuth } from "./middleware/adminAuth";
 import { registerOrganization } from "./routes/client/regitserOrganization";
 
 import { getCompany, updateCompany } from "./routes/company/updateOrganization";
-import { UpdateMember, DeleteMember, getMembersInfo } from "./routes/company";
+import { getBillingStatus, createCheckout, stripeWebhook, createPortal } from "./routes/billing";
 
 const app = express();
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
-    credentials: true,
-  }),
-);
+app.use(cors({
+  origin: (origin, callback) => callback(null, true),
+  credentials: true,
+}));
+
+// Stripe webhook needs raw body — register BEFORE express.json()
+app.post("/api/billing/webhook", express.raw({ type: "application/json" }), stripeWebhook);
+
 app.use(express.json());
 
+app.get("/health", (_req, res) => res.json({ ok: true }));
 app.post("/api/chat", Chat);
 
 app.use(clerkMiddleware());
@@ -54,14 +48,24 @@ app.post("/api/finance/analysis", requireAuth, saveAnalysis);
 //automation marketin routes?
 app.get("/api/posts", requireAuth, getPosts);
 app.post("/api/posts", requireAuth, createPost);
+app.put("/api/posts/:id", requireAuth, updatePost);
+app.delete("/api/posts/:id", requireAuth, deletePost);
+app.post("/api/posts/:id/publish-now", requireAuth, publishNow);
+app.get("/api/marketing/strategy", requireAuth, getMarketingStrategy);
+app.post("/api/marketing/strategy", requireAuth, saveMarketingStrategy);
+app.get("/api/facebook/pending-posts", requireApiKey, getPendingPosts);
+app.post("/api/facebook/posts/:id/publish", requireApiKey, markPublished);
 app.get("/api/company", requireAuth, getCompany);
 app.put("/api/company", requireAuth, updateCompany);
+app.get("/api/billing/status", requireAuth, getBillingStatus);
+app.post("/api/billing/checkout", requireAuth, createCheckout);
+app.post("/api/billing/portal", requireAuth, createPortal);
 
 app.post("/api/admin", adminAccess);
 app.get("/api/admin/companies", AdminAuth, getCompanyData);
 app.get("/api/admin/clients", AdminAuth, getUsersData);
 
-const PORT = 8888;
+const PORT = process.env.PORT || 8888;
 app.listen(PORT, () => {
   console.log(`Backend running on port ${PORT}`);
 });

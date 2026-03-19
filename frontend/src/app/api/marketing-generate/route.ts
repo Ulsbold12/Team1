@@ -5,10 +5,35 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+async function translateToMongolian(text: string): Promise<string> {
+  const apiKey = process.env.GOOGLE_TRANSLATE_API_KEY;
+  const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`;
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      q: text,
+      source: "en",
+      target: "mn",
+      format: "text",
+    }),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok || data.error) {
+    throw new Error(data.error?.message ?? "Translation failed");
+  }
+
+  return data.data.translations[0].translatedText;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { productName, description, targetAudience } = body;
+    const { productName, description, targetAudience, images } = body;
+    const imageBase64s: string[] = Array.isArray(images) ? images : [];
 
     if (!productName || !description || !targetAudience) {
       return NextResponse.json(
@@ -29,135 +54,187 @@ export async function POST(request: NextRequest) {
       messages: [
         {
           role: "system",
-          content: `You are a senior marketing strategist and native Mongolian copywriter with 10+ years of experience building B2B and B2C brands on social media in Mongolia and the broader Mongolian-speaking market.
+          content: `You are a social media marketer creating posts for a Mongolian brand. Write all posts in natural, engaging English — they will be translated into Mongolian afterward, so write clearly and avoid idioms or slang that don't translate well.
 
-## YOUR GOAL
-Generate a high-quality, ready-to-publish 30-day content marketing plan. Every post must sound like it was written by a real Mongolian marketer — natural, platform-native, and compelling.
-
----
-
-## LANGUAGE & TONE RULES (CRITICAL)
-- Write ALL post content and advice in fluent, natural Mongolian (Монгол хэл).
-- Avoid robotic or translated-sounding Mongolian. Use everyday expressions Mongolian audiences actually use.
-- Adjust formality per platform: LinkedIn = professional but warm; Facebook = friendly and conversational; Twitter = bold and punchy.
-- Hashtags: Use Mongolian hashtags where natural (e.g., #МонголБизнес, #Стартап), but English hashtags are fine for global/tech topics.
+## GOAL
+Generate 15 ready-to-publish social media posts for the given product. Posts must feel human, specific, and platform-native — not like ad copy or a brochure.
 
 ---
 
-## PLATFORM GUIDELINES
-
-### LinkedIn (1 post)
-- Tone: Thought leadership, professional insight, data or story-driven
-- Structure: Strong opening line → key insight or story → takeaway → soft CTA
-- Length: 150–250 words
-- Hashtags: 3–5, placed at the end
-- ❌ Avoid: Generic motivational quotes, vague advice
-
-### Facebook (2 posts)
-- Tone: Warm, community-focused, conversational
-- Structure: Hook question or relatable statement → short story or tip → engagement question or CTA
-- Length: 80–150 words
-- Hashtags: 2–3, woven in naturally or at the end
-- ✅ Emojis encouraged (1–3, purposeful)
-- ❌ Avoid: Wall-of-text paragraphs, overly salesy language
-
-### Twitter/X (2 posts)
-- Tone: Punchy, direct, confident
-- Structure: Bold statement OR question OR surprising fact → brief elaboration if space allows → 1 hashtag
-- Length: STRICT maximum 280 characters including hashtags
-- ❌ Avoid: Filler words, weak openings like "Did you know..."
+## STRICT DO NOT LIST
+❌ No fake customer quotes or made-up testimonials
+❌ No feature lists with colons: "Features: X, Y, Z"
+❌ No generic CTAs like "Order today and get a discount!"
+❌ No vague claims like "a huge difference in your experience"
+❌ No self-introductions like "Hi, I'm a student at X university"
+❌ No idioms or culturally specific slang that won't survive translation
+❌ No exclamation marks anywhere — use periods or commas instead. Mongolians don't use "!" in casual writing.
+❌ No overly enthusiastic or hype-y tone. Keep it calm, direct, and grounded. Think a knowledgeable friend, not a salesperson.
 
 ---
 
-## CONTENT VARIETY (use each type exactly once)
-Distribute these across the 5 posts:
-1. **Problem/Solution** — name the pain point your audience faces, position the product as the fix
-2. **Social proof** — write as if a real customer is sharing their experience (first-person testimonial style)
-3. **Educational tip** — teach one genuinely useful thing related to the product's domain
-4. **Feature spotlight** — highlight one specific product capability with a concrete benefit
-5. **Call-to-action** — drive a clear next step: sign up, request a demo, DM, visit site, etc.
+## PLATFORM RULES
+
+### Facebook (7 posts) — 80–130 words
+- First line must stop the scroll — bold statement or short relatable moment
+- Middle: one short story, tip, or real situation
+- End: a comment-bait question OR a simple link CTA
+- 1–2 emojis, placed naturally
+- 2–3 hashtags
+
+### Twitter/X (5 posts) — STRICT max 220 characters (leaving room for translation expansion)
+- One idea. One punch. Done.
+- No feature lists
+- First line must stand alone
+- 1 hashtag max
+
+### LinkedIn (3 posts) — 150–200 words
+- Open with a specific observation or relatable situation, not a question
+- Share a concrete insight, number, or before/after scenario
+- End with a genuine question that invites comments
+- Professional but human — like a founder talking to their network
+- 3–5 hashtags at the bottom
 
 ---
 
-## FEW-SHOT EXAMPLES (match this quality level)
+## CONTENT TYPES — distribute across all 15 posts, no type used more than 4 times
 
-**LinkedIn example — Problem/Solution:**
-Олон компани маркетингийн зардлаа дэмий үрдэг.
-Яагаад гэвэл зөв үзэгчиддээ хүрэхгүй байдаг.
+1. **Problem/Solution** — name a specific pain point, show how the product fixes it
+2. **Before/After** — describe what life looks like before vs after using the product, from the brand's perspective. No fake customer voice.
+3. **Educational tip** — one genuinely useful tip related to the product's domain
+4. **Feature spotlight** — ONE specific feature + ONE concrete real-world benefit
+5. **Call-to-action** — drive a specific next step: sign up, DM, try free, visit site
 
-Бид нэг үйлчлүүлэгчтэйгээ ажиллахдаа тэдний сошиал медиа зарнаас 40%-ийг буруу сегментэд зарцуулж байгааг илрүүлсэн. Нэг сарын дараа зорилтот хэрэглэгчдээ нарийвчлан тодорхойлоод, CTR нь 3 дахин өсчээ.
-
-Таны бизнест ч гэсэн ийм далд алдагдал байж болно.
-
-Хэрэв та өөрийн маркетингийн үр ашгийг шалгахыг хүсвэл — коммент дээр "ШАЛГАХ" гэж бичнэ үү.
-
-#МаркетингМонгол #B2BМонгол #ДижиталМаркетинг
-
-**Twitter example — Educational tip:**
-Сошиал медиад хамгийн их engagement авдаг цаг: даваа-лхагва 9-11 цаг.
-Дараагийн постоо тэр цагт тавь. 📊 #МонголБизнес
-
-**Facebook example — CTA:**
-Та маркетингийн агуулга бэлтгэхэд хэдэн цаг зарцуулдаг вэ? 🤔
-
-Манай хэрэглэгчид дунджаар 7 цаг/долоо хоногийг хэмнэж байна — бидний AI контент төлөвлөгч ашиглаж.
-
-1 долоо хоногийн үнэгүй туршилт эхлүүлэх бол доорх линк дээр дарна уу 👇
-#АIМаркетинг #МонголСтартап
+Vary the content types across platforms. Do not repeat the same angle back-to-back.
 
 ---
 
-## QUALITY CHECKLIST (apply before finalizing each post)
-✅ Does it sound like a real Mongolian person wrote it?
-✅ Is the opening line strong enough to stop someone scrolling?
-✅ Does it match the platform's style and length?
-✅ Is the CTA or takeaway specific and actionable?
-✅ Does it clearly relate to the product without being a generic post?
+## GOOD EXAMPLES (match this quality)
 
-If any answer is NO — rewrite that post until all are YES.
+**LinkedIn — Problem/Solution:**
+Most wired earphones fail at the same two things: the cable breaks within months, and the audio cuts out at the worst moments.
+
+We built around those exact failure points. Reinforced braided cable, stable analog connection, no battery to die on you mid-session.
+
+If you've gone through three pairs of earphones this year — what kept breaking first?
+
+#AudioGear #EverydayTech #MongoliaStartup
+
+---
+
+**Twitter — Educational tip:**
+AUX beats Bluetooth for gaming. Zero compression, zero latency.
+If your game has audio cues, this matters. #GamingAudio
+
+---
+
+**Facebook — Before/After:**
+Most people pick earphones based on how they look.
+Then the cable frays. The sound cuts out. The whole thing dies in six months.
+
+After switching to a reinforced AUX option? The cable outlasts the phone.
+
+What's the longest you've kept a pair of earphones alive? 👇 #EarphoneTips
 
 ---
 
 ## OUTPUT FORMAT
-Return ONLY valid JSON. No markdown, no preamble, no trailing text.
+Return ONLY valid JSON. No markdown, no extra text.
 
 {
-  "advice": "3–5 sentence strategic advice specific to THIS product and THIS audience. Be concrete: mention the platform priority, content angle, and one growth tactic they should focus on first.",
+  "advice": "3–5 sentences of strategic advice in English, specific to this product and audience. Name which platform to prioritize, what content angle works best, and one concrete first-week action.",
   "posts": [
     {
       "platform": "LinkedIn" | "Facebook" | "Twitter",
-      "contentType": "Problem/Solution" | "Social proof" | "Educational tip" | "Feature spotlight" | "Call-to-action",
-      "content": "Full post content in Mongolian",
-      "scheduledDate": "YYYY-MM-DD"
+      "contentType": "Problem/Solution" | "Before/After" | "Educational tip" | "Feature spotlight" | "Call-to-action",
+      "content": "Full post content in English",
+      "scheduledDate": "YYYY-MM-DDTHH:mm:00+08:00"
     }
   ]
 }
 
-Generate exactly 5 posts. Spread scheduledDate evenly across 30 days starting from the date provided by the user.
-Platform distribution: 1 LinkedIn, 2 Facebook, 2 Twitter.`,
+Generate exactly 15 posts. Spread scheduledDate evenly across 30 days starting from the user's start date (roughly every 2 days).
+Distribution: 7 Facebook, 5 Twitter, 3 LinkedIn.
+
+## SCHEDULING — all times are Asia/Ulaanbaatar (UTC+8)
+Based on real engagement data for this timezone, assign the best posting time per platform:
+
+- **Facebook**: weekdays → 09:00–12:00; weekends → 13:00–16:00. Also strong at 22:00 any day.
+- **Twitter**: weekdays only → 11:00–15:00. Also strong at 22:00 on weekdays.
+- **LinkedIn**: weekdays only → 08:00–17:00 (business hours). Prefer morning (08:00–10:00) or 22:00.
+
+Overall peak for all platforms: **Wednesday at 22:00** (100% engagement score). Use this slot for your highest-priority posts.
+
+Pick specific times within these windows — do not use identical times for every post. Vary them naturally.
+
+Set scheduledDate as a full datetime string: "YYYY-MM-DDTHH:mm:00+08:00".`,
         },
         {
           role: "user",
-          content: `Generate a 30-day marketing content plan for the following product:
+          content: [
+            {
+              type: "text" as const,
+              text: `Generate a 30-day content plan for this product:
 
 Product name: ${productName}
 Description: ${description}
 Target audience: ${targetAudience}
-Start date: ${todayISO}
-
-Remember: ALL content must be in natural, engaging Mongolian. Make every post feel like it was written specifically for this product — not a generic template.`,
+Start date: ${todayISO}${imageBase64s.length > 0 ? `\n\nThe user has provided ${imageBase64s.length} product image(s) above. Analyze them for visual details — colors, style, mood, product appearance — and use that context to make the posts more specific and visually grounded.` : ""}`,
+            },
+            ...imageBase64s.map((dataUrl) => ({
+              type: "image_url" as const,
+              image_url: { url: dataUrl, detail: "low" as const },
+            })),
+          ],
         },
       ],
     });
 
     const responseText = response.choices[0].message.content;
-
-    if (!responseText) {
-      throw new Error("AI-аас хоосон хариу ирлээ");
-    }
+    if (!responseText) throw new Error("Empty response from AI");
 
     const aiResult = JSON.parse(responseText);
-    return NextResponse.json(aiResult, { status: 200 });
+
+    const safeTranslate = (text: string) =>
+      translateToMongolian(text).catch(() => text);
+
+    const [translatedAdvice, ...translatedContents] = await Promise.all([
+      safeTranslate(aiResult.advice),
+      ...aiResult.posts.map((post: { content: string }) => safeTranslate(post.content)),
+    ]);
+
+    const translatedPosts = aiResult.posts.map(
+      (
+        post: {
+          platform: string;
+          contentType: string;
+          scheduledDate: string;
+          content: string;
+        },
+        i: number,
+      ) => ({
+        ...post,
+        content: translatedContents[i],
+      }),
+    );
+
+    const cleanAdvice = translatedAdvice.replace(/!/g, ".");
+    const cleanPosts = translatedPosts.map(
+      (post: {
+        platform: string;
+        contentType: string;
+        scheduledDate: string;
+        content: string;
+      }) => ({
+        ...post,
+        content: post.content.replace(/!/g, "."),
+      }),
+    );
+
+    return NextResponse.json(
+      { advice: cleanAdvice, posts: cleanPosts },
+      { status: 200 },
+    );
   } catch (error) {
     console.error("Маркетинг API алдаа:", error);
     return NextResponse.json(

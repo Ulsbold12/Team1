@@ -1,5 +1,6 @@
 import type { RequestHandler } from "express";
 import prisma from "../../lib/prisma";
+import type { PrismaClient } from "@prisma/client";
 import { clerkClient } from "../../lib/clerkClient";
 
 export const registerPatron: RequestHandler = async (req, res) => {
@@ -17,18 +18,38 @@ export const registerPatron: RequestHandler = async (req, res) => {
       return res.status(403).json({ message: "user already registered" });
     }
 
-    const clerkUser = await clerkClient.users.getUser(clerkId);
-    console.log("userdata from clerk:", clerkUser);
+    const result = await prisma.$transaction(async (tx: Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'>) => {
+      const organization = await tx.organization.create({
+        data: {
+          id: clerkId,
+          name: data.name,
+          industry: data.industry,
+          patronage: "BASIC",
+          address: data.address ?? "",
+          description: data.description ?? "",
+          emailAddress: data.emailAddress ?? "",
+          phoneNumber: data.phoneNumber ?? "",
+          createdAt: new Date(),
+        },
+      });
 
-    const result = await prisma.client.create({
-      data: {
-        id: clerkId,
-        orgId: undefined,
-        role: "EXECUTIVE",
-        email: clerkUser.emailAddresses[0].emailAddress,
-        firstname: clerkUser.firstName as string,
-        lastname: clerkUser.lastName as string,
-      },
+      const newClient = await tx.client.create({
+        data: {
+          id: clerkId,
+          orgId: organization.id,
+          role: data.role ?? "EXECUTIVE",
+          email: data.email,
+          firstname: data.firstname,
+          lastname: data.lastname,
+        },
+      });
+
+      return { organization, newClient };
+    });
+
+    // Clerk metadata-д onboarding дууссан гэж тэмдэглэнэ
+    await clerkClient.users.updateUser(clerkId, {
+      publicMetadata: { onboardingComplete: true },
     });
 
     return res.status(201).json({ success: true, data: result });

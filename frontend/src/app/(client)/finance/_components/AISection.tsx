@@ -10,24 +10,15 @@ interface AISectionProps {
 
 export const AISection = ({ aiResult }: AISectionProps) => {
   const { getToken } = useAuth();
-  const [saved, setSaved] = useState<{ summary: string; tips: string[] } | null>(null);
+  const [saved, setSaved] = useState<{
+    summary: string;
+    tips: string[];
+  } | null>(null);
 
-  useEffect(() => {
-    if (aiResult) return;
-    async function fetchLatest() {
-      const token = await getToken();
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/finance/analyses`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
-      if (data.success && data.data?.length > 0) {
-        setSaved({ summary: data.data[0].summary, tips: data.data[0].tips });
-      }
-    }
-    fetchLatest();
-  }, [aiResult]);
-
-  const summary = aiResult?.summary ?? saved?.summary ?? "AI шинжилгээ хийснээр энд дүгнэлт харагдана.";
+  const summary =
+    aiResult?.summary ??
+    saved?.summary ??
+    "AI шинжилгээ хийснээр энд дүгнэлт харагдана.";
   const tips: string[] = aiResult?.tips ?? saved?.tips ?? [];
 
   return (
@@ -44,7 +35,9 @@ export const AISection = ({ aiResult }: AISectionProps) => {
             {summary}
           </p>
           {tips.map((tip, i) => (
-            <p key={i} className="text-white/75 text-sm mt-1">💡 {tip}</p>
+            <p key={i} className="text-white/75 text-sm mt-1">
+              💡 {tip}
+            </p>
           ))}
         </div>
       </div>

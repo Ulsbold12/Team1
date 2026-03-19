@@ -16,7 +16,7 @@ export const updateCompany: RequestHandler = async (req, res) => {
     const { name, industry } = req.body;
 
     const updated = await prisma.organization.update({
-      where: { id: client.orgId as string},
+      where: { id: client.orgId ?? "" },
       data: {
         ...(name && { name }),
         ...(industry && { industry }),

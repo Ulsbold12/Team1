@@ -8,8 +8,10 @@ import Modul from "./_components/Modul";
 import Cta from "./_components/Cta";
 
 export default function Home() {
+  console.log("hello world");
+  console.log("this is env", process.env.OPENAI_API_KEY);
   return (
-    <div className="relative w-screen h-screen">
+    <div className="relative min-h-screen" style={{ background: "#050B15" }}>
       <Header />
       <Hero />
       <Trusted />

@@ -1,28 +1,42 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "./generated"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_PUBLIC_URL")
+  url      = env("DATABASE_URL")
 }
 
 model Organization {
   id              String            @id @unique
   name            String            @default("")
   industry        Industry
-  address         String
-  phoneNumber     String
-  emailAddress    String
-  patronage       Subscription
-  createdAt       DateTime          @default(now())
+  patronage            Subscription
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  createdAt            DateTime          @default(now())
+  address              String
   description     String
+  emailAddress    String
+  phoneNumber     String
   members         Client[]
   financeData     Finance[]
   financeAnalyses FinanceAnalysis[]
+  InviteCode      InviteCode[]
   posts           Post[]
-  inviteCodes     InviteCode[]
+  marketingStrategy MarketingStrategy?
+}
+
+model MarketingStrategy {
+  id             String       @id @default(cuid())
+  orgId          String       @unique
+  productName    String
+  description    String
+  targetAudience String
+  advice         String?
+  updatedAt      DateTime     @updatedAt
+  createdAt      DateTime     @default(now())
+  org            Organization @relation(fields: [orgId], references: [id])
 }
 
 model Client {
@@ -66,8 +80,10 @@ model Post {
   title       String
   content     String       @default("")
   platform    String
+  images      Json         @default("[]")
   reach       Int          @default(0)
   publishedAt DateTime     @default(now())
+  published   Boolean      @default(false)
   org         Organization @relation(fields: [orgId], references: [id])
 }
 
@@ -78,6 +94,14 @@ model Administrator {
   password       String
   createdAt      DateTime @default(now())
   lastAccessTime DateTime @default(now())
+}
+
+model InviteCode {
+  code         String       @unique
+  orgId        String
+  createdBy    String
+  expiresAt    DateTime
+  Organization Organization @relation(fields: [orgId], references: [id])
 }
 
 enum Industry {
@@ -95,9 +119,6 @@ enum MemberAccessType {
   MEMBER
 }
 
-enum ExpenseType {
-  БУСАД
-}
 
 enum Subscription {
   BASIC

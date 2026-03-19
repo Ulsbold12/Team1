@@ -1,19 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { RevenueCard } from "./RevenueCard";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
 
 interface FinanceRecord {
   revenue: number;
@@ -27,23 +15,6 @@ interface AiCategory {
   total: number;
 }
 
-const COLORS = ["#10b981", "#3b82f6", "#f59e0b", "#f43f5e", "#8b5cf6"];
-
-const MONTH_NAMES = [
-  "1-р сар",
-  "2-р сар",
-  "3-р сар",
-  "4-р сар",
-  "5-р сар",
-  "6-р сар",
-  "7-р сар",
-  "8-р сар",
-  "9-р сар",
-  "10-р сар",
-  "11-р сар",
-  "12-р сар",
-];
-
 export const Dashboard = ({ aiResult }: { aiResult?: any }) => {
   const { getToken } = useAuth();
   const [records, setRecords] = useState<FinanceRecord[]>([]);
@@ -54,25 +25,14 @@ export const Dashboard = ({ aiResult }: { aiResult?: any }) => {
     async function fetchFinance() {
       try {
         const token = await getToken();
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/finance`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          },
-        );
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/finance`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         const data = await res.json();
         if (data.success && Array.isArray(data.data)) {
           setRecords(data.data);
-          const totalRevenue = data.data.reduce(
-            (s: number, r: FinanceRecord) => s + (r.revenue ?? 0),
-            0,
-          );
-          const totalExpense = data.data.reduce(
-            (s: number, r: FinanceRecord) => s + (r.expense ?? 0),
-            0,
-          );
-          setRevenue(totalRevenue);
-          setExpense(totalExpense);
+          setRevenue(data.data.reduce((s: number, r: FinanceRecord) => s + (r.revenue ?? 0), 0));
+          setExpense(data.data.reduce((s: number, r: FinanceRecord) => s + (r.expense ?? 0), 0));
         }
       } catch (e) {
         console.error(e);
@@ -134,29 +94,8 @@ export const Dashboard = ({ aiResult }: { aiResult?: any }) => {
     },
   ];
 
-  const barData = [...records].reverse().map((r) => ({
-    огноо: MONTH_NAMES[new Date(r.month).getMonth()],
-    орлого: r.revenue ?? 0,
-    зарлага: r.expense ?? 0,
-  }));
-
-  const pieData =
-    aiResult?.expenses && aiResult.expenses.length > 0
-      ? aiResult.expenses.map((c: AiCategory, i: number) => ({
-          id: i,
-          name: c.name,
-          value: c.total,
-        }))
-      : records.length > 0
-        ? [
-            { id: 0, name: "Орлого", value: revenue },
-            { id: 1, name: "Зарлага", value: expense },
-          ]
-        : [];
-
   return (
     <div className="bg-background dark:bg-sidebar w-full flex flex-col gap-6 p-4 md:p-5 transition-colors">
-      {/* Revenue cards */}
       <div className="flex flex-row gap-4 md:gap-10 flex-wrap">
         {cards.map((item) => (
           <RevenueCard
@@ -168,8 +107,6 @@ export const Dashboard = ({ aiResult }: { aiResult?: any }) => {
           />
         ))}
       </div>
-
-      {/* Charts */}
     </div>
   );
 };

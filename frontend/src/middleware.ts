@@ -5,6 +5,7 @@ const isPublicRoute = createRouteMatcher([
   "/sign-in(.*)",
   "/sign-up(.*)",
   "/onboarding(.*)",
+  "/api/finance-analyze",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
@@ -13,21 +14,6 @@ export default clerkMiddleware(async (auth, req) => {
   const path = req.nextUrl.pathname;
   if (!userId) {
     return (await auth()).redirectToSignIn();
-  }
-  if (
-    userId &&
-    !sessionClaims?.metadata?.onboardingComplete &&
-    path !== "/onboarding" 
-  ) {
-    return NextResponse.redirect(new URL("/onboarding", req.url));
-  }
-
-  if (
-    userId &&
-    !sessionClaims?.metadata?.onboardingComplete &&
-    path === "/onboarding"
-  ) {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 });
 
