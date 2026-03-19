@@ -9,15 +9,17 @@ datasource db {
 }
 
 model Organization {
-  id              String            @id @unique
-  name            String            @default("")
-  industry        Industry
-  patronage       Subscription
-  createdAt       DateTime          @default(now())
-  members         Client[]
-  financeData     Finance[]
-  financeAnalyses FinanceAnalysis[]
-  posts           Post[]
+  id                   String            @id @unique
+  name                 String            @default("")
+  industry             Industry
+  patronage            Subscription      @default(BASIC)
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  createdAt            DateTime          @default(now())
+  members              Client[]
+  financeData          Finance[]
+  financeAnalyses      FinanceAnalysis[]
+  posts                Post[]
 }
 
 model Client {
