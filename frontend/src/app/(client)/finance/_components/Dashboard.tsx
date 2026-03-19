@@ -15,23 +15,6 @@ interface AiCategory {
   total: number;
 }
 
-const COLORS = ["#10b981", "#3b82f6", "#f59e0b", "#f43f5e", "#8b5cf6"];
-
-const MONTH_NAMES = [
-  "1-р сар",
-  "2-р сар",
-  "3-р сар",
-  "4-р сар",
-  "5-р сар",
-  "6-р сар",
-  "7-р сар",
-  "8-р сар",
-  "9-р сар",
-  "10-р сар",
-  "11-р сар",
-  "12-р сар",
-];
-
 export const Dashboard = ({ aiResult }: { aiResult?: any }) => {
   const { getToken } = useAuth();
   const [records, setRecords] = useState<FinanceRecord[]>([]);
