@@ -107,6 +107,7 @@ Generate 15 ready-to-publish social media posts for the given product. Posts mus
 
 Vary the content types across platforms. Do not repeat the same angle back-to-back.
 
+
 ---
 
 ## GOOD EXAMPLES (match this quality)
