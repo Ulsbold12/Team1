@@ -10,12 +10,10 @@ import { loginAdmin } from "@/lib/adminApi";
 import { SectionHeader } from "@/app/(client)/dashboard/_components/dashboard/SectionHeader";
 import { useAuth } from "@clerk/nextjs";
 
+
 const AdminPage = () => {
   const router = useRouter();
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [error, setError] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+
   const { getToken } = useAuth();
   const handleGetCode = async () => {
     const token = await getToken();
@@ -67,16 +65,17 @@ const AdminPage = () => {
 
       <section className="space-y-4">
         <SectionHeader icon={Settings} title="Organization Settings" />
-        <div className="bg-card p-6 rounded-xl border border-border shadow-sm">
+        <div className="bg-card p-6 rounded-xl border border-border shadow-sm w-full aspect-5/1">
           <p className="text-sm text-muted-foreground">
-            Change organization settings
+            Update members settings
           </p>
-          <Button
-            variant="outline"
-            className="mt-3 border-[#5048e5] text-[#5048e5] hover:bg-[#5048e5]/10"
-          >
-            Edit Settings
-          </Button>
+          {/* map the members info and display here:
+          change role -> assign authentication
+          delete -> remove member
+          
+          */}
+
+
         </div>
       </section>
 

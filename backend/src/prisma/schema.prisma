@@ -12,12 +12,17 @@ model Organization {
   id              String            @id @unique
   name            String            @default("")
   industry        Industry
+  address         String
+  phoneNumber     String
+  emailAddress    String
   patronage       Subscription
   createdAt       DateTime          @default(now())
+  description     String
   members         Client[]
   financeData     Finance[]
   financeAnalyses FinanceAnalysis[]
   posts           Post[]
+  inviteCodes     InviteCode[]
 }
 
 model Client {
@@ -97,4 +102,13 @@ enum ExpenseType {
 enum Subscription {
   BASIC
   PRO
+}
+
+model InviteCode {
+  code      String   @unique
+  orgId     String
+  createdBy String
+  expiresAt DateTime
+
+  organization Organization @relation(fields: [orgId], references: [id])
 }

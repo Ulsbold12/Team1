@@ -28,9 +28,11 @@ export const registerOrganization: RequestHandler = async (req, res) => {
         id: newOrgId,
         name: data.name,
         industry: data.industry,
+        address: data.address,
+        phoneNumber: data.phoneNumber,
+        emailAddress: data.email,
+        description: data.description,
         members: { connect: { id: clerkId } },
-        financeData: undefined,
-        posts: undefined,
         patronage: "BASIC",
       },
     });
@@ -39,6 +41,12 @@ export const registerOrganization: RequestHandler = async (req, res) => {
         .status(500)
         .json({ message: "failed to register org [registerOrg.ts]" });
     }
+    if (newOrg) {
+      await clerkClient.users.updateUser(clerkId, {
+        publicMetadata: { onboardingComplete: true },
+      });
+    }
+
     return res.status(200).json({ message: "New Org Registered", newOrg });
   } catch (e) {
     console.log(e);

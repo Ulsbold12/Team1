@@ -5,7 +5,6 @@ import { clerkClient } from "../../lib/clerkClient";
 export const registerPatron: RequestHandler = async (req, res) => {
   try {
     const clerkId = req.clerkUserId;
-    const data = req.body;
 
     if (!clerkId) {
       return res.status(401).json({ message: "Unauthorized" });
@@ -15,40 +14,21 @@ export const registerPatron: RequestHandler = async (req, res) => {
       where: { id: clerkId },
     });
     if (existingUser) {
-      await clerkClient.users.updateUser(clerkId, {
-        publicMetadata: { onboardingComplete: true },
-      });
-      return res.status(200).json({ success: true, data: existingUser });
+      return res.status(403).json({ message: "user already registered" });
     }
 
-    const result = await prisma.$transaction(async (tx) => {
-      const organization = await tx.organization.create({
-        data: {
-          id: clerkId,
-          name: data.name,
-          industry: data.industry,
-          patronage: "BASIC",
-          createdAt: new Date(),
-        },
-      });
+    const clerkUser = await clerkClient.users.getUser(clerkId);
+    console.log("userdata from clerk:", clerkUser);
 
-      const newClient = await tx.client.create({
-        data: {
-          id: clerkId,
-          orgId: organization.id,
-          role: data.role ?? "EXECUTIVE",
-          email: data.email,
-          firstname: data.firstname,
-          lastname: data.lastname,
-        },
-      });
-
-      return { organization, newClient };
-    });
-
-    // Clerk metadata-д onboarding дууссан гэж тэмдэглэнэ
-    await clerkClient.users.updateUser(clerkId, {
-      publicMetadata: { onboardingComplete: true },
+    const result = await prisma.client.create({
+      data: {
+        id: clerkId,
+        orgId: undefined,
+        role: "EXECUTIVE",
+        email: clerkUser.emailAddresses[0].emailAddress,
+        firstname: clerkUser.firstName as string,
+        lastname: clerkUser.lastName as string,
+      },
     });
 
     return res.status(201).json({ success: true, data: result });

@@ -14,6 +14,7 @@ export default function AdministratorPage() {
   const [loading, setLoading] = useState(false);
   const [org, setOrg] = useState<OrganizationInterface[]>([]);
   const [clients, setClients] = useState<ClientType[]>([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {

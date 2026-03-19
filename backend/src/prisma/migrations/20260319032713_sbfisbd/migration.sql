@@ -5,7 +5,7 @@ CREATE TYPE "Industry" AS ENUM ('TECH', 'FINANCE', 'HEALTHCARE', 'EDUCATION', 'R
 CREATE TYPE "MemberAccessType" AS ENUM ('EXECUTIVE', 'MANAGEMENT', 'MEMBER');
 
 -- CreateEnum
-CREATE TYPE "ExpenseType" AS ENUM ('БАРАА_МАТЕРИАЛ', 'ТЭЭВЭР', 'УРСГАЛ_ЗАРДАЛ', 'ЦАЛИН');
+CREATE TYPE "ExpenseType" AS ENUM ('БУСАД');
 
 -- CreateEnum
 CREATE TYPE "Subscription" AS ENUM ('BASIC', 'PRO');
@@ -55,6 +55,7 @@ CREATE TABLE "FinanceAnalysis" (
     "orgId" TEXT NOT NULL,
     "summary" TEXT NOT NULL,
     "categories" JSONB NOT NULL,
+    "monthly" JSONB,
     "tips" JSONB NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -86,6 +87,14 @@ CREATE TABLE "Administrator" (
     CONSTRAINT "Administrator_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "InviteCode" (
+    "code" TEXT NOT NULL,
+    "orgId" TEXT NOT NULL,
+    "createdBy" TEXT NOT NULL,
+    "expiresAt" TIMESTAMP(3) NOT NULL
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Organization_id_key" ON "Organization"("id");
 
@@ -98,6 +107,9 @@ CREATE UNIQUE INDEX "Administrator_id_key" ON "Administrator"("id");
 -- CreateIndex
 CREATE UNIQUE INDEX "Administrator_username_key" ON "Administrator"("username");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "InviteCode_code_key" ON "InviteCode"("code");
+
 -- AddForeignKey
 ALTER TABLE "Client" ADD CONSTRAINT "Client_orgId_fkey" FOREIGN KEY ("orgId") REFERENCES "Organization"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
@@ -109,3 +121,6 @@ ALTER TABLE "FinanceAnalysis" ADD CONSTRAINT "FinanceAnalysis_orgId_fkey" FOREIG
 
 -- AddForeignKey
 ALTER TABLE "Post" ADD CONSTRAINT "Post_orgId_fkey" FOREIGN KEY ("orgId") REFERENCES "Organization"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "InviteCode" ADD CONSTRAINT "InviteCode_orgId_fkey" FOREIGN KEY ("orgId") REFERENCES "Organization"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

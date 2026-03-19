@@ -25,6 +25,7 @@ export default function OnboardingPage() {
     name: "",
     businessType: "",
     description: "",
+    email: "",
     phone: "",
     address: "",
   });
@@ -36,6 +37,28 @@ export default function OnboardingPage() {
 
   const { user } = useUser();
 
+  useEffect(() => {
+    try {
+      const getMe = async () => {
+        const token = await getToken();
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/onboarding`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        if (res) {
+          console.log("response:", res);
+        }
+      };
+      getMe();
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
   const redirecting = useRef(false);
 
   useEffect(() => {
@@ -65,8 +88,9 @@ export default function OnboardingPage() {
           name: form.name,
           industry: form.businessType,
           email: user?.primaryEmailAddress?.emailAddress,
-          firstname: user?.firstName ?? "",
-          lastname: user?.lastName ?? "",
+          phoneNumber: form.phone ?? user?.primaryPhoneNumber?.phoneNumber,
+          address: form.address ?? "",
+          description: form.description,
         }),
       },
     );
@@ -96,11 +120,11 @@ export default function OnboardingPage() {
         body: JSON.stringify({
           id: newMform.id,
           role: newMform.role,
-          optKey: newMform.optKey
+          optKey: newMform.optKey,
         }),
       },
     );
-    console.log(res)
+    console.log(res);
   }
   return (
     <div className="relative flex min-h-screen items-center justify-center">
