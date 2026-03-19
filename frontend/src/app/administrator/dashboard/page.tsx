@@ -103,12 +103,6 @@ export default function AdministratorPage() {
                     </TableRow>
                   ))}
                 </TableBody>
-                <TableFooter>
-                  <TableRow>
-                    <TableCell colSpan={3}>Total</TableCell>
-                    <TableCell className="text-right">$2,500.00</TableCell>
-                  </TableRow>
-                </TableFooter>
               </Table>
             </Card>
           </div>
@@ -124,8 +118,14 @@ export default function AdministratorPage() {
             <div className={`w-full grid grid-cols-2 gap-2`}>
               <Card>
                 {clients.map((c) => (
-                  <div key={c.id}>
-                    {c.firstname} {c.lastname}
+                  <div
+                    key={c.id}
+                    className="w-full p-2 flex flex-col gap-2 items-start justify-between"
+                  >
+                    <p className="text-medium">
+                      {c.firstname} {c.lastname}
+                    </p>{" "}
+                    <p className="text-light text-sm">{c.email}</p>
                   </div>
                 ))}
               </Card>

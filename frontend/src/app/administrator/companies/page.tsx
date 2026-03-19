@@ -3,11 +3,17 @@
 import { useEffect } from "react";
 import { useAdmin } from "../provider/adminProvider";
 export default function Page() {
-    const {fetchCompaniesData} = useAdmin();
+  const { fetchCompaniesData, companies } = useAdmin();
   useEffect(() => {
-    const fetchData = async() => {
-        const res = await fetch('/api')
-    }
+    const fetchData = async () => {
+      const res = await fetch("/api");
+    };
   }, []);
-  return <>company managaementguybfs</>;
+  return (
+    <>
+      {companies.map((c) => (
+        <p key={c.id}>{c.name}</p>
+      ))}
+    </>
+  );
 }
