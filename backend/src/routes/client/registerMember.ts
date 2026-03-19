@@ -1,6 +1,7 @@
 import type { RequestHandler } from "express";
 import prisma from "../../lib/prisma";
 import { customAlphabet } from "nanoid";
+import { Auditlog } from "../admin/auditLog";
 
 export const getCodeForMember: RequestHandler = async (req, res) => {
   try {
@@ -21,7 +22,7 @@ export const getCodeForMember: RequestHandler = async (req, res) => {
     }
 
     const isAuthorized = await prisma.client.findFirst({
-      where: { id: clerkId, role: "EXECUTIVE" },
+      where: { id: clerkId, role: { in: ["EXECUTIVE", "MANAGEMENT"] } },
     });
 
     if (!isAuthorized) {
@@ -52,7 +53,7 @@ export const getCodeForMember: RequestHandler = async (req, res) => {
 };
 
 export const registerMember: RequestHandler = async (req, res) => {
-  const { optKey, role, email, firstname, lastname } = req.body;
+  const { optKey, role, email, firstname, lastname, orgId } = req.body;
   const clerkId = req.clerkUserId;
 
   if (!optKey) {
@@ -96,7 +97,8 @@ export const registerMember: RequestHandler = async (req, res) => {
 
       return newMember;
     });
-
+    const org = await prisma.organization.findUnique({ where: { id: orgId } });
+    await Auditlog(result.email, "added", org?.name as string);
     return res.status(200).json({ success: true, data: result });
   } catch (e) {
     console.log(e);

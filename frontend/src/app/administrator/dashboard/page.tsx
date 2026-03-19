@@ -9,11 +9,22 @@ import { UserRoundCheck, Banknote, Building2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { getClients, getCompanies } from "@/lib/adminApi";
 import { OrganizationInterface, ClientType } from "../Types";
-
+import { useAdmin } from "../provider/adminProvider";
+import {
+  Table,
+  TableCell,
+  TableBody,
+  TableCaption,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 export default function AdministratorPage() {
   const [loading, setLoading] = useState(false);
   const [org, setOrg] = useState<OrganizationInterface[]>([]);
   const [clients, setClients] = useState<ClientType[]>([]);
+  const { fetchAuditLog, fetchCompaniesData } = useAdmin();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,7 +77,40 @@ export default function AdministratorPage() {
               <Input placeholder="Search Company" className="w-fit"></Input>
             </div>
 
-            <Card className={`w-full `}></Card>
+            <Card className={`w-full `}>
+              {" "}
+              <Table>
+                <TableCaption>Most recent companies</TableCaption>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[100px]">Name</TableHead>
+                    <TableHead>desc</TableHead>
+                    <TableHead>Created At</TableHead>
+                    <TableHead className="text-right">
+                      Membership plan
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {org.map((o) => (
+                    <TableRow key={o.id}>
+                      <TableCell className="font-medium">{o.name}</TableCell>
+                      <TableCell>{o.description}</TableCell>
+                      <TableCell>{JSON.stringify(o.createdAt)}</TableCell>
+                      <TableCell className="text-right">
+                        {o.patronage}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TableCell colSpan={3}>Total</TableCell>
+                    <TableCell className="text-right">$2,500.00</TableCell>
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            </Card>
           </div>
           {/**/}
           <div className="flex flex-col gap-2">

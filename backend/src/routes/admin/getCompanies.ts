@@ -2,6 +2,7 @@ import type { RequestHandler } from "express";
 import prisma from "../../lib/prisma";
 import { clerkClient } from "../../lib/clerkClient";
 import { customAlphabet, nanoid } from "nanoid";
+import { Auditlog } from "./auditLog";
 export const getCompanyData: RequestHandler = async (req, res) => {
   try {
     const companyData = await prisma.organization.findMany({});
@@ -51,6 +52,7 @@ export const createCompany: RequestHandler = async (req, res) => {
         .status(500)
         .json({ message: "failed to register org [registerOrg.ts]" });
     }
+    await Auditlog("admin", "created", "company", { newOrg });
     return res.status(200).json({ message: "New Org Registered", newOrg });
   } catch (e) {
     console.log(e);
@@ -85,7 +87,7 @@ export const deleteCompany: RequestHandler = async (req, res) => {
 
 export const readCompanydataById: RequestHandler = async (req, res) => {
   try {
-    const { orgId } = req.body;
+    const { orgId } = req.params;
     if (!orgId) {
       return res
         .status(404)

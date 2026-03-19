@@ -24,14 +24,14 @@ import { useAuth } from "@clerk/nextjs";
 import { Card, CardContent } from "@/components/ui/card";
 import { useUser } from "@clerk/nextjs";
 
-export function Countdown(expiresAt: Date) {
-  const [countdown, setCountDown] = useState()
+export function useCountdown(expiresAt: Date) {
+  const [countdown, setCountDown] = useState();
   const [timeLeft, setTimeLeft] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
-      const diff = expiresAt.getTime() - now.getTime(); 
+      const diff = expiresAt.getTime() - now.getTime();
 
       if (diff <= 0) {
         setTimeLeft("Expired");
@@ -42,13 +42,12 @@ export function Countdown(expiresAt: Date) {
       const minutes = Math.floor(diff / 1000 / 60);
       const seconds = Math.floor((diff / 1000) % 60);
 
-
       setTimeLeft(
         `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`,
       );
-    }, 1000); 
+    }, 1000);
 
-    return () => clearInterval(interval); 
+    return () => clearInterval(interval);
   }, [expiresAt]);
 
   return timeLeft;
@@ -57,6 +56,7 @@ export function Countdown(expiresAt: Date) {
 const AdminPage = () => {
   const [members, setMembers] = useState<ClientType[]>([]);
   const [loading, setLoading] = useState(false);
+  const [codeloading, setCodeloading] = useState(false);
   const [company, setCompany] = useState<OrganizationInterface | null>(null);
   const [code, setCode] = useState<InvCode | "">("");
   const router = useRouter();
@@ -116,7 +116,9 @@ const AdminPage = () => {
 
   const handleGetCode = async () => {
     const token = await getToken();
+
     try {
+      setCodeloading(true);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/onboarding/getcode`,
         {
@@ -130,14 +132,14 @@ const AdminPage = () => {
       const data = await res.json();
       console.log(data);
       setCode(data);
+      setCodeloading(false);
     } catch (e) {
       console.log(e);
+    } finally {
+      setCodeloading(false);
     }
-
-
-    
   };
-
+  const timeLeft = useCountdown(code ? new Date(code.expiresAt) : new Date());
   return (
     <div className="flex-1 overflow-y-auto p-8 space-y-8 bg-muted/30 text-foreground">
       <section>
@@ -155,13 +157,29 @@ const AdminPage = () => {
           <p className="text-sm text-muted-foreground">
             Authorize new member registry under your organization
           </p>
+
           <Button
             className="bg-[#5048e5] hover:bg-[#4038d4] text-white"
             onClick={() => {
               handleGetCode();
             }}
+            disabled={codeloading}
           >
-            Get Code
+            {code ? (
+              <>
+                Your code: {code.optKey}, expires at: {timeLeft}
+              </>
+            ) : (
+              <>
+                {codeloading ? (
+                  <>
+                    <LoaderCircle className="animate-spin ease-in-out duration-[600000ms]" />
+                  </>
+                ) : (
+                  <>Get Code </>
+                )}
+              </>
+            )}
           </Button>
         </div>
       </section>

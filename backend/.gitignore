@@ -4,3 +4,4 @@
 src/prisma/generated
 .clerk
 backend/src/prisma
+/src/generated/prisma

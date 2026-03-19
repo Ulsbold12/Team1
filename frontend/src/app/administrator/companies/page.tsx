@@ -1,7 +1,13 @@
-'use client';
+"use client";
 
+import { useEffect } from "react";
+import { useAdmin } from "../provider/adminProvider";
 export default function Page() {
-    return (
-        <>company managaementguybfs</>
-    )
+    const {fetchCompaniesData} = useAdmin();
+  useEffect(() => {
+    const fetchData = async() => {
+        const res = await fetch('/api')
+    }
+  }, []);
+  return <>company managaementguybfs</>;
 }

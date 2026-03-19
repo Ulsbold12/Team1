@@ -3,26 +3,66 @@ import cors from "cors";
 import "dotenv/config";
 import { clerkMiddleware } from "@clerk/express";
 import { requireAuth } from "./middleware/requireAuth";
-import { registerPatron } from "./routes/client";
-import { getFinance, createFinance, saveAnalysis, getAnalyses } from "./routes/finance";
-import { getPosts, createPost, updatePost, deletePost, getPendingPosts, markPublished, requireApiKey, publishNow } from "./routes/posts";
-import { getMarketingStrategy, saveMarketingStrategy } from "./routes/marketing";
+import {
+  Auditlog,
+  createCompany,
+  deleteCompany,
+  readCompanydataById,
+} from "./routes/admin";
+
+import {
+  registerMember,
+  getCodeForMember,
+  registerPatron,
+} from "./routes/client";
+import { getMembersInfo, DeleteMember, UpdateMember } from "./routes/company";
+import {
+  getFinance,
+  createFinance,
+  saveAnalysis,
+  getAnalyses,
+} from "./routes/finance";
+import {
+  getPosts,
+  createPost,
+  updatePost,
+  deletePost,
+  getPendingPosts,
+  markPublished,
+  requireApiKey,
+  publishNow,
+} from "./routes/posts";
+import {
+  getMarketingStrategy,
+  saveMarketingStrategy,
+} from "./routes/marketing";
 import { Chat } from "./routes/ai/chat";
 import { getCompanyData, getUsersData, adminAccess } from "./routes/admin";
 import { AdminAuth } from "./middleware/adminAuth";
 import { registerOrganization } from "./routes/client/regitserOrganization";
 
 import { getCompany, updateCompany } from "./routes/company/updateOrganization";
-import { getBillingStatus, createCheckout, stripeWebhook, createPortal } from "./routes/billing";
+import {
+  getBillingStatus,
+  createCheckout,
+  stripeWebhook,
+  createPortal,
+} from "./routes/billing";
 
 const app = express();
-app.use(cors({
-  origin: (origin, callback) => callback(null, true),
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: (origin, callback) => callback(null, true),
+    credentials: true,
+  }),
+);
 
 // Stripe webhook needs raw body — register BEFORE express.json()
-app.post("/api/billing/webhook", express.raw({ type: "application/json" }), stripeWebhook);
+app.post(
+  "/api/billing/webhook",
+  express.raw({ type: "application/json" }),
+  stripeWebhook,
+);
 
 app.use(express.json());
 
@@ -37,7 +77,7 @@ app.get("/api/onboarding/getcode", requireAuth, getCodeForMember);
 app.post("/api/onboarding/org", requireAuth, registerOrganization);
 //org executive personnel routes
 app.get("/api/company/members", requireAuth, getMembersInfo);
-app.delete("api/company/members", requireAuth, DeleteMember);
+app.delete("/api/company/members", requireAuth, DeleteMember);
 app.post("/api/company/members", requireAuth, UpdateMember);
 //finance routes
 
@@ -60,9 +100,12 @@ app.put("/api/company", requireAuth, updateCompany);
 app.get("/api/billing/status", requireAuth, getBillingStatus);
 app.post("/api/billing/checkout", requireAuth, createCheckout);
 app.post("/api/billing/portal", requireAuth, createPortal);
-
+//admin routers
 app.post("/api/admin", adminAccess);
 app.get("/api/admin/companies", AdminAuth, getCompanyData);
+app.get("/api/admin/comapnies/:id", requireAuth, readCompanydataById);
+app.post("/api/admin/companies", AdminAuth, createCompany);
+app.delete("/api/admin/companies", AdminAuth, deleteCompany);
 app.get("/api/admin/clients", AdminAuth, getUsersData);
 
 const PORT = process.env.PORT || 8888;
