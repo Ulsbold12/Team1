@@ -1,43 +1,15 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { RevenueCard } from "./RevenueCard";
-
-import { useAuth } from "@clerk/nextjs";
-
-interface FinanceRecord {
-  revenue: number;
-  expense: number;
-  netProfit: number;
-  month: string;
-}
 
 interface AiCategory {
   name: string;
   total: number;
 }
 
-const COLORS = ["#10b981", "#3b82f6", "#f59e0b", "#f43f5e", "#8b5cf6"];
-
-const MONTH_NAMES = [
-  "1-р сар",
-  "2-р сар",
-  "3-р сар",
-  "4-р сар",
-  "5-р сар",
-  "6-р сар",
-  "7-р сар",
-  "8-р сар",
-  "9-р сар",
-  "10-р сар",
-  "11-р сар",
-  "12-р сар",
-];
-
 export const Dashboard = ({ aiResult }: { aiResult?: any }) => {
   const [revenue, setRevenue] = useState(0);
   const [expense, setExpense] = useState(0);
-  const [records, setRecords] = useState<FinanceRecord[]>([]);
-  const { getToken } = useAuth();
 
   const displayRevenue = aiResult?.income
     ? aiResult.income.reduce(
