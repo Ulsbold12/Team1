@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RevenueCard } from "./RevenueCard";
 
 interface FinanceRecord {
@@ -34,37 +34,6 @@ const MONTH_NAMES = [
 export const Dashboard = ({ aiResult }: { aiResult?: any }) => {
   const [revenue, setRevenue] = useState(0);
   const [expense, setExpense] = useState(0);
-
-  useEffect(() => {
-    async function fetchFinance() {
-      try {
-        const token = await getToken();
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/finance`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          },
-        );
-        const data = await res.json();
-        if (data.success && Array.isArray(data.data)) {
-          setRecords(data.data);
-          const totalRevenue = data.data.reduce(
-            (s: number, r: FinanceRecord) => s + (r.revenue ?? 0),
-            0,
-          );
-          const totalExpense = data.data.reduce(
-            (s: number, r: FinanceRecord) => s + (r.expense ?? 0),
-            0,
-          );
-          setRevenue(totalRevenue);
-          setExpense(totalExpense);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    fetchFinance();
-  }, [aiResult]);
 
   const displayRevenue = aiResult?.income
     ? aiResult.income.reduce(
@@ -119,26 +88,6 @@ export const Dashboard = ({ aiResult }: { aiResult?: any }) => {
     },
   ];
 
-  const barData = [...records].reverse().map((r) => ({
-    огноо: MONTH_NAMES[new Date(r.month).getMonth()],
-    орлого: r.revenue ?? 0,
-    зарлага: r.expense ?? 0,
-  }));
-
-  const pieData =
-    aiResult?.expenses && aiResult.expenses.length > 0
-      ? aiResult.expenses.map((c: AiCategory, i: number) => ({
-          id: i,
-          name: c.name,
-          value: c.total,
-        }))
-      : records.length > 0
-        ? [
-            { id: 0, name: "Орлого", value: revenue },
-            { id: 1, name: "Зарлага", value: expense },
-          ]
-        : [];
-
   return (
     <div className="bg-background dark:bg-sidebar w-full flex flex-col gap-6 p-4 md:p-5 transition-colors">
       <div className="flex flex-row gap-4 md:gap-10 flex-wrap">
@@ -152,8 +101,6 @@ export const Dashboard = ({ aiResult }: { aiResult?: any }) => {
           />
         ))}
       </div>
-
-      {/* Charts */}
     </div>
   );
 };
