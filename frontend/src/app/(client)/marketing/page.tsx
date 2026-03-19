@@ -232,6 +232,15 @@ export default function MarketingPage() {
               setSavedPosts((prev) => prev.map((p) => p.id === id ? { ...p, content } : p))
             }
             onDeleted={(id) => setSavedPosts((prev) => prev.filter((p) => p.id !== id))}
+            onDeletedAll={async () => {
+              if (!confirm("Бүх хадгалсан постуудыг устгах уу?")) return;
+              const token = await getToken();
+              fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts`, {
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${token}` },
+              }).catch(console.error);
+              setSavedPosts([]);
+            }}
           />
         </div>
       </div>

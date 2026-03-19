@@ -16,7 +16,7 @@ export default function OnboardingPage() {
     phone: "",
     address: "",
   });
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
 
   const redirecting = useRef(false);
 

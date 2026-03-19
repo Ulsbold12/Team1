@@ -48,6 +48,7 @@ export async function POST(request: NextRequest) {
     const today = new Date();
     const todayISO = today.toISOString().split("T")[0];
 
+    // Step 1: Generate posts in English
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       response_format: { type: "json_object" },
