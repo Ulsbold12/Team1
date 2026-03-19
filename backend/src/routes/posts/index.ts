@@ -117,6 +117,7 @@ export const publishNow: RequestHandler = async (req, res) => {
 };
 
 
+
 export const createPost: RequestHandler = async (req, res) => {
   const orgId = req.clerkUserId!;
   const { title, content, platform, scheduledDate, images } = req.body;
