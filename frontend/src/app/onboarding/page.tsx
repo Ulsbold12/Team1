@@ -29,6 +29,7 @@ export default function OnboardingPage() {
     phone: "",
     address: "",
   });
+  const { user, isLoaded } = useUser();
   const [newMform, setNewMform] = useState({
     id: "",
     role: "",

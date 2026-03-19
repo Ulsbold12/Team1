@@ -48,6 +48,7 @@ export async function POST(request: NextRequest) {
     const today = new Date();
     const todayISO = today.toISOString().split("T")[0];
 
+    // Step 1: Generate posts in English
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       response_format: { type: "json_object" },
@@ -106,6 +107,8 @@ Generate 15 ready-to-publish social media posts for the given product. Posts mus
 5. **Call-to-action** — drive a specific next step: sign up, DM, try free, visit site
 
 Vary the content types across platforms. Do not repeat the same angle back-to-back.
+
+
 
 ---
 

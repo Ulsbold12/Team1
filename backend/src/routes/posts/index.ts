@@ -116,6 +116,18 @@ export const publishNow: RequestHandler = async (req, res) => {
   }
 };
 
+
+
+export const deleteAllPosts: RequestHandler = async (req, res) => {
+  const orgId = req.clerkUserId!;
+  try {
+    await prisma.post.deleteMany({ where: { orgId } });
+    return res.json({ success: true });
+  } catch (e) {
+    return res.status(500).json({ success: false, message: e });
+  }
+};
+
 export const createPost: RequestHandler = async (req, res) => {
   const orgId = req.clerkUserId!;
   const { title, content, platform, scheduledDate, images } = req.body;
