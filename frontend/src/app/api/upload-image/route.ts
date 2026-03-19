@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const blob = await put(file.name, file, { access: "private" });
+    const blob = await put(file.name, file, { access: "public" });
     return NextResponse.json({ url: blob.url });
   } catch (e) {
     console.error("Blob upload error:", e);

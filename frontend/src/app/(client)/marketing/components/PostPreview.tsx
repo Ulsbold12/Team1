@@ -121,7 +121,7 @@ export default function PostPreview({
                 style={{ background: "white", borderColor: "#E5E7EB" }}
               >
                 <div
-                  className={`w-8 h-8 rounded-lg ${pc!.badge} flex items-center justify-center flex-shrink-0`}
+                  className={`w-8 h-8 rounded-lg ${pc!.badge} flex items-center justify-center shrink-0`}
                 >
                   {PLATFORM_ICON[preview.platform]}
                 </div>
