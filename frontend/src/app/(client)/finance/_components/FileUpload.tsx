@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Dashboard } from "./Dashboard";
 import { GraphicSection } from "./GraphicSection";
 import FinanceForm from "./FinanceForm";
+import { FinanceReport } from "./FinanceReport";
 
 interface Transaction {
   [key: string]: string | number;
@@ -223,12 +224,6 @@ export default function FileUpload({ onResult }: FileUploadProps) {
     [],
   );
   const [showManualForm, setShowManualForm] = useState(false);
-  // const [manualForm, setManualForm] = useState({
-  //   date: "",
-  //   description: "",
-  //   type: "expense",
-  //   amount: "",
-  // });
   const [aiResult, setAiResult] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedMonths, setSelectedMonths] = useState<Set<string>>(new Set());
@@ -236,6 +231,7 @@ export default function FileUpload({ onResult }: FileUploadProps) {
   const [showDuplicates, setShowDuplicates] = useState(false);
   const [isPdfLoading, setIsPdfLoading] = useState(false);
   const pdfRef = useRef<HTMLDivElement>(null);
+  const [monthIndex, setMonthIndex] = useState(-1);
 
   const downloadPDF = () => {
     if (!aiResult) return;
@@ -508,7 +504,10 @@ export default function FileUpload({ onResult }: FileUploadProps) {
           typeof raw.revenue === "number"
             ? raw.revenue
             : Array.isArray(raw.income)
-              ? (raw.income as { total: number }[]).reduce((s, c) => s + (c.total ?? 0), 0)
+              ? (raw.income as { total: number }[]).reduce(
+                  (s, c) => s + (c.total ?? 0),
+                  0,
+                )
               : typeof raw.income === "number"
                 ? raw.income
                 : 0;
@@ -516,15 +515,19 @@ export default function FileUpload({ onResult }: FileUploadProps) {
           typeof raw.expense === "number"
             ? raw.expense
             : Array.isArray(raw.expenses)
-              ? (raw.expenses as { total: number }[]).reduce((s, c) => s + (c.total ?? 0), 0)
+              ? (raw.expenses as { total: number }[]).reduce(
+                  (s, c) => s + (c.total ?? 0),
+                  0,
+                )
               : typeof raw.expenses === "number"
                 ? raw.expenses
                 : 0;
-        const netProfit = raw.netProfit ?? (revenue - expense);
+        const netProfit = raw.netProfit ?? revenue - expense;
         // "2025-01" → "2025-01-01" so Date parses correctly
-        const monthStr = typeof raw.month === "string" && raw.month.length === 7
-          ? raw.month + "-01"
-          : raw.month;
+        const monthStr =
+          typeof raw.month === "string" && raw.month.length === 7
+            ? raw.month + "-01"
+            : raw.month;
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/finance`, {
           method: "POST",
           headers: authHeader,
@@ -543,10 +546,45 @@ export default function FileUpload({ onResult }: FileUploadProps) {
     }
   };
 
+  const monthlyGroups = useMemo(() => {
+    const map = new Map<string, Transaction[]>();
+    filteredTransactions.forEach((tx) => {
+      const key = getMonthKey(String(tx["Огноо"] ?? ""));
+      if (!map.has(key)) map.set(key, []);
+      map.get(key)!.push(tx);
+    });
+    return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
+  }, [filteredTransactions]);
+
+  const isAllMonths = monthIndex === -1;
+  const currentMonthKey = isAllMonths
+    ? ""
+    : (monthlyGroups[monthIndex]?.[0] ?? "");
+  const currentMonthTx = isAllMonths
+    ? filteredTransactions
+    : (monthlyGroups[monthIndex]?.[1] ?? []);
+  const currentMonthLabel = isAllMonths
+    ? "Бүх сар"
+    : `${currentMonthKey.slice(0, 4)} оны ${MONTH_NAMES[Number(currentMonthKey.slice(5, 7)) - 1]}`;
+
+  const currentMonthAiResult = useMemo(() => {
+    if (!aiResult) return null;
+    if (isAllMonths) return aiResult;
+    const monthData = aiResult.monthly?.find(
+      (m: any) => m.month === currentMonthKey,
+    );
+    if (!monthData) return aiResult;
+    return {
+      ...aiResult,
+      income: monthData.income ?? aiResult.income,
+      expenses: monthData.expenses ?? aiResult.expenses,
+    };
+  }, [aiResult, currentMonthKey, isAllMonths]);
+
   return (
     <>
       <div className="w-full flex flex-col lg:flex-row gap-6 mt-10 items-start">
-        <Card className="w-full lg:w-[420px] shrink-0 self-stretch">
+        <Card className="w-full  shrink-0 self-stretch">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <UploadCloud className="h-6 w-6 text-zinc-700 dark:text-zinc-300" />
@@ -757,171 +795,45 @@ export default function FileUpload({ onResult }: FileUploadProps) {
             </div>
           </CardContent>
         </Card>
-
-        {aiResult && (
-          <div
-            ref={pdfRef}
-            className="flex-1 flex flex-col gap-4 bg-white dark:bg-slate-900 p-2 rounded-lg self-stretch overflow-y-auto"
-          >
-            {/* Ерөнхий дүгнэлт */}
-            <Card className="w-full border-blue-100 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20">
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-2 text-base text-blue-700 dark:text-blue-300">
-                  <Sparkles className="h-5 w-5" />
-                  Ерөнхий дүгнэлт
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                  {aiResult.summary}
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* Tab: Нийт + сар бүр */}
-            <Card className="w-full">
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <Sparkles className="h-4 w-4 text-blue-500" />
-                  Ангилалын задаргаа
-                </CardTitle>
-                <div className="flex flex-wrap gap-2 pt-2">
-                  <button
-                    onClick={() => setActiveTab("нийт")}
-                    className={`px-3 py-1 rounded-full text-sm border transition-colors ${
-                      activeTab === "нийт"
-                        ? "bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 border-slate-800"
-                        : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-300 dark:border-slate-600 hover:border-slate-500"
-                    }`}
-                  >
-                    Нийт
-                  </button>
-                  {aiResult.monthly?.map((m: { month: string }) => (
-                    <button
-                      key={m.month}
-                      onClick={() => setActiveTab(m.month)}
-                      className={`px-3 py-1 rounded-full text-sm border transition-colors ${
-                        activeTab === m.month
-                          ? "bg-blue-600 text-white border-blue-600"
-                          : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-300 dark:border-slate-600 hover:border-blue-400"
-                      }`}
-                    >
-                      {getMonthLabel(m.month)}
-                    </button>
-                  ))}
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-5">
-                {(() => {
-                  const monthData =
-                    activeTab === "нийт"
-                      ? { income: aiResult.income, expenses: aiResult.expenses }
-                      : aiResult.monthly?.find(
-                          (m: { month: string }) => m.month === activeTab,
-                        );
-
-                  const income: { name: string; total: number }[] =
-                    monthData?.income ?? [];
-                  const expenses: { name: string; total: number }[] =
-                    monthData?.expenses ?? [];
-
-                  const maxIncome = Math.max(...income.map((c) => c.total), 1);
-                  const maxExpense = Math.max(
-                    ...expenses.map((c) => c.total),
-                    1,
-                  );
-
-                  return (
-                    <>
-                      {/* Орлого */}
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-sm font-semibold text-emerald-600">
-                          <TrendingUp className="h-4 w-4" />
-                          Орлого
-                        </div>
-                        {income.map((cat, i) => (
-                          <div key={i} className="space-y-1">
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="text-slate-600 dark:text-slate-400">
-                                {cat.name}
-                              </span>
-                              <span className="font-semibold text-emerald-700 dark:text-emerald-400">
-                                ₮{cat.total.toLocaleString()}
-                              </span>
-                            </div>
-                            <div className="h-2 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-                              <div
-                                className="h-2 rounded-full bg-emerald-400 transition-all"
-                                style={{
-                                  width: `${(cat.total / maxIncome) * 100}%`,
-                                }}
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="border-t border-slate-100 dark:border-slate-700" />
-
-                      {/* Зарлага */}
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-sm font-semibold text-rose-600">
-                          <TrendingDown className="h-4 w-4" />
-                          Зарлага
-                        </div>
-                        {expenses.map((cat, i) => (
-                          <div key={i} className="space-y-1">
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="text-slate-600">{cat.name}</span>
-                              <span className="font-semibold text-rose-700 dark:text-rose-400">
-                                ₮{cat.total.toLocaleString()}
-                              </span>
-                            </div>
-                            <div className="h-2 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-                              <div
-                                className="h-2 rounded-full bg-rose-400 transition-all"
-                                style={{
-                                  width: `${(cat.total / maxExpense) * 100}%`,
-                                }}
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </>
-                  );
-                })()}
-              </CardContent>
-            </Card>
-
-            {/* Зөвлөмж */}
-            <Card className="w-full">
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <Lightbulb className="h-5 w-5 text-yellow-500" />
-                  Зөвлөмж
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                {aiResult.tips?.map((tip: string, i: number) => (
-                  <div
-                    key={i}
-                    className="flex gap-3 items-start p-2 rounded-lg bg-slate-50 dark:bg-slate-800"
-                  >
-                    <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
-                    <span className="text-sm text-slate-700 dark:text-slate-300">
-                      {tip}
-                    </span>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-        )}
       </div>
       <div>
-        <Dashboard aiResult={aiResult} />
-        <GraphicSection aiResult={aiResult} />
+        {monthlyGroups.length > 0 && (
+          <div>
+            <div className="flex items-center justify-center gap-4 py-4">
+              <button
+                onClick={() => setMonthIndex((p) => Math.max(p - 1, -1))}
+                disabled={monthIndex === -1}
+                className="text-indigo-600 disabled:text-gray-300 font-bold text-xl"
+              >
+                ←
+              </button>
+              <span className="font-semibold text-lg min-w-[180px] text-center">
+                {currentMonthLabel}
+              </span>
+              <button
+                onClick={() =>
+                  setMonthIndex((p) =>
+                    Math.min(p + 1, monthlyGroups.length - 1),
+                  )
+                }
+                disabled={monthIndex === monthlyGroups.length - 1}
+                className="text-indigo-600 disabled:text-gray-300 font-bold text-xl"
+              >
+                →
+              </button>
+            </div>
+
+            <FinanceReport
+              aiResult={currentMonthAiResult}
+              transactions={currentMonthTx.map((tx) => ({
+                date: String(tx["Огноо"] ?? ""),
+                description: String(tx["Гүйлгээний утга"] ?? ""),
+                amount: Number(tx["Зарлага"] || tx["Орлого"] || 0),
+                type: Number(tx["Орлого"] || 0) > 0 ? "income" : "expense",
+              }))}
+            />
+          </div>
+        )}
       </div>
     </>
   );

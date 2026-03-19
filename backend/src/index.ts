@@ -22,6 +22,7 @@ app.post("/api/billing/webhook", express.raw({ type: "application/json" }), stri
 
 app.use(express.json());
 
+app.get("/health", (_req, res) => res.json({ ok: true }));
 app.post("/api/chat", Chat);
 
 app.use(clerkMiddleware());
@@ -47,7 +48,7 @@ app.post("/api/billing/checkout", requireAuth, createCheckout);
 app.post("/api/billing/portal", requireAuth, createPortal);
 
 
-const PORT = 8888;
+const PORT = process.env.PORT || 8888;
 app.listen(PORT, () => {
   console.log(`Backend running on port ${PORT}`);
 });

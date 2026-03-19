@@ -3,6 +3,7 @@ import { useState } from "react";
 import { AISection } from "./_components/AISection";
 import FileUpload from "./_components/FileUpload";
 import { HeadSection } from "./_components/HeadSection";
+import { FinanceReport } from "./_components/FinanceReport";
 
 export interface AiCategory {
   name: string;
@@ -31,7 +32,6 @@ export default function Finance() {
     <div className="flex-1 overflow-y-auto p-8 space-y-8 bg-muted/30 text-foreground">
       <HeadSection />
       <FileUpload onResult={(result) => setAiResult(result)} />
-      <AISection aiResult={aiResult} />
     </div>
   );
 }
