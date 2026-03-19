@@ -15,12 +15,12 @@ export function SavedPostsList({ posts, loading, onUpdated, onDeleted }: SavedPo
   return (
     <Card className="rounded-2xl shadow p-0">
       <CardHeader className="px-6 pt-6 pb-2">
-        <CardTitle className="text-xl font-bold text-slate-900">Хадгалсан постууд</CardTitle>
+        <CardTitle className="text-xl font-bold text-slate-900 dark:text-white">Хадгалсан постууд</CardTitle>
       </CardHeader>
       <CardContent className="px-6 pb-6">
-        {loading && <p className="text-sm text-slate-400">Ачааллаж байна...</p>}
+        {loading && <p className="text-sm text-slate-400 dark:text-gray-500">Ачааллаж байна...</p>}
         {!loading && posts.length === 0 && (
-          <p className="text-sm text-slate-400">Хадгалсан пост байхгүй байна.</p>
+          <p className="text-sm text-slate-400 dark:text-gray-500">Хадгалсан пост байхгүй байна.</p>
         )}
         {!loading && posts.length > 0 && (
           <div className="flex flex-col gap-3">

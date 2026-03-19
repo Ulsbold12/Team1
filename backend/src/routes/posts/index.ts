@@ -88,6 +88,34 @@ export const deletePost: RequestHandler = async (req, res) => {
   }
 };
 
+export const publishNow: RequestHandler = async (req, res) => {
+  const orgId = req.clerkUserId!;
+  const id = req.params.id as string;
+  try {
+    const post = await prisma.post.findUnique({ where: { id } });
+    if (!post || post.orgId !== orgId) return res.status(404).json({ success: false, message: "Not found" });
+
+    const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL;
+    if (!n8nWebhookUrl) return res.status(503).json({ success: false, message: "N8N_WEBHOOK_URL not configured" });
+
+    await fetch(n8nWebhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        platform: post.platform,
+        content: post.content,
+        images: post.images,
+        postId: post.id,
+        publishNow: true,
+      }),
+    });
+
+    return res.json({ success: true });
+  } catch (e) {
+    return res.status(500).json({ success: false, message: e });
+  }
+};
+
 export const createPost: RequestHandler = async (req, res) => {
   const orgId = req.clerkUserId!;
   const { title, content, platform, scheduledDate, images } = req.body;

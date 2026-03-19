@@ -68,11 +68,11 @@ export default function PostPreview({
   const pc = preview ? PLATFORM_COLORS[preview.platform] : null;
 
   return (
-    <div className="flex flex-col h-full bg-white border-l border-gray-200">
+    <div className="flex flex-col h-full bg-white dark:bg-gray-900 border-l border-gray-200 dark:border-gray-700">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3.5 border-b border-gray-100">
+      <div className="flex items-center justify-between px-4 py-3.5 border-b border-gray-100 dark:border-gray-800">
         <div className="flex items-center gap-2">
-          <span className="text-[13px] font-bold text-gray-800">
+          <span className="text-[13px] font-bold text-gray-800 dark:text-gray-100">
             Постын дэлгэрэнгүй
           </span>
           {preview && (
@@ -84,7 +84,7 @@ export default function PostPreview({
         {preview && (
           <button
             onClick={copy}
-            className="text-[11px] px-2.5 py-1 rounded-lg border border-gray-200 text-gray-500 hover:border-[#5048e5]/40 hover:text-[#5048e5] transition-all"
+            className="text-[11px] px-2.5 py-1 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-[#5048e5]/40 hover:text-[#5048e5] transition-all"
           >
             {copied ? "✓ Хуулагдлаа" : "Хуулах"}
           </button>
@@ -94,7 +94,7 @@ export default function PostPreview({
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         {!preview ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-12">
-            <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center mb-3">
+            <div className="w-12 h-12 bg-gray-50 dark:bg-gray-800 rounded-xl flex items-center justify-center mb-3">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <path
                   d="M12 2L9.09 8.26L2 9.27l5 4.87L5.82 21 12 17.77 18.18 21l-1.18-6.86L22 9.27l-7.09-1.01L12 2z"
@@ -102,10 +102,10 @@ export default function PostPreview({
                 />
               </svg>
             </div>
-            <p className="text-[12px] font-semibold text-gray-400">
+            <p className="text-[12px] font-semibold text-gray-400 dark:text-gray-500">
               Контент үүсгэгдээгүй
             </p>
-            <p className="text-[11px] text-gray-300 mt-1">
+            <p className="text-[11px] text-gray-300 dark:text-gray-600 mt-1">
               Зүүн талын формыг бөглөж контент үүсгэнэ үү
             </p>
           </div>
@@ -113,24 +113,23 @@ export default function PostPreview({
           <>
             {/* Platform */}
             <div>
-              <p className="text-[9px] font-bold text-gray-400 tracking-widest mb-2 uppercase">
+              <p className="text-[9px] font-bold text-gray-400 dark:text-gray-500 tracking-widest mb-2 uppercase">
                 Платформ
               </p>
               <div
-                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl border ${pc!.pill} border-opacity-30`}
-                style={{ background: "white", borderColor: "#E5E7EB" }}
+                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 ${pc!.pill} border-opacity-30`}
               >
                 <div
                   className={`w-8 h-8 rounded-lg ${pc!.badge} flex items-center justify-center shrink-0`}
                 >
                   {PLATFORM_ICON[preview.platform]}
                 </div>
-                <span className="text-[13px] font-bold text-gray-800">
+                <span className="text-[13px] font-bold text-gray-800 dark:text-gray-100">
                   {preview.platform}
                 </span>
                 {autoPost && (
                   <div className="ml-auto flex items-center gap-1.5">
-                    <span className="text-[10px] text-gray-400">Авто пост</span>
+                    <span className="text-[10px] text-gray-400 dark:text-gray-500">Авто пост</span>
                     <div className="w-8 h-4 bg-[#5048e5] rounded-full flex items-center justify-end pr-0.5">
                       <div className="w-3 h-3 bg-white rounded-full shadow" />
                     </div>
@@ -141,17 +140,17 @@ export default function PostPreview({
 
             {/* Image preview */}
             <div>
-              <p className="text-[9px] font-bold text-gray-400 tracking-widest mb-2 uppercase">
+              <p className="text-[9px] font-bold text-gray-400 dark:text-gray-500 tracking-widest mb-2 uppercase">
                 Зургийн урьдчилж харах
               </p>
               <div
-                className="w-full rounded-xl bg-gray-50 border border-gray-100 overflow-hidden"
+                className="w-full rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 overflow-hidden"
                 style={{ aspectRatio: "16/9" }}
               >
                 <div className="w-full h-full flex flex-col items-center justify-center relative">
                   {/* Decorative frame */}
-                  <div className="absolute inset-4 border border-gray-200 rounded-lg flex flex-col items-center justify-center p-4 bg-white">
-                    <div className="w-8 h-8 bg-gray-100 rounded-lg mb-2 flex items-center justify-center">
+                  <div className="absolute inset-4 border border-gray-200 dark:border-gray-700 rounded-lg flex flex-col items-center justify-center p-4 bg-white dark:bg-gray-800">
+                    <div className="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-lg mb-2 flex items-center justify-center">
                       <svg
                         width="16"
                         height="16"
@@ -174,10 +173,10 @@ export default function PostPreview({
                         />
                       </svg>
                     </div>
-                    <p className="text-[10px] font-semibold text-gray-300 text-center">
+                    <p className="text-[10px] font-semibold text-gray-300 dark:text-gray-600 text-center">
                       CONTENT
                     </p>
-                    <p className="text-[9px] text-gray-200 text-center mt-0.5 truncate max-w-full px-2">
+                    <p className="text-[9px] text-gray-200 dark:text-gray-700 text-center mt-0.5 truncate max-w-full px-2">
                       {preview.title}
                     </p>
                   </div>
@@ -189,7 +188,7 @@ export default function PostPreview({
 
             {/* Scheduled info */}
             {scheduledDate && (
-              <div className="flex items-center gap-2 text-[11px] text-gray-500 bg-gray-50 rounded-lg px-3 py-2">
+              <div className="flex items-center gap-2 text-[11px] text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
                   <rect
                     x="3"
@@ -216,11 +215,11 @@ export default function PostPreview({
 
             {/* Content */}
             <div>
-              <p className="text-[9px] font-bold text-gray-400 tracking-widest mb-2 uppercase">
+              <p className="text-[9px] font-bold text-gray-400 dark:text-gray-500 tracking-widest mb-2 uppercase">
                 Тайлбар
               </p>
-              <div className="bg-gray-50 rounded-xl p-3 border border-gray-100">
-                <p className="text-[11px] text-gray-700 leading-relaxed whitespace-pre-line">
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-3 border border-gray-100 dark:border-gray-700">
+                <p className="text-[11px] text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-line">
                   {preview.content}
                 </p>
               </div>
@@ -243,8 +242,8 @@ export default function PostPreview({
       </div>
 
       {/* Bottom buttons */}
-      <div className="px-4 py-3 border-t border-gray-100 flex gap-2">
-        <button className="flex-1 py-2.5 rounded-xl text-[12px] font-bold border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
+      <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-800 flex gap-2">
+        <button className="flex-1 py-2.5 rounded-xl text-[12px] font-bold border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
           Устгах
         </button>
         <button

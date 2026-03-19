@@ -190,7 +190,7 @@ export default function MarketingPage() {
 
   return (
     <div className="flex-1 p-6">
-      <h1 className="text-3xl font-bold text-slate-900 mb-6">Маркетинг</h1>
+      <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Маркетинг</h1>
 
       {sessionExpired && (
         <div className="mb-4 flex items-center gap-3 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">

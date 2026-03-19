@@ -36,14 +36,14 @@ export function StrategyForm({
     <Card className="rounded-2xl shadow p-0">
       <CardHeader className="px-6 pt-6 pb-2">
         <div className="flex items-start justify-between gap-2">
-          <CardTitle className="text-2xl font-bold text-slate-900">Стратеги боловсруулах</CardTitle>
+          <CardTitle className="text-2xl font-bold text-slate-900 dark:text-white">Стратеги боловсруулах</CardTitle>
           {lastSaved && (
-            <span className="text-xs text-slate-400 shrink-0 mt-1">
+            <span className="text-xs text-slate-400 dark:text-gray-500 shrink-0 mt-1">
               Хадгалсан: {lastSaved.toLocaleDateString("mn-MN", { month: "short", day: "numeric" })}
             </span>
           )}
         </div>
-        <p className="text-slate-500 text-sm mt-1">
+        <p className="text-slate-500 dark:text-gray-400 text-sm mt-1">
           Маркетинг AI-тай ярьж тантай тохирсон 30 хоногийн контент төлөвлөгөө гаргаарай
         </p>
       </CardHeader>
@@ -89,10 +89,10 @@ export function StrategyForm({
             onDrop={(e) => { e.preventDefault(); setDragging(false); onImageFiles(e.dataTransfer.files); }}
             className={[
               "flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed p-5 cursor-pointer transition-colors text-center",
-              dragging ? "border-[#5048e5] bg-[#5048e5]/5" : "border-slate-200 hover:border-[#5048e5]/40 hover:bg-slate-50",
+              dragging ? "border-[#5048e5] bg-[#5048e5]/5" : "border-slate-200 dark:border-gray-700 hover:border-[#5048e5]/40 hover:bg-slate-50 dark:hover:bg-gray-800",
             ].join(" ")}>
-            <ImagePlus className="size-6 text-slate-400" />
-            <p className="text-xs text-slate-500">
+            <ImagePlus className="size-6 text-slate-400 dark:text-gray-500" />
+            <p className="text-xs text-slate-500 dark:text-gray-400">
               Зураг чирж тавих эсвэл <span className="text-[#5048e5] font-medium">сонгох</span>
             </p>
             <input
@@ -108,7 +108,7 @@ export function StrategyForm({
           {images.length > 0 && (
             <div className="grid grid-cols-3 gap-2 mt-1">
               {images.map((img, i) => (
-                <div key={i} className="relative group rounded-lg overflow-hidden border border-slate-200 aspect-square">
+                <div key={i} className="relative group rounded-lg overflow-hidden border border-slate-200 dark:border-gray-700 aspect-square">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={img.preview} alt={img.name} className="w-full h-full object-cover" />
                   {img.uploading && (

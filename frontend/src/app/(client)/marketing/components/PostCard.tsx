@@ -16,7 +16,7 @@ export function PostCard({ post, images = [], onSaved }: PostCardProps) {
   const [saving, setSaving] = useState(false);
   const [selectedIndexes, setSelectedIndexes] = useState<Set<number>>(new Set());
   const { getToken } = useAuth();
-  const badgeClass = PLATFORM_COLORS[post.platform as Platform] ?? "bg-slate-200 text-slate-700";
+  const badgeClass = PLATFORM_COLORS[post.platform as Platform] ?? "bg-slate-200 text-slate-700 dark:bg-gray-700 dark:text-gray-200";
 
   function toggleImage(i: number) {
     setSelectedIndexes((prev) => {
@@ -58,19 +58,19 @@ export function PostCard({ post, images = [], onSaved }: PostCardProps) {
   }
 
   return (
-    <div className="rounded-xl border border-slate-200 p-4 flex flex-col gap-3">
+    <div className="rounded-xl border border-slate-200 dark:border-gray-700 p-4 flex flex-col gap-3">
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <span translate="no" className={["inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold", badgeClass].join(" ")}>
           {post.platform === "LinkedIn" ? <><span className="font-bold leading-none">in</span> {post.platform}</> : post.platform}
         </span>
-        <span className="text-xs text-slate-400">{post.scheduledDate.slice(0, 16).replace("T", " ")}</span>
+        <span className="text-xs text-slate-400 dark:text-gray-500">{post.scheduledDate.slice(0, 16).replace("T", " ")}</span>
       </div>
 
-      <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">{post.content}</p>
+      <p className="text-sm text-slate-700 dark:text-gray-200 leading-relaxed whitespace-pre-wrap">{post.content}</p>
 
       {images.length > 0 && (
         <div className="flex flex-col gap-1.5">
-          <p className="text-xs text-slate-400">Зураг сонгох (заавал биш)</p>
+          <p className="text-xs text-slate-400 dark:text-gray-500">Зураг сонгох (заавал биш)</p>
           <div className="grid grid-cols-3 gap-2">
             {images.map((img, i) => {
               const selected = selectedIndexes.has(i);
@@ -81,7 +81,7 @@ export function PostCard({ post, images = [], onSaved }: PostCardProps) {
                   onClick={() => toggleImage(i)}
                   className={[
                     "relative rounded-lg overflow-hidden border-2 aspect-square transition-all",
-                    selected ? "border-blue-500 ring-2 ring-blue-200" : "border-slate-200 opacity-60 hover:opacity-90",
+                    selected ? "border-blue-500 ring-2 ring-blue-200" : "border-slate-200 dark:border-gray-700 opacity-60 hover:opacity-90",
                   ].join(" ")}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={img.preview} alt="" className="w-full h-full object-cover" />

@@ -21,6 +21,7 @@ export interface SavedPost {
   content: string;
   publishedAt: string;
   images: string[];
+  published?: boolean;
 }
 
 export const PLATFORM_COLORS: Record<Platform, string> = {
