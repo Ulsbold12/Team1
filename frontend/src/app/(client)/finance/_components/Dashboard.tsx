@@ -1,8 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
-import { RevenueCard } from "./RevenueCard";
-
+import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
+import { RevenueCard } from "./RevenueCard";
 
 interface FinanceRecord {
   revenue: number;
@@ -34,10 +33,30 @@ const MONTH_NAMES = [
 ];
 
 export const Dashboard = ({ aiResult }: { aiResult?: any }) => {
+  const { getToken } = useAuth();
+  const [records, setRecords] = useState<FinanceRecord[]>([]);
   const [revenue, setRevenue] = useState(0);
   const [expense, setExpense] = useState(0);
-  const [records, setRecords] = useState<FinanceRecord[]>([]);
-  const { getToken } = useAuth();
+
+  useEffect(() => {
+    async function fetchFinance() {
+      try {
+        const token = await getToken();
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/finance`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        if (data.success && Array.isArray(data.data)) {
+          setRecords(data.data);
+          setRevenue(data.data.reduce((s: number, r: FinanceRecord) => s + (r.revenue ?? 0), 0));
+          setExpense(data.data.reduce((s: number, r: FinanceRecord) => s + (r.expense ?? 0), 0));
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    fetchFinance();
+  }, [aiResult]);
 
   const displayRevenue = aiResult?.income
     ? aiResult.income.reduce(
