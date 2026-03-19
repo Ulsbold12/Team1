@@ -32,7 +32,8 @@ async function translateToMongolian(text: string): Promise<string> {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { productName, description, targetAudience } = body;
+    const { productName, description, targetAudience, images } = body;
+    const imageBase64s: string[] = Array.isArray(images) ? images : [];
 
     if (!productName || !description || !targetAudience) {
       return NextResponse.json(
@@ -155,12 +156,21 @@ Distribution: 1 LinkedIn, 2 Facebook, 2 Twitter.`,
         },
         {
           role: "user",
-          content: `Generate a 30-day content plan for this product:
+          content: [
+            {
+              type: "text" as const,
+              text: `Generate a 30-day content plan for this product:
 
 Product name: ${productName}
 Description: ${description}
 Target audience: ${targetAudience}
-Start date: ${todayISO}`,
+Start date: ${todayISO}${imageBase64s.length > 0 ? `\n\nThe user has provided ${imageBase64s.length} product image(s) above. Analyze them for visual details — colors, style, mood, product appearance — and use that context to make the posts more specific and visually grounded.` : ""}`,
+            },
+            ...imageBase64s.map((dataUrl) => ({
+              type: "image_url" as const,
+              image_url: { url: dataUrl, detail: "low" as const },
+            })),
+          ],
         },
       ],
     });
@@ -170,11 +180,12 @@ Start date: ${todayISO}`,
 
     const aiResult = JSON.parse(responseText);
 
+    const safeTranslate = (text: string) =>
+      translateToMongolian(text).catch(() => text);
+
     const [translatedAdvice, ...translatedContents] = await Promise.all([
-      translateToMongolian(aiResult.advice),
-      ...aiResult.posts.map((post: { content: string }) =>
-        translateToMongolian(post.content),
-      ),
+      safeTranslate(aiResult.advice),
+      ...aiResult.posts.map((post: { content: string }) => safeTranslate(post.content)),
     ]);
 
     const translatedPosts = aiResult.posts.map(

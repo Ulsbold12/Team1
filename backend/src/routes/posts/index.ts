@@ -14,7 +14,7 @@ function requireApiKey(req: Request, res: Response, next: Function) {
 }
 
 // GET /api/facebook/pending-posts  — n8n дуудна
-export const getPendingPosts: RequestHandler = async (req, res) => {
+export const getPendingPosts: RequestHandler = async (_req, res) => {
   try {
     const posts = await prisma.post.findMany({
       where: {
@@ -61,9 +61,36 @@ export const getPosts: RequestHandler = async (req, res) => {
   }
 };
 
+export const updatePost: RequestHandler = async (req, res) => {
+  const orgId = req.clerkUserId!;
+  const id = req.params.id as string;
+  const { content } = req.body;
+  try {
+    const post = await prisma.post.findUnique({ where: { id } });
+    if (!post || post.orgId !== orgId) return res.status(404).json({ success: false, message: "Not found" });
+    const updated = await prisma.post.update({ where: { id }, data: { content } });
+    return res.json({ success: true, data: updated });
+  } catch (e) {
+    return res.status(500).json({ success: false, message: e });
+  }
+};
+
+export const deletePost: RequestHandler = async (req, res) => {
+  const orgId = req.clerkUserId!;
+  const id = req.params.id as string;
+  try {
+    const post = await prisma.post.findUnique({ where: { id } });
+    if (!post || post.orgId !== orgId) return res.status(404).json({ success: false, message: "Not found" });
+    await prisma.post.delete({ where: { id } });
+    return res.json({ success: true });
+  } catch (e) {
+    return res.status(500).json({ success: false, message: e });
+  }
+};
+
 export const createPost: RequestHandler = async (req, res) => {
   const orgId = req.clerkUserId!;
-  const { title, content, platform, scheduledDate } = req.body;
+  const { title, content, platform, scheduledDate, images } = req.body;
   try {
     const post = await prisma.post.create({
       data: {
@@ -71,6 +98,7 @@ export const createPost: RequestHandler = async (req, res) => {
         title: title || content?.slice(0, 60) || "Untitled",
         content: content || "",
         platform,
+        images: Array.isArray(images) ? images : [],
         publishedAt: scheduledDate ? new Date(scheduledDate) : new Date(),
       },
     });
