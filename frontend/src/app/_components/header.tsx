@@ -18,7 +18,6 @@ export const Header = () => {
         </Link>
 
         <div className="flex items-center gap-3">
-          <ChatBubble />
           <SignedOut>
             <SignInButton mode="modal">
               <Button className="bg-[#5048e5] hover:bg-[#4038d4] text-white rounded-xl">

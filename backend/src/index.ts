@@ -10,7 +10,7 @@ import { Chat } from "./routes/ai/chat";
 import { getCompany, updateCompany } from "./routes/company/updateOrganization";
 const app = express();
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  origin: (origin, callback) => callback(null, true),
   credentials: true,
 }));
 app.use(express.json());

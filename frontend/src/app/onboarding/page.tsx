@@ -33,7 +33,10 @@ export default function OnboardingPage() {
     e.preventDefault();
     setLoading(true);
 
+    try {
     const token = await getToken();
+    console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
+    console.log("Token:", token ? "ok" : "null");
 
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/onboarding`,
@@ -60,7 +63,12 @@ export default function OnboardingPage() {
       await session?.reload();
       window.location.href = "/dashboard";
     } else alert(`Алдаа: ${JSON.stringify(data)}`);
-    setLoading(false);
+    } catch (err) {
+      console.error("Fetch error:", err);
+      alert(`Network error: ${err}`);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
