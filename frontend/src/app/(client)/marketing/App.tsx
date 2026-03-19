@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ContentForm, { GeneratedPreview } from "./components/ContentForm";
 import Calendar from "./components/Calendar";
 import PostPreview from "./components/PostPreview";
@@ -11,12 +11,37 @@ function getKey(y: number, m: number, d: number) {
 
 export default function MarketingApp() {
   const [activeNav, setActiveNav] = useState("Маркетинг AI");
-  const [events, setEvents] = useState<EventsMap>(INITIAL_EVENTS);
+  const [events, setEvents] = useState<EventsMap>(() => {
+    if (typeof window === "undefined") return INITIAL_EVENTS;
+    try {
+      const saved = localStorage.getItem("marketing_events");
+      return saved ? JSON.parse(saved) : INITIAL_EVENTS;
+    } catch { return INITIAL_EVENTS; }
+  });
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [preview, setPreview] = useState<GeneratedPreview | null>(null);
-  const [aiAdvice, setAiAdvice] = useState(
-    "Илүү сайн үр дүнд хүрэхийн тулд тайлбар хэсэгт тодорхой боломжуудыг дурдаарай.",
-  );
+  const [preview, setPreview] = useState<GeneratedPreview | null>(() => {
+    if (typeof window === "undefined") return null;
+    try {
+      const saved = localStorage.getItem("marketing_preview");
+      return saved ? JSON.parse(saved) : null;
+    } catch { return null; }
+  });
+  const [aiAdvice, setAiAdvice] = useState(() => {
+    if (typeof window === "undefined") return "Илүү сайн үр дүнд хүрэхийн тулд тайлбар хэсэгт тодорхой боломжуудыг дурдаарай.";
+    return localStorage.getItem("marketing_advice") ?? "Илүү сайн үр дүнд хүрэхийн тулд тайлбар хэсэгт тодорхой боломжуудыг дурдаарай.";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("marketing_events", JSON.stringify(events));
+  }, [events]);
+
+  useEffect(() => {
+    if (preview) localStorage.setItem("marketing_preview", JSON.stringify(preview));
+  }, [preview]);
+
+  useEffect(() => {
+    localStorage.setItem("marketing_advice", aiAdvice);
+  }, [aiAdvice]);
   const [autoPost, setAutoPost] = useState(true);
   const [scheduledTime, setScheduledTime] = useState("09:00");
   const [notif, setNotif] = useState<string | null>(null);

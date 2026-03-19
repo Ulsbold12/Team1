@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useMemo } from "react";
+import React, { useState, useRef, useMemo, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
 import * as XLSX from "xlsx";
 import {
@@ -224,6 +224,34 @@ export default function FileUpload({ onResult }: FileUploadProps) {
   );
   const [showManualForm, setShowManualForm] = useState(false);
   const [aiResult, setAiResult] = useState<any>(null);
+
+  useEffect(() => {
+    const loadSavedAnalysis = async () => {
+      try {
+        const token = await getToken();
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/finance/analysis`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.data?.length > 0) {
+            const latest = data.data[0];
+            const restored = {
+              summary: latest.summary,
+              tips: latest.tips,
+              monthly: latest.monthly,
+              income: (latest.categories as any)?.income ?? [],
+              expenses: (latest.categories as any)?.expenses ?? [],
+            };
+            setAiResult(restored);
+            onResult?.(restored);
+          }
+        }
+      } catch (_) {}
+    };
+    loadSavedAnalysis();
+  }, []);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedMonths, setSelectedMonths] = useState<Set<string>>(new Set());
   const [activeTab, setActiveTab] = useState<string>("нийт");
