@@ -1,7 +1,7 @@
 import type { RequestHandler } from "express";
 import prisma from "../../lib/prisma";
 import { clerkClient } from "../../lib/clerkClient";
-//sole purpose of this code is handle registry of user when user signs in with clerk.
+
 export const registerPatron: RequestHandler = async (req, res) => {
   try {
     const clerkId = req.clerkUserId;
@@ -32,26 +32,26 @@ export const registerPatron: RequestHandler = async (req, res) => {
         },
       });
 
-    const newClient = await prisma.client.create({
-      data: {
-        id: clerkId,
-        role: data.role ?? "EXECUTIVE",
-        email: data.email,
-        firstname: data.firstname,
-        lastname: data.lastname,
-      },
+      const newClient = await tx.client.create({
+        data: {
+          id: clerkId,
+          orgId: organization.id,
+          role: data.role ?? "EXECUTIVE",
+          email: data.email,
+          firstname: data.firstname,
+          lastname: data.lastname,
+        },
+      });
+
+      return { organization, newClient };
     });
 
-    return res.status(201).json(newClient);
-    // return { newClient };
-    // });
-
     // Clerk metadata-д onboarding дууссан гэж тэмдэглэнэ
-    // await clerkClient.users.updateUser(clerkId, {
-    //   publicMetadata: { onboardingComplete: true },
-    // });
+    await clerkClient.users.updateUser(clerkId, {
+      publicMetadata: { onboardingComplete: true },
+    });
 
-    // return res.status(201).json({ success: true, data: result });
+    return res.status(201).json({ success: true, data: result });
   } catch (error) {
     console.error(error);
     return res

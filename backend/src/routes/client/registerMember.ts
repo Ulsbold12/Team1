@@ -31,7 +31,7 @@ export const getCodeForMember: RequestHandler = async (req, res) => {
 };
 export const registerMember: RequestHandler = async (req, res) => {
   const { orgId } = req.body;
-  const { codeToSend } = req.body;
+  const { optKey } = req.body;
   const data = req.body;
   if (!orgId) {
     return res.status(500).json({ message: "organizationId not found" });

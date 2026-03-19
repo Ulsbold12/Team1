@@ -3,6 +3,7 @@
 import Prism from "@/components/Prism";
 import { Button } from "@/components/ui/button";
 import { useAuth, useClerk, useUser } from "@clerk/nextjs";
+import { useEffect, useRef, useState } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -10,7 +11,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { CircleHelp } from "lucide-react";
-import { useState } from "react";
+
 //1. bug fix: detecting if user has a company id on her/his registry.
 //2. if yes -> continue aboard, if no, offer two choices: enter company ID || create company id
 
@@ -76,7 +77,6 @@ export default function OnboardingPage() {
     if (res.ok) {
       await session?.reload();
       window.location.href = "/dashboard";
-    } else alert(`Алдаа: ${JSON.stringify(data)}`);
     } else alert(`Алдаа: ${JSON.stringify(data)}`);
     setLoading(false);
   }
