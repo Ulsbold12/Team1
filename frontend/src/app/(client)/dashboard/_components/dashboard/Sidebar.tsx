@@ -9,6 +9,7 @@ import {
   Megaphone,
   Settings,
   ShieldCheck,
+  CreditCard,
 } from "lucide-react";
 import {
   Sidebar,
@@ -26,6 +27,7 @@ const navItems = [
   { label: "Нүүр", icon: Home, href: "/dashboard" },
   { label: "Санхүү AI", icon: Landmark, href: "/finance" },
   { label: "Маркетинг AI", icon: Megaphone, href: "/marketing" },
+  { label: "Тариф & Төлбөр", icon: CreditCard, href: "/billing" },
   { label: "Тохиргоо", icon: Settings, href: "/settings" },
   { label: "Админ", icon: ShieldCheck, href: "/admin" },
 ];
