@@ -3,11 +3,15 @@ import cors from "cors";
 import "dotenv/config";
 import { clerkMiddleware } from "@clerk/express";
 import { requireAuth } from "./middleware/requireAuth";
-import { registerPatron } from "./routes/client";
+import { registerPatron, registerMember, getCodeForMember } from "./routes/client";
+import { getMembersInfo, DeleteMember, UpdateMember } from "./routes/client/members";
 import { getFinance, createFinance, saveAnalysis, getAnalyses } from "./routes/finance";
 import { getPosts, createPost, updatePost, deletePost, deleteAllPosts, getPendingPosts, markPublished, requireApiKey, publishNow } from "./routes/posts";
 import { getMarketingStrategy, saveMarketingStrategy } from "./routes/marketing";
 import { Chat } from "./routes/ai/chat";
+import { getCompanyData, getUsersData, adminAccess } from "./routes/admin";
+import { AdminAuth } from "./middleware/adminAuth";
+import { registerOrganization } from "./routes/client/regitserOrganization";
 import { getCompany, updateCompany } from "./routes/company/updateOrganization";
 import { getBillingStatus, createCheckout, stripeWebhook, createPortal } from "./routes/billing";
 
@@ -17,7 +21,6 @@ app.use(cors({
   credentials: true,
 }));
 
-// Stripe webhook needs raw body — register BEFORE express.json()
 app.post("/api/billing/webhook", express.raw({ type: "application/json" }), stripeWebhook);
 
 app.use(express.json());
@@ -28,10 +31,19 @@ app.post("/api/chat", Chat);
 app.use(clerkMiddleware());
 
 app.post("/api/onboarding", requireAuth, registerPatron);
+app.post("/api/onboarding/member", requireAuth, registerMember);
+app.get("/api/onboarding/getcode", requireAuth, getCodeForMember);
+app.post("/api/onboarding/org", requireAuth, registerOrganization);
+
+app.get("/api/company/members", requireAuth, getMembersInfo);
+app.delete("/api/company/members", requireAuth, DeleteMember);
+app.post("/api/company/members", requireAuth, UpdateMember);
+
 app.get("/api/finance", requireAuth, getFinance);
 app.post("/api/finance", requireAuth, createFinance);
 app.get("/api/finance/analysis", requireAuth, getAnalyses);
 app.post("/api/finance/analysis", requireAuth, saveAnalysis);
+
 app.get("/api/posts", requireAuth, getPosts);
 app.post("/api/posts", requireAuth, createPost);
 app.put("/api/posts/:id", requireAuth, updatePost);
@@ -42,12 +54,16 @@ app.get("/api/marketing/strategy", requireAuth, getMarketingStrategy);
 app.post("/api/marketing/strategy", requireAuth, saveMarketingStrategy);
 app.get("/api/facebook/pending-posts", requireApiKey, getPendingPosts);
 app.post("/api/facebook/posts/:id/publish", requireApiKey, markPublished);
+
 app.get("/api/company", requireAuth, getCompany);
 app.put("/api/company", requireAuth, updateCompany);
 app.get("/api/billing/status", requireAuth, getBillingStatus);
 app.post("/api/billing/checkout", requireAuth, createCheckout);
 app.post("/api/billing/portal", requireAuth, createPortal);
 
+app.post("/api/admin", adminAccess);
+app.get("/api/admin/companies", AdminAuth, getCompanyData);
+app.get("/api/admin/clients", AdminAuth, getUsersData);
 
 const PORT = process.env.PORT || 8888;
 app.listen(PORT, () => {

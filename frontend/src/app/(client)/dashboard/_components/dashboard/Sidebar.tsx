@@ -12,7 +12,6 @@ import {
   CreditCard,
   Receipt,
 } from "lucide-react";
-import { useUser } from "@clerk/nextjs";
 import {
   Sidebar,
   SidebarContent,
@@ -24,7 +23,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-
+import { useUser } from "@clerk/nextjs";
 const navItems = [
   { label: "Нүүр", icon: Home, href: "/dashboard" },
   { label: "Санхүү AI", icon: Landmark, href: "/finance" },
@@ -73,7 +72,8 @@ export function AppSidebar() {
                         : pathname === item.href ||
                           pathname.startsWith(item.href + "/")
                     }
-                    className="data-[active=true]:bg-[#5048e5]/10 data-[active=true]:text-[#5048e5]">
+                    className="data-[active=true]:bg-[#5048e5]/10 data-[active=true]:text-[#5048e5]"
+                  >
                     <Link href={item.href}>
                       <item.icon />
                       <span>{item.label}</span>
