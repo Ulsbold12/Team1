@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { RevenueCard } from "./RevenueCard";
-import { useEffect } from "react";
+
 import { useAuth } from "@clerk/nextjs";
 
 interface FinanceRecord {
