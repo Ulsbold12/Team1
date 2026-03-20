@@ -5,7 +5,7 @@ import Header from "../_parts/Header";
 import { ControlSideBar } from "../_parts/ControlSideBar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { UserRoundCheck, Banknote, Building2 } from "lucide-react";
+import { UserRoundCheck, Banknote, Building2, BanIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { getClients, getCompanies } from "@/lib/adminApi";
 import { OrganizationInterface, ClientType } from "../Types";
@@ -43,31 +43,39 @@ export default function AdministratorPage() {
     };
     fetchData();
   }, []);
+
+  const TopViewPanels = [
+    { label: "НИЙТ КОМПАНИУД", number: `${org.length}`, icon: Building2 },
+    {
+      label: "ИДЭВХИТЭЙ ХЭРЭГЛЭГЧИД",
+      number: `${clients.length}`,
+      icon: UserRoundCheck,
+    },
+    { label: "САР БҮРИЙН ОРЛОГО", number: `$ ${org.length}`, icon: Banknote },
+  ];
+
   return (
     <>
       <div
         className={`w-full h-full flex flex-col lg:p-5 lg:gap-5 items-center`}
       >
-        <Header />
+        <h1 className="text-2xl font-bold p-2">Admin Control Panel</h1>
         {/*Leading three info decks*/}
         <div className={`w-full flex flex-col gap-2 p-5`}>
           <div className={`w-full grid grid-cols-3 gap-2`}>
-            <Card className={`p-5`}>
-              <p className="text-gray-500">НИЙТ КОМПАНИУД</p>
-              <Building2 className="" />
-              <p>{org.length}</p>
-            </Card>
-            <Card>
-              <p className="text-gray-500">ИДЭВХИТЭЙ ХЭРЭГЛЭГЧИД</p>
-              <UserRoundCheck />
-              <p>{clients.length}</p>
-            </Card>
-            <Card>
-              {" "}
-              <p className="text-gray-500">САР БҮРИЙН ОРЛОГО</p>
-              <Banknote />
-              <p>{}</p>
-            </Card>
+            {TopViewPanels.map((p, i) => {
+              const Icon = p.icon;
+              return (
+                <Card
+                  className={`p-5 flex p-5 items-center w-full aspect-5/2`}
+                  key={i}
+                >
+                  <p className="text-gray-500 text-[1em] w-full">{p.label}</p>
+                  <p className="text-4xl font-bold">{p.number}</p>{" "}
+                  <Icon className="" />
+                </Card>
+              );
+            })}
           </div>
           {/*Top ranked org info deck*/}
 
@@ -79,13 +87,13 @@ export default function AdministratorPage() {
 
             <Card className={`w-full `}>
               {" "}
-              <Table>
+              <Table className="p-5">
                 <TableCaption>Most recent companies</TableCaption>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[100px]">Name</TableHead>
-                    <TableHead>desc</TableHead>
-                    <TableHead>Created At</TableHead>
+                    <TableHead>Owner</TableHead>
+                    <TableHead>Status</TableHead>
                     <TableHead className="text-right">
                       Membership plan
                     </TableHead>
@@ -94,8 +102,14 @@ export default function AdministratorPage() {
                 <TableBody>
                   {org.map((o) => (
                     <TableRow key={o.id}>
-                      <TableCell className="font-medium">{o.name}</TableCell>
-                      <TableCell>{o.description}</TableCell>
+                      <TableCell className="font-medium px-2">{o.name}</TableCell>
+                      <TableCell>
+                        {o.members
+                          ?.filter((m) => m.role === " EXECUTIVE")
+                          .map((m) => (
+                            <>{m.firstname}</>
+                          ))}
+                      </TableCell>
                       <TableCell>{JSON.stringify(o.createdAt)}</TableCell>
                       <TableCell className="text-right">
                         {o.patronage}

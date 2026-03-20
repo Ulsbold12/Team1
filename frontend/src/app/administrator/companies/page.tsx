@@ -1,12 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAdmin } from "../provider/adminProvider";
+import { OrganizationInterface } from "../Types";
 export default function Page() {
-  const { fetchCompaniesData, companies } = useAdmin();
+  const [companies, setCompanies] = useState<OrganizationInterface[]>([]);
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("/api");
+      const res = await fetch("/api/admin/companies", {
+        method: "GET",
+      });
+      console.log(res);
     };
   }, []);
   return (

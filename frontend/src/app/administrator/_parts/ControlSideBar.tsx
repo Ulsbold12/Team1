@@ -20,7 +20,6 @@ const navItems = [
   { label: "Хяналтын Сбмбр", icon: LayoutDashboard, href: "/administrator/dashboard" },
   { label: "Компаниуд", icon: TableProperties, href: "/administrator/companies" },
   { label: "Хэрэглэгчид", icon: Users, href: "/administrator/users" },
-  { label: "Админ", icon: ShieldUser, href: "/administrator/about-me" },
   { label: "Тохиргоо", icon: Settings, href: "/administrator/settings" },
 ];
 export function ControlSideBar() {

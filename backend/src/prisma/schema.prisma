@@ -12,6 +12,7 @@ model Organization {
   name                 String             @default("")
   industry             Industry
   patronage            Subscription
+  Owner                String
   stripeCustomerId     String?
   stripeSubscriptionId String?
   createdAt            DateTime           @default(now())
