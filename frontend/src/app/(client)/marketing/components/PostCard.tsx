@@ -33,13 +33,19 @@ export function PostCard({ post, images = [], onSaved }: PostCardProps) {
       const selectedBlobUrls = images
         .filter((img, i) => selectedIndexes.has(i) && img.blobUrl)
         .map((img) => img.blobUrl as string);
+      const platformMap: Record<string, string> = {
+        Facebook: "FACEBOOK",
+        LinkedIn: "LINKEDIN",
+        Twitter: "TWITTER",
+        Instagram: "INSTAGRAM",
+      };
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({
           content: post.content,
-          platform: post.platform,
-          scheduledDate: post.scheduledDate,
+          platform: platformMap[post.platform] ?? post.platform,
+          scheduledDate: new Date().toISOString(),
           images: selectedBlobUrls,
         }),
       });

@@ -12,9 +12,7 @@ export const getMembersInfo: RequestHandler = async (req, res) => {
     if (!clerkId || !org) {
       return res.status(404).json({ message: "info not matchable" });
     }
-    console.log(clerkId);
     const { orgId } = org;
-    console.log(orgId);
     const members = await prisma.client.findMany({
       where: {
         orgId: orgId as string,

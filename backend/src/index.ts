@@ -89,12 +89,14 @@ app.post("/api/finance/analysis", requireAuth, saveAnalysis);
 app.get("/api/posts", requireAuth, getPosts);
 app.post("/api/posts", requireAuth, createPost);
 app.put("/api/posts/:id", requireAuth, updatePost);
+app.delete("/api/posts", requireAuth, deleteAllPosts);
 app.delete("/api/posts/:id", requireAuth, deletePost);
 app.post("/api/posts/:id/publish-now", requireAuth, publishNow);
 app.get("/api/marketing/strategy", requireAuth, getMarketingStrategy);
 app.post("/api/marketing/strategy", requireAuth, saveMarketingStrategy);
 app.get("/api/facebook/pending-posts", requireApiKey, getPendingPosts);
 app.post("/api/facebook/posts/:id/publish", requireApiKey, markPublished);
+
 app.get("/api/company", requireAuth, getCompany);
 app.put("/api/company", requireAuth, updateCompany);
 app.get("/api/billing/status", requireAuth, getBillingStatus);

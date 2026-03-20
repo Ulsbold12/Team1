@@ -19,4 +19,5 @@ export const getCompanies = () => api.get("/api/admin/companies");
 
 export const getClients = () => api.get("/api/admin/clients");
 
-
+export const deleteCompany = (id: string) =>
+  api.delete(`/api/admin/companies/${id}`);

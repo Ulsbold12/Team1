@@ -9,13 +9,23 @@ interface SavedPostsListProps {
   loading: boolean;
   onUpdated: (id: string, content: string) => void;
   onDeleted: (id: string) => void;
+  onDeletedAll: () => void;
 }
 
-export function SavedPostsList({ posts, loading, onUpdated, onDeleted }: SavedPostsListProps) {
+export function SavedPostsList({ posts, loading, onUpdated, onDeleted, onDeletedAll }: SavedPostsListProps) {
   return (
     <Card className="rounded-2xl shadow p-0">
       <CardHeader className="px-6 pt-6 pb-2">
-        <CardTitle className="text-xl font-bold text-slate-900 dark:text-white">Хадгалсан постууд</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-xl font-bold text-slate-900 dark:text-white">Хадгалсан постууд</CardTitle>
+          {posts.length > 0 && (
+            <button
+              onClick={onDeletedAll}
+              className="text-xs text-slate-400 dark:text-gray-500 hover:text-red-500 transition-colors px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
+              Цэвэрлэх
+            </button>
+          )}
+        </div>
       </CardHeader>
       <CardContent className="px-6 pb-6">
         {loading && <p className="text-sm text-slate-400 dark:text-gray-500">Ачааллаж байна...</p>}
