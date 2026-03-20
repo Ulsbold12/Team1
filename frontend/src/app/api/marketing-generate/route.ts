@@ -5,29 +5,6 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-async function translateToMongolian(text: string): Promise<string> {
-  const apiKey = process.env.GOOGLE_TRANSLATE_API_KEY;
-  const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`;
-
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      q: text,
-      source: "en",
-      target: "mn",
-      format: "text",
-    }),
-  });
-
-  const data = await res.json();
-
-  if (!res.ok || data.error) {
-    throw new Error(data.error?.message ?? "Translation failed");
-  }
-
-  return data.data.translations[0].translatedText;
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -55,122 +32,71 @@ export async function POST(request: NextRequest) {
       messages: [
         {
           role: "system",
-          content: `You are a social media marketer creating posts for a Mongolian brand. Write all posts in natural, engaging English — they will be translated into Mongolian afterward, so write clearly and avoid idioms or slang that don't translate well.
+          content: `Та Монгол брэндийн social media маркетер. Бүх постуудыг МОНГОЛ ХЭЛЭЭР бич.
 
-## GOAL
-Generate 15 ready-to-publish social media posts for the given product. Posts must feel human, specific, and platform-native — not like ad copy or a brochure.
-
----
-
-## STRICT DO NOT LIST
-❌ No fake customer quotes or made-up testimonials
-❌ No feature lists with colons: "Features: X, Y, Z"
-❌ No generic CTAs like "Order today and get a discount!"
-❌ No vague claims like "a huge difference in your experience"
-❌ No self-introductions like "Hi, I'm a student at X university"
-❌ No idioms or culturally specific slang that won't survive translation
-❌ No exclamation marks anywhere — use periods or commas instead. Mongolians don't use "!" in casual writing.
-❌ No overly enthusiastic or hype-y tone. Keep it calm, direct, and grounded. Think a knowledgeable friend, not a salesperson.
+## ЗОРИЛГО
+Өгөгдсөн бүтээгдэхүүнд зориулж 12 пост үүсгэ. Постууд хүний мэдрэмжтэй, тодорхой, платформд тохирсон байх ёстой.
 
 ---
 
-## PLATFORM RULES
-
-### Facebook (7 posts) — 80–130 words
-- First line must stop the scroll — bold statement or short relatable moment
-- Middle: one short story, tip, or real situation
-- End: a comment-bait question OR a simple link CTA
-- 1–2 emojis, placed naturally
-- 2–3 hashtags
-
-### Twitter/X (5 posts) — STRICT max 220 characters (leaving room for translation expansion)
-- One idea. One punch. Done.
-- No feature lists
-- First line must stand alone
-- 1 hashtag max
-
-### LinkedIn (3 posts) — 150–200 words
-- Open with a specific observation or relatable situation, not a question
-- Share a concrete insight, number, or before/after scenario
-- End with a genuine question that invites comments
-- Professional but human — like a founder talking to their network
-- 3–5 hashtags at the bottom
+## ХОРИГЛОХ ЗҮЙЛС
+❌ Хуурамч хэрэглэгчийн сэтгэгдэл бүү бич
+❌ "Онцлогууд: X, Y, Z" гэсэн жагсаалт бүү хэрэглэ
+❌ "Өнөөдөр захиалаад хямдрал ав" зэрэг ерөнхий уриа бүү хэрэглэ
+❌ Орилох, хэт урам зоригтой өнгө аяс бүү хэрэглэ. Тайван, шууд, бодитой байх.
+❌ Анхаарлын тэмдэг (!) хэрэглэхгүй. Цэг эсвэл таслал хэрэглэ.
 
 ---
 
-## CONTENT TYPES — distribute across all 15 posts, no type used more than 4 times
+## ПЛАТФОРМЫН ДҮРМҮҮД
 
-1. **Problem/Solution** — name a specific pain point, show how the product fixes it
-2. **Before/After** — describe what life looks like before vs after using the product, from the brand's perspective. No fake customer voice.
-3. **Educational tip** — one genuinely useful tip related to the product's domain
-4. **Feature spotlight** — ONE specific feature + ONE concrete real-world benefit
-5. **Call-to-action** — drive a specific next step: sign up, DM, try free, visit site
+### Facebook (8 пост) — 60–100 үг
+- Эхний мөр анхаарал татах ёстой
+- Дунд хэсэг: нэг богино түүх, зөвлөгөө, эсвэл бодит нөхцөл байдал
+- Төгсгөл: коммент урих асуулт эсвэл энгийн CTA
+- 1–2 emoji байгалийн байршилд
+- 2–3 хэштэг
 
-Vary the content types across platforms. Do not repeat the same angle back-to-back.
-
-
-
----
-
-## GOOD EXAMPLES (match this quality)
-
-**LinkedIn — Problem/Solution:**
-Most wired earphones fail at the same two things: the cable breaks within months, and the audio cuts out at the worst moments.
-
-We built around those exact failure points. Reinforced braided cable, stable analog connection, no battery to die on you mid-session.
-
-If you've gone through three pairs of earphones this year — what kept breaking first?
-
-#AudioGear #EverydayTech #MongoliaStartup
+### Instagram (4 пост) — 40–70 үг
+- Зургийн тайлбар маягаар бич
+- Сэтгэл татах, visual байдалд тохирсон
+- 4–6 хэштэг
 
 ---
 
-**Twitter — Educational tip:**
-AUX beats Bluetooth for gaming. Zero compression, zero latency.
-If your game has audio cues, this matters. #GamingAudio
+## АГУУЛГЫН ТӨРЛҮҮД
+1. **Асуудал/Шийдэл** — тодорхой өвдөлтийн цэг нэрлэж, бүтээгдэхүүн хэрхэн засдагийг харуул
+2. **Өмнө/Дараа** — бүтээгдэхүүн ашиглахаас өмнө ба дараах байдлыг харуул
+3. **Сургалтын зөвлөгөө** — бүтээгдэхүүний салбарт хэрэгтэй нэг зөвлөгөө
+4. **Онцлог тодруулалт** — нэг тодорхой онцлог + нэг бодит ашиг тус
+5. **Үйлд уриалах** — бүртгүүл, мессеж илгээ, үнэгүй туршаад үз
 
 ---
 
-**Facebook — Before/After:**
-Most people pick earphones based on how they look.
-Then the cable frays. The sound cuts out. The whole thing dies in six months.
-
-After switching to a reinforced AUX option? The cable outlasts the phone.
-
-What's the longest you've kept a pair of earphones alive? 👇 #EarphoneTips
-
----
-
-## OUTPUT FORMAT
-Return ONLY valid JSON. No markdown, no extra text.
+## ГАРАЛТЫН ФОРМАТ
+Зөвхөн хүчинтэй JSON буцаа. Markdown, нэмэлт текст байхгүй.
 
 {
-  "advice": "3–5 sentences of strategic advice in English, specific to this product and audience. Name which platform to prioritize, what content angle works best, and one concrete first-week action.",
+  "advice": "3–5 өгүүлбэр стратегийн зөвлөгөө Монгол хэлээр. Аль платформыг тэргүүлэх, ямар агуулгын өнцөг хамгийн сайн ажилладаг, эхний 7 хоногт хийх нэг тодорхой үйлдэл.",
   "posts": [
     {
-      "platform": "LinkedIn" | "Facebook" | "Twitter",
-      "contentType": "Problem/Solution" | "Before/After" | "Educational tip" | "Feature spotlight" | "Call-to-action",
-      "content": "Full post content in English",
+      "platform": "Facebook" | "Instagram",
+      "contentType": "Асуудал/Шийдэл" | "Өмнө/Дараа" | "Сургалтын зөвлөгөө" | "Онцлог тодруулалт" | "Үйлд уриалах",
+      "content": "Монгол хэл дээрх бүтэн постын агуулга",
       "scheduledDate": "YYYY-MM-DDTHH:mm:00+08:00"
     }
   ]
 }
 
-Generate exactly 15 posts. Spread scheduledDate evenly across 30 days starting from the user's start date (roughly every 2 days).
-Distribution: 7 Facebook, 5 Twitter, 3 LinkedIn.
+Яг 12 пост үүсгэ. scheduledDate-г хэрэглэгчийн эхлэх огнооноос эхлэн 30 хоногт жигд тараа (ойролцоогоор 2–3 хоног тутамд).
+Тоо: 8 Facebook, 4 Instagram.
 
-## SCHEDULING — all times are Asia/Ulaanbaatar (UTC+8)
-Based on real engagement data for this timezone, assign the best posting time per platform:
+## ЦАГИЙН ХУВААРЬ — Улаанбаатарын цаг (UTC+8)
+- **Facebook**: ажлын өдрүүд → 09:00–12:00; амралтын өдрүүд → 13:00–16:00. Мөн 22:00 хүчтэй.
+- **Instagram**: ажлын өдрүүд → 12:00–14:00 эсвэл 19:00–21:00.
 
-- **Facebook**: weekdays → 09:00–12:00; weekends → 13:00–16:00. Also strong at 22:00 any day.
-- **Twitter**: weekdays only → 11:00–15:00. Also strong at 22:00 on weekdays.
-- **LinkedIn**: weekdays only → 08:00–17:00 (business hours). Prefer morning (08:00–10:00) or 22:00.
-
-Overall peak for all platforms: **Wednesday at 22:00** (100% engagement score). Use this slot for your highest-priority posts.
-
-Pick specific times within these windows — do not use identical times for every post. Vary them naturally.
-
-Set scheduledDate as a full datetime string: "YYYY-MM-DDTHH:mm:00+08:00".`,
+Лхагва гаригийн 22:00 — хамгийн өндөр engagement. Хамгийн чухал постыг энд тавь.
+Цагийг байгалийн байдлаар өөрчил, бүх пост ижил цагтай байх ёсгүй.`,
         },
         {
           role: "user",
@@ -198,31 +124,8 @@ Start date: ${todayISO}${imageBase64s.length > 0 ? `\n\nThe user has provided ${
 
     const aiResult = JSON.parse(responseText);
 
-    const safeTranslate = (text: string) =>
-      translateToMongolian(text).catch(() => text);
-
-    const [translatedAdvice, ...translatedContents] = await Promise.all([
-      safeTranslate(aiResult.advice),
-      ...aiResult.posts.map((post: { content: string }) => safeTranslate(post.content)),
-    ]);
-
-    const translatedPosts = aiResult.posts.map(
-      (
-        post: {
-          platform: string;
-          contentType: string;
-          scheduledDate: string;
-          content: string;
-        },
-        i: number,
-      ) => ({
-        ...post,
-        content: translatedContents[i],
-      }),
-    );
-
-    const cleanAdvice = translatedAdvice.replace(/!/g, ".");
-    const cleanPosts = translatedPosts.map(
+    const cleanAdvice = aiResult.advice.replace(/!/g, ".");
+    const cleanPosts = aiResult.posts.map(
       (post: {
         platform: string;
         contentType: string;
