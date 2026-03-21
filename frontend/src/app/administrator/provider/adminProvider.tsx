@@ -17,7 +17,7 @@ interface AdminContextType {
   users: ClientTypes[] | [];
   allusers: ClientTypes[] | [];
   fetchCompaniesData: () => Promise<void>;
-  fetchUsersOfCompanies: () => Promise<void>;
+  fetchUsersOfCompanies: (orgId: string) => Promise<void>;
   fetchAuditLog: () => Promise<void>;
   createCompany: (data: OrganizationInterface) => Promise<void>;
   deleteCompany: (id: string) => Promise<void>;
@@ -25,6 +25,9 @@ interface AdminContextType {
 export const AdminContext = createContext({} as AdminContextType);
 export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const [companies, setCompanies] = useState<OrganizationInterface[]>([]);
+  const [singleorg, setSingleorg] = useState<OrganizationInterface | null>(
+    null,
+  );
   const [users, setUsers] = useState<ClientTypes[]>([]);
   const [allusers, setAllUsers] = useState<ClientTypes[]>([]);
   const [lastAccessTime, setLastAccessTime] = useState<Date>(new Date());
@@ -56,6 +59,8 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   async function fetchUsersOfCompanies(orgId: string) {
     try {
       const res = await fetch(`/api/admin/companies/${orgId}`);
+      console.log(res);
+      setSingleorg(res.data);
     } catch (e) {
       console.error(e);
     }
@@ -93,11 +98,19 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       console.log(e);
     }
   }
+
+  async function fetchAuditLog() {
+    try {
+    } catch (e) {
+      console.error(e);
+    }
+  }
   return (
     <AdminContext.Provider
       value={{
         login,
         fetchCompaniesData,
+        fetchUsersOfCompanies,
         allusers,
         lastAccessTime,
         users,

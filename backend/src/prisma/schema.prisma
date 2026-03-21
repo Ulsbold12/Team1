@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../prisma/generated"
 }
 
 datasource db {
@@ -11,19 +12,19 @@ model Organization {
   name                 String             @default("")
   industry             Industry
   patronage            Subscription
-  stripeCustomerId     String?
-  stripeSubscriptionId String?
   createdAt            DateTime           @default(now())
   address              String
   description          String
   emailAddress         String
   phoneNumber          String
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
   members              Client[]
   financeData          Finance[]
   financeAnalyses      FinanceAnalysis[]
   InviteCode           InviteCode[]
-  posts                Post[]
   marketingStrategy    MarketingStrategy?
+  posts                Post[]
 }
 
 model MarketingStrategy {
@@ -80,10 +81,10 @@ model Post {
   title       String
   content     String       @default("")
   platform    String
-  images      Json         @default("[]")
   reach       Int          @default(0)
   publishedAt DateTime     @default(now())
   published   Boolean      @default(false)
+  images      Json         @default("[]")
   org         Organization @relation(fields: [orgId], references: [id])
 }
 
@@ -125,11 +126,11 @@ enum Subscription {
 }
 
 model AuditLog {
-  id        String   @id @default(cuid())
-  clientId  String
-  action    String
-  target    String
-  details   Json?
-  createdAt DateTime @default(now())
-  client    Client   @relation(fields: [clientId], references: [id])
+  id       String   @id @default(cuid())
+  clientId String
+  action   String
+  target   String
+  details  Json?
+  date     DateTime @default(now())
+  client   Client   @relation(fields: [clientId], references: [id])
 }
