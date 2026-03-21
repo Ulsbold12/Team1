@@ -1,35 +1,24 @@
 "use client";
 
-import { useState } from "react";
-import { ControlSideBar } from "../_parts/ControlSideBar";
-import { Lobby } from "../_parts/Lobby";
-import { Companies } from "../_parts/Companies";
-import { Clients } from "../_parts/Clients";
-import { Sales } from "../_parts/Sales";
-type DisplayTypes = "Lobby" | "Companies" | "Clients" | "Sales";
-
-const RenderContent = ({ active }: { active: DisplayTypes }) => {
-  switch (active) {
-    case "Lobby":
-      return <Lobby />;
-    case "Clients":
-      return <Clients />;
-    case "Companies":
-      return <Companies />;
-    case "Sales":
-      return <Sales />;
-    default:
-      return <Lobby />;
-  }
-};
+import { useAdmin } from "../provider/adminProvider";
+import { Dashboard } from "../_parts/Dashboard";
+import { CompaniesDisplay } from "../_parts/CompaniesDisplay";
+import { UsersDisplay } from "../_parts/UsersDisplay";
+import { SubscriptionsDisplay } from "../_parts/SubscriptionsDisplay";
 
 export default function MainPage() {
-  const [active, setActive] = useState<DisplayTypes>("Lobby");
+  const { activeSection } = useAdmin();
 
-  return (
-    <>
-      <ControlSideBar />
-      <RenderContent active={active} />
-    </>
-  );
+  switch (activeSection) {
+    case "dashboard":
+      return <Dashboard />;
+    case "companies":
+      return <CompaniesDisplay />;
+    case "users":
+      return <UsersDisplay />;
+    case "subscriptions":
+      return <SubscriptionsDisplay />;
+    default:
+      return <Dashboard />;
+  }
 }
