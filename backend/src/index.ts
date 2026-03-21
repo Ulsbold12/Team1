@@ -7,6 +7,7 @@ import {
   Auditlog,
   createCompany,
   deleteCompany,
+  getAuditLog,
   readCompanydataById,
 } from "./routes/admin";
 
@@ -89,7 +90,7 @@ app.post("/api/finance/analysis", requireAuth, saveAnalysis);
 app.get("/api/posts", requireAuth, getPosts);
 app.post("/api/posts", requireAuth, createPost);
 app.put("/api/posts/:id", requireAuth, updatePost);
-app.delete("/api/posts", requireAuth, deleteAllPosts);
+// app.delete("/api/posts", requireAuth, deleteAllPosts);
 app.delete("/api/posts/:id", requireAuth, deletePost);
 app.post("/api/posts/:id/publish-now", requireAuth, publishNow);
 app.get("/api/marketing/strategy", requireAuth, getMarketingStrategy);
@@ -109,6 +110,9 @@ app.get("/api/admin/comapnies/:id", requireAuth, readCompanydataById);
 app.post("/api/admin/companies", AdminAuth, createCompany);
 app.delete("/api/admin/companies", AdminAuth, deleteCompany);
 app.get("/api/admin/clients", AdminAuth, getUsersData);
+
+//activities log fetch request
+app.get("/auditlog", getAuditLog);
 
 const PORT = process.env.PORT || 8888;
 app.listen(PORT, () => {

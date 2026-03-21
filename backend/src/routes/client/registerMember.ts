@@ -28,10 +28,6 @@ export const getCodeForMember: RequestHandler = async (req, res) => {
     if (!isAuthorized) {
       return res.status(403).json({
         message: `Unauthorized, clientId: ${clerkId}`,
-
-    if (!isAuthorized) {
-      return res.status(403).json({
-        message: `Unauthorized, clientId: ${clerkId}`,
         success: false,
       });
     }
@@ -41,17 +37,7 @@ export const getCodeForMember: RequestHandler = async (req, res) => {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
     const codeToSend = await prisma.inviteCode.create({
-
-    const newCode = customAlphabet("1234567890", 6);
-    const instantCode = newCode();
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
-
-    const codeToSend = await prisma.inviteCode.create({
       data: {
-        code: instantCode,
-        orgId: orgId as string,
-        createdBy: clerkId as string,
-        expiresAt: expiresAt,
         code: instantCode,
         orgId: orgId as string,
         createdBy: clerkId as string,
@@ -118,7 +104,7 @@ export const registerMember: RequestHandler = async (req, res) => {
     console.log(e);
     return res.status(500).json({
       message: "failed to register member",
-      message: "failed to register member",
+
       success: false,
     });
   }

@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Organization {
@@ -12,7 +11,6 @@ model Organization {
   name                 String             @default("")
   industry             Industry
   patronage            Subscription
-  Owner                String
   stripeCustomerId     String?
   stripeSubscriptionId String?
   createdAt            DateTime           @default(now())
@@ -133,6 +131,5 @@ model AuditLog {
   target    String
   details   Json?
   createdAt DateTime @default(now())
-
-  client Client @relation(fields: [clientId], references: [id])
+  client    Client   @relation(fields: [clientId], references: [id])
 }

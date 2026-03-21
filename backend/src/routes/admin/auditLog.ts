@@ -10,7 +10,7 @@ export async function Auditlog(
   await prisma.auditLog.create({ data: { clientId, target, action, details } });
 }
 
-export const getAuditLog: RequestHandler = async (req, res) => {
+export const getAuditLog: RequestHandler = async (_, res) => {
   try {
     const log = await prisma.auditLog.findMany({});
     if (!log) {
