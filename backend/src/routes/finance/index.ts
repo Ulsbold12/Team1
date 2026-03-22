@@ -7,7 +7,7 @@ export const getFinance: RequestHandler = async (req, res) => {
     const finance = await prisma.finance.findMany({
       where: { orgId },
       orderBy: { month: "desc" },
-      take: 6,
+      take: 36,
     });
     return res.json({ success: true, data: finance });
   } catch (e) {
