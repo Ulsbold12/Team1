@@ -22,83 +22,67 @@ import { CreditCard, TrendingUp, Building2, Users } from "lucide-react";
 const MOCK_TRANSACTIONS = [
   {
     id: "txn_001",
-    company: "Acme Corp",
-    user: "John Doe",
-    plan: "Pro",
-    amount: "$49.00",
-    status: "paid",
+    companyId: "YBDSRDSQYFBS",
+    clientId: "user_3BAt3sVybHdKcLslDvMkev49roj",
     date: "2025-03-01",
-    type: "subscription",
+    stripeCustomerId: "cus_001",
+    stripeId: "sub_001",
   },
   {
     id: "txn_002",
-    company: "TechStart",
-    user: "Jane Smith",
-    plan: "Starter",
-    amount: "$19.00",
-    status: "paid",
+    companyId: "YSBBWEBWEQSF",
+    clientId: "_devGenerated_01",
     date: "2025-03-01",
-    type: "subscription",
+    stripeCustomerId: "cus_002",
+    stripeId: "sub_002",
   },
   {
     id: "txn_003",
-    company: "Mega Corp",
-    user: "Bob Johnson",
-    plan: "Enterprise",
-    amount: "$299.00",
-    status: "failed",
+    companyId: "SSSDBCCDUCDQ",
+    clientId: "_devGenerated_02",
     date: "2025-03-02",
-    type: "subscription",
+    stripeCustomerId: "cus_003",
+    stripeId: "sub_003",
   },
   {
     id: "txn_004",
-    company: "Dev Studio",
-    user: "Alice Brown",
-    plan: "Pro",
-    amount: "$49.00",
-    status: "paid",
+    companyId: "BYWQWFCYRBWU",
+    clientId: "_devGenerated_03",
     date: "2025-03-05",
-    type: "subscription",
+    stripeCustomerId: "cus_004",
+    stripeId: "sub_004",
   },
   {
     id: "txn_005",
-    company: "CloudBase Inc",
-    user: "Mike Wilson",
-    plan: "Enterprise",
-    amount: "$299.00",
-    status: "paid",
+    companyId: "RWQYFXYWUUQC",
+    clientId: "_devGenerated_04",
     date: "2025-03-07",
-    type: "upgrade",
+    stripeCustomerId: "cus_005",
+    stripeId: "sub_005",
   },
   {
     id: "txn_006",
-    company: "AlphaNet",
-    user: "Sara Lee",
-    plan: "Starter",
-    amount: "$19.00",
-    status: "refunded",
+    companyId: "UBSURQQCXUWY",
+    clientId: "_devGenerated_05",
     date: "2025-03-10",
-    type: "subscription",
+    stripeCustomerId: "cus_006",
+    stripeId: "sub_006",
   },
   {
     id: "txn_007",
-    company: "Acme Corp",
-    user: "John Doe",
-    plan: "Enterprise",
-    amount: "$299.00",
-    status: "paid",
+    companyId: "YBDSRDSQYFBS",
+    clientId: "user_3BAt3sVybHdKcLslDvMkev49roj",
     date: "2025-03-12",
-    type: "upgrade",
+    stripeCustomerId: "cus_001",
+    stripeId: "sub_007",
   },
   {
     id: "txn_008",
-    company: "BetaWorks",
-    user: "Tom Harris",
-    plan: "Pro",
-    amount: "$49.00",
-    status: "pending",
+    companyId: "DCWFBFBBFCIY",
+    clientId: "_devGenerated_03",
     date: "2025-03-15",
-    type: "subscription",
+    stripeCustomerId: "cus_007",
+    stripeId: "sub_008",
   },
 ];
 
@@ -113,27 +97,37 @@ const MOCK_STATS = {
 const statusColors: Record<string, string> = {
   paid: "bg-green-500/10 text-green-600 border-green-500/20 dark:text-green-400",
   failed: "bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400",
-  pending: "bg-amber-500/10 text-amber-600 border-amber-500/20 dark:text-amber-400",
+  pending:
+    "bg-amber-500/10 text-amber-600 border-amber-500/20 dark:text-amber-400",
   refunded: "bg-secondary text-secondary-foreground border-border",
 };
 
 const typeColors: Record<string, string> = {
   subscription: "bg-[#5048e5]/10 text-[#5048e5] border-[#5048e5]/20",
-  upgrade: "bg-purple-500/10 text-purple-600 border-purple-500/20 dark:text-purple-400",
+  upgrade:
+    "bg-purple-500/10 text-purple-600 border-purple-500/20 dark:text-purple-400",
 };
 
 export function Sales() {
   return (
     <div className="flex-1 overflow-y-auto p-8 space-y-8 bg-muted/30 text-foreground">
       <section>
-        <h2 className="text-3xl font-black text-foreground tracking-tight">Subscriptions</h2>
-        <p className="text-muted-foreground mt-1">Transaction and payment audit log</p>
+        <h2 className="text-3xl font-black text-foreground tracking-tight">
+          Subscriptions
+        </h2>
+        <p className="text-muted-foreground mt-1 text-white">
+          Transaction and payment audit log
+        </p>
       </section>
 
-      {/* Stats row */}
       <div className="grid grid-cols-4 gap-6">
         <StatCard
-          icon={<TrendingUp size={16} className="text-green-600 dark:text-green-400" />}
+          icon={
+            <TrendingUp
+              size={16}
+              className="text-green-600 dark:text-green-400"
+            />
+          }
           label="Total Revenue"
           value={MOCK_STATS.totalRevenue}
           valueClass="text-green-600 dark:text-green-400"
@@ -145,7 +139,9 @@ export function Sales() {
           valueClass="text-[#5048e5]"
         />
         <StatCard
-          icon={<Building2 size={16} className="text-blue-600 dark:text-blue-400" />}
+          icon={
+            <Building2 size={16} className="text-blue-600 dark:text-blue-400" />
+          }
           label="Companies on Plan"
           value={String(MOCK_STATS.companiesOnPlan)}
           valueClass="text-blue-600 dark:text-blue-400"
@@ -158,22 +154,25 @@ export function Sales() {
         />
       </div>
 
-      {/* Transactions table */}
       <Card className="shadow-sm">
         <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-semibold">Transaction Log</CardTitle>
+          <CardTitle className="text-sm font-semibold">
+            Transaction Log
+          </CardTitle>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="p-0 overflow-y-auto h-[400px]">
+          {" "}
+          {/* 👈 fixed height + overflow */}
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-xs font-medium">Transaction ID</TableHead>
+                <TableHead className="text-xs font-medium">
+                  Transaction ID
+                </TableHead>
                 <TableHead className="text-xs font-medium">Company</TableHead>
                 <TableHead className="text-xs font-medium">User</TableHead>
-                <TableHead className="text-xs font-medium">Plan</TableHead>
-                <TableHead className="text-xs font-medium">Type</TableHead>
-                <TableHead className="text-xs font-medium">Amount</TableHead>
-                <TableHead className="text-xs font-medium">Status</TableHead>
+                <TableHead className="text-xs font-medium">Stripe CI</TableHead>
+                <TableHead className="text-xs font-medium">Stripe ID</TableHead>
                 <TableHead className="text-xs font-medium">Date</TableHead>
               </TableRow>
             </TableHeader>
@@ -183,21 +182,22 @@ export function Sales() {
                   <TableCell className="text-muted-foreground text-xs font-mono py-3">
                     {txn.id}
                   </TableCell>
-                  <TableCell className="text-sm font-medium py-3">{txn.company}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground py-3">{txn.user}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground py-3">{txn.plan}</TableCell>
-                  <TableCell className="py-3">
-                    <Badge variant="outline" className={`${typeColors[txn.type] ?? ""} text-xs`}>
-                      {txn.type}
-                    </Badge>
+                  <TableCell className="text-sm font-medium py-3">
+                    {txn.clientId}
                   </TableCell>
-                  <TableCell className="text-sm font-semibold py-3">{txn.amount}</TableCell>
-                  <TableCell className="py-3">
-                    <Badge variant="outline" className={`${statusColors[txn.status] ?? ""} text-xs`}>
-                      {txn.status}
-                    </Badge>
+                  <TableCell className="text-sm text-muted-foreground py-3">
+                    {txn.companyId}
                   </TableCell>
-                  <TableCell className="text-muted-foreground text-xs py-3">{txn.date}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground py-3">
+                    {txn.stripeCustomerId}
+                  </TableCell>
+                  <TableCell className="text-sm font-semibold py-3">
+                    {txn.stripeId}
+                  </TableCell>
+
+                  <TableCell className="text-muted-foreground text-xs py-3">
+                    {txn.date}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

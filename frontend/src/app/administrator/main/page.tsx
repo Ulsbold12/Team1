@@ -11,10 +11,10 @@ import { AdminSideBar } from "../_parts/AdminSideBar";
 type DisplayTypes = "Lobby" | "Companies" | "Clients" | "Sales";
 import { ShieldCheck } from "lucide-react";
 const navItems = [
-  { ref: "Lobby", label: "Хяналтын Самбар", icon: LayoutDashboard },
-  { ref: "Companies", label: "Компаниуд", icon: Building2 },
-  { ref: "Clients", label: "Хэрэглэгчид", icon: Users },
-  { ref: "Sales", label: "Тохиргоо", icon: BadgeCent },
+  { ref: "Lobby", label: "Lobby", icon: LayoutDashboard },
+  { ref: "Companies", label: "Companies", icon: Building2 },
+  { ref: "Clients", label: "Clients", icon: Users },
+  { ref: "Sales", label: "Sales", icon: BadgeCent },
 ];
 
 export default function MainPage() {

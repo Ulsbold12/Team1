@@ -5,6 +5,7 @@ import {
   ReactNode,
   useContext,
   useState,
+  useEffect
 } from "react";
 import { OrganizationInterface } from "../Types";
 import { Dispatch, SetStateAction } from "react";
@@ -103,7 +104,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   }
   async function deleteCompany(OrgId: string) {
     try {
-      const res = await adminApi.delete(`/api/admin/companies${OrgId}`);
+      const res = await adminApi.delete(`/api/admin/companies/${OrgId}`);
       if (res) {
         console.log(res);
       }
@@ -126,6 +127,8 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     fetchAllOwners();
     fetchAuditLog();
   }, [lastAccessTime]);
+
+  console.log("adminprivoder", companies)
   return (
     <AdminContext.Provider
       value={{

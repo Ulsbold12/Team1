@@ -5,7 +5,12 @@ import { customAlphabet } from "nanoid";
 
 export const getCompanyData: RequestHandler = async (_, res) => {
   try {
-    const companyData = await prisma.organization.findMany({});
+    const companyData = await prisma.organization.findMany({
+      include: {
+        members: true,
+        aiUsages: true,
+      },
+    });
     if (!companyData) {
       return res.status(404).json({ message: "no data to be found" });
     }
@@ -58,7 +63,7 @@ export const createCompany: RequestHandler = async (req, res) => {
 
 export const deleteCompany: RequestHandler = async (req, res) => {
   try {
-    const { orgId } = req.body;
+    const { orgId } = req.params;
     const deleted = await prisma.organization.delete({
       where: { id: orgId as string },
     });

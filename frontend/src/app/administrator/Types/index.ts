@@ -2,11 +2,11 @@ export type ClientType = {
   id: string;
   orgId: string;
   role: "EXECUTIVE" | "MANAGEMENT" | "MEMBER";
-  role: "EXECUTIVE" | "MANAGEMENT" | "MEMBER";
   email: string;
   firstname: string;
   lastname: string;
   createdAt: Date;
+  lastSeenAt: Date;
 };
 
 export type FinanceType = {
@@ -33,7 +33,12 @@ export type Post = {
   react: number;
   publishedAt: Date;
 };
-
+export type AIusagetype = {
+  id: string;
+  clientId: string;
+  orgId: string;
+  date: Date;
+};
 export interface OrganizationInterface {
   id: string;
   name: string;
@@ -52,8 +57,9 @@ export interface OrganizationInterface {
   emailAddress: string;
   description: String;
   patronage: "BASIC" | "PRO";
-  PhoneNumber: String;
+  phoneNumber: String;
   address: string;
+  aiUsages: AIusagetype[];
 }
 
 export type AdminType = {

@@ -4,6 +4,7 @@ import { customAlphabet } from "nanoid";
 
 //admin controlled audit log
 
+
 export const getAuditLog: RequestHandler = async (_, res) => {
   try {
     const log = await prisma.auditLog.findMany({});

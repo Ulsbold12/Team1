@@ -15,5 +15,5 @@ export default function SupaDupaAdminLayouttoDesu({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className={`w-full h-screen no-scrollbar`}>{children}</div>;
+  return <div className={`w-full h-screen no-scrollbar overflow-hidden`}>{children}</div>;
 }

@@ -13,14 +13,14 @@ import { ReactNode, useState } from "react";
 export function AdminSideBar({ children }: { children: ReactNode }) {
   const { showSideBar, setShowSideBar } = useAdmin();
   return (
-    <aside
+    <div
       onMouseEnter={() => {
         setShowSideBar(true);
       }}
       onMouseLeave={() => {
         setShowSideBar(false);
       }}
-      className="w-13 hover:w-60 ease-in-out duration-300 h-screen bg-gray-900 color-white text-white border-r border-border shrink-0"
+      className="w-12 hover:w-60 ease-in-out duration-300 h-screen bg-gray-600 color-white text-white  shrink-0"
     >
       <div className="flex items-center gap-3 shrink-0 absolute top-5 left-2">
         <div className="w-8 h-8 rounded-lg bg-[#5048e5] flex items-center justify-center shrink-0">
@@ -35,6 +35,6 @@ export function AdminSideBar({ children }: { children: ReactNode }) {
       </div>
 
       <div className="flex-1 px-3 py-4 absolute top-15">{children}</div>
-    </aside>
+    </div>
   );
 }

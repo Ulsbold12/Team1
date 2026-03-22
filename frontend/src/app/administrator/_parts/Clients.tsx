@@ -111,7 +111,7 @@ export function Clients() {
   });
   const { allusers } = useAdmin();
   const client = allusers.filter((u) => u.role === "EXECUTIVE");
-  console.log("clients", client)
+  console.log("clients", client);
 
   const openRead = (user: User) => {
     setSelectedUser(user);
@@ -144,65 +144,87 @@ export function Clients() {
     console.log("[TODO] delete user:", id);
     setDeleteConfirmId(null);
   };
+  function getLastSeen(lastSeenAt: Date): string {
+    const now = new Date();
+    const diff = now.getTime() - new Date(lastSeenAt).getTime();
 
+    const minutes = Math.floor(diff / (1000 * 60));
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+    if (minutes < 1) return "Just now";
+    if (minutes < 60) return `${minutes} minutes ago`;
+    if (hours < 24) return `${hours} hours ago`;
+    return `${days} days ago`;
+  }
   return (
     <div className="flex-1 overflow-y-auto p-8 space-y-8 bg-muted/30 text-foreground">
       <div>
         <h2 className="text-3xl font-black text-foreground tracking-tight">
           Users
         </h2>
-        <p className="text-muted-foreground mt-1">
+        <p className="text-muted-foreground mt-1 text-white">
           Manage all registered users
         </p>
       </div>
-
-      <div className="flex flex-col gap-3">
-        {client.length === 0 ? (
-          <>Loading</>
-        ) : (
-          <>
-            {" "}
-            {client.map((user) => (
-              <div
-                key={user.id}
-                className="bg-card border border-border rounded-xl px-5 py-4 flex items-center gap-4 shadow-sm hover:border-[#5048e5]/30 transition-colors"
-              >
-                <div className="w-9 h-9 bg-[#5048e5]/10 rounded-full flex items-center justify-center shrink-0">
-                  <User size={15} className="text-[#5048e5]" />
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="text-foreground font-semibold text-sm">
-                      {user.firstname} {user.lastname}
-                    </p>
-                    <Badge
-                      variant="outline"
-                      // className={
-                      //   user.status === "active"
-                      //     ? "bg-green-500/10 text-green-600 border-green-500/20 text-xs dark:text-green-400"
-                      //     : "bg-red-500/10 text-red-600 border-red-500/20 text-xs dark:text-red-400"
-                      // }
-                    >
-                      [USER_STATUS]
-                    </Badge>
-                  </div>
-                  <p className="text-muted-foreground text-xs mt-0.5">
-                    {user.email} · {user.orgId}
-                  </p>
-                </div>
-
-                <Badge
-                  variant="outline"
-                  className={`${roleColors[user.role] ?? ""} text-xs shrink-0`}
+      <div className={`w-full h-full overflow-scroll`}>
+        {" "}
+        <div className="flex flex-col gap-3">
+          {client.length === 0 ? (
+            <>Loading</>
+          ) : (
+            <>
+              {" "}
+              {client.map((user) => (
+                <div
+                  key={user.id}
+                  className="bg-card border border-border rounded-xl px-5 py-4 flex items-center gap-4 shadow-sm hover:border-[#5048e5]/30 transition-colors"
                 >
-                  {user.role}
-                </Badge>
+                  <div className="w-9 h-9 bg-[#5048e5]/10 rounded-full flex items-center justify-center shrink-0">
+                    <User size={15} className="text-[#5048e5]" />
+                  </div>
 
-                <p className="text-muted-foreground text-xs shrink-0 w-24 text-right">
-                  Joined {JSON.stringify(user.createdAt)}
-                </p>
-                {/* 
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="text-foreground font-semibold text-sm">
+                        {user.firstname} {user.lastname}
+                      </p>
+                      <Badge
+                        variant="outline"
+                        className="scale-90"
+                        // className={
+                        //   getLastSeen(user)
+                        //     ? "bg-green-500/10 text-green-600 border-green-500/20 text-xs dark:text-green-400"
+                        //     : "bg-red-500/10 text-red-600 border-red-500/20 text-xs dark:text-red-400"
+                        // }
+                      >
+                        <p className="text-xs text-gray-400">Last active: </p>
+                        {getLastSeen(user.lastSeenAt)}
+                      </Badge>
+                    </div>
+                    <p className="text-muted-foreground text-xs mt-0.5">
+                      {user.email} · Organization ID: {user.orgId}
+                    </p>
+                  </div>
+
+                  <Badge
+                    variant="outline"
+                    className={`${roleColors[user.role] ?? ""} text-xs shrink-0`}
+                  >
+                    {user.role}
+                  </Badge>
+
+                  <div className="text-muted-foreground text-xs shrink-0 w-24 text-right">
+                    Joined
+                    <p>
+                      {new Date(user.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </p>
+                  </div>
+                  {/* 
             {deleteConfirmId === user.id ? (
               <div className="flex items-center gap-2 shrink-0">
                 <span className="text-destructive text-xs">Delete?</span>
@@ -260,10 +282,11 @@ export function Clients() {
                 </DropdownMenuContent>
               </DropdownMenu>
             )} */}
-              </div>
-            ))}
-          </>
-        )}
+                </div>
+              ))}
+            </>
+          )}
+        </div>
       </div>
 
       {/* Sheet: Read User */}

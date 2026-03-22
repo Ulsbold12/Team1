@@ -5,7 +5,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Organization {
@@ -26,6 +25,8 @@ model Organization {
   InviteCode           InviteCode[]
   marketingStrategy    MarketingStrategy?
   posts                Post[]
+  aiUsages             AiUsage[]
+  marketinAIUsages     MarketinAIUsage[]
 }
 
 model MarketingStrategy {
@@ -41,18 +42,21 @@ model MarketingStrategy {
 }
 
 model Client {
-  id         String           @id @unique
-  orgId      String?
-  role       MemberAccessType
-  email      String
-  firstname  String
-  lastname   String
-  profilePic String?
-  createdAt  DateTime         @default(now())
-  ofOrg      Organization?    @relation(fields: [orgId], references: [id])
-  auditLogs  AuditLog[]
-  phoneNumber String?
-  personalEmail String?
+  id               String            @id @unique
+  orgId            String?
+  role             MemberAccessType
+  email            String
+  firstname        String
+  lastname         String
+  profilePic       String?
+  createdAt        DateTime          @default(now())
+  ofOrg            Organization?     @relation(fields: [orgId], references: [id])
+  auditLogs        AuditLog[]
+  phoneNumber      String?
+  personalEmail    String?
+  lastSeenAt       DateTime          @default(now())
+  aiUsages         AiUsage[]
+  marketinAIUsages MarketinAIUsage[]
 }
 
 model Finance {
@@ -128,9 +132,6 @@ enum Subscription {
   PRO
 }
 
-
-
-
 enum AuditAction {
   CREATE
   UPDATE
@@ -144,12 +145,31 @@ enum AuditTarget {
   INVITE_CODE
   PATRONAGE
 }
+
 model AuditLog {
-  id       String   @id @default(cuid())
+  id       String      @id @default(cuid())
   clientId String
   action   AuditAction
   target   AuditTarget
   details  Json?
-  date     DateTime @default(now())
-  client   Client   @relation(fields: [clientId], references: [id])
+  date     DateTime    @default(now())
+  client   Client      @relation(fields: [clientId], references: [id])
+}
+
+model AiUsage {
+  id       String       @id @default(cuid())
+  clientId String
+  orgId    String
+  date     DateTime     @default(now())
+  client   Client       @relation(fields: [clientId], references: [id])
+  org      Organization @relation(fields: [orgId], references: [id])
+}
+
+model MarketinAIUsage {
+  id       String       @id @default(cuid())
+  clientId String
+  orgId    String
+  date     DateTime     @default(now())
+  client   Client       @relation(fields: [clientId], references: [id])
+  org      Organization @relation(fields: [orgId], references: [id])
 }

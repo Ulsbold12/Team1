@@ -49,6 +49,7 @@ import {
   stripeWebhook,
   createPortal,
 } from "./routes/billing";
+import { ActivityStatus, aiLimiting } from "./routes/client/activityStatus";
 
 const app = express();
 app.use(
@@ -71,6 +72,7 @@ app.get("/health", (_req, res) => res.json({ ok: true }));
 app.post("/api/chat", Chat);
 
 app.use(clerkMiddleware());
+app.use(ActivityStatus);
 //onboarding routes
 app.post("/api/onboarding", requireAuth, registerPatron);
 app.post("/api/onboarding/member", requireAuth, registerMember);
@@ -108,12 +110,17 @@ app.post("/api/admin", adminAccess);
 app.get("/api/admin/companies", AdminAuth, getCompanyData);
 app.get("/api/admin/companies/:orgId", AdminAuth, readCompanydataById);
 app.post("/api/admin/companies", AdminAuth, createCompany);
-app.delete("/api/admin/companies", AdminAuth, deleteCompany);
+app.delete("/api/admin/companies/:orgId", AdminAuth, deleteCompany);
 app.get("/api/admin/clients", AdminAuth, getUsersData);
 app.get("/api/admin/companies/:orgId/members", AdminAuth, getUsersofOrgbyId);
 
 //activities log fetch request
 app.get("/api/auditlog", getAuditLog);
+
+//ai limiting
+app.post("/api/limiting", requireAuth, aiLimiting);
+
+
 
 const PORT = process.env.PORT || 8888;
 app.listen(PORT, () => {

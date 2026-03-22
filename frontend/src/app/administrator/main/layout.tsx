@@ -7,7 +7,9 @@ export default function RootLayout({
 }) {
   return (
     <AdminProvider>
-      <div className={`shrink-0 w-screen h-screen no-scrollbar overflow-hidden bg-gray-600`}>{children}</div>
+      <div className={` no-scrollbar w-screen h-screen shrink-0`}>
+        {children}
+      </div>
     </AdminProvider>
   );
 }
