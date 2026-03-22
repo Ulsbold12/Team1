@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { Platform, Post, SavedPost, ImageItem, PLATFORM_COLORS } from "./constants";
@@ -16,6 +16,10 @@ export function PostCard({ post, images = [], onSaved }: PostCardProps) {
   const [saving, setSaving] = useState(false);
   const [selectedIndexes, setSelectedIndexes] = useState<Set<number>>(new Set());
   const { getToken } = useAuth();
+
+  useEffect(() => {
+    setSelectedIndexes(new Set(images.map((_, i) => i)));
+  }, [images]);
   const badgeClass = PLATFORM_COLORS[post.platform as Platform] ?? "bg-slate-200 text-slate-700 dark:bg-gray-700 dark:text-gray-200";
 
   function toggleImage(i: number) {
@@ -31,8 +35,9 @@ export function PostCard({ post, images = [], onSaved }: PostCardProps) {
     try {
       const token = await getToken();
       const selectedBlobUrls = images
-        .filter((img, i) => selectedIndexes.has(i) && img.blobUrl)
+        .filter((img, i) => selectedIndexes.has(i) && img.blobUrl && img.blobUrl.startsWith("http"))
         .map((img) => img.blobUrl as string);
+      console.log("[PostCard save] images:", images.map(img => ({ blobUrl: img.blobUrl, uploading: img.uploading })), "selected:", selectedBlobUrls);
       const platformMap: Record<string, string> = {
         Facebook: "FACEBOOK",
         LinkedIn: "LINKEDIN",

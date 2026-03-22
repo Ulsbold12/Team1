@@ -179,6 +179,20 @@ export const createPost: RequestHandler = async (req, res) => {
   const orgId = req.clerkUserId!;
   const { title, content, platform, scheduledDate, images } = req.body;
   try {
+    await prisma.organization.upsert({
+      where: { id: orgId },
+      update: {},
+      create: {
+        id: orgId,
+        name: "My Organization",
+        industry: "RETAIL",
+        patronage: "BASIC",
+        address: "",
+        description: "",
+        emailAddress: "",
+        phoneNumber: "",
+      },
+    });
     const post = await prisma.post.create({
       data: {
         orgId,
