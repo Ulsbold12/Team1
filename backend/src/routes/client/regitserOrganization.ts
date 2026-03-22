@@ -61,8 +61,8 @@ export const registerOrganization: RequestHandler = async (req, res) => {
     });
 
     return res.status(200).json({ message: "New Org Registered", newOrg });
-  } catch (e) {
-    console.log(e);
-    return res.status(500).json({ message: "Somethign went wrong" });
+  } catch (e: any) {
+    console.error("[registerOrganization] error:", e);
+    return res.status(500).json({ message: e?.message ?? "Something went wrong" });
   }
 };
