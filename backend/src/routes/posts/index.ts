@@ -7,7 +7,7 @@ function requireApiKey(req: Request, res: Response, next: Function) {
   const key = Array.isArray(req.headers["x-api-key"])
     ? req.headers["x-api-key"][0]
     : req.headers["x-api-key"];
-if (!process.env.N8N_API_KEY || key !== process.env.N8N_API_KEY) {
+  if (!process.env.N8N_API_KEY || key !== process.env.N8N_API_KEY) {
     return res.status(401).json({ error: "Unauthorized" });
   }
   next();
@@ -67,8 +67,12 @@ export const updatePost: RequestHandler = async (req, res) => {
   const { content } = req.body;
   try {
     const post = await prisma.post.findUnique({ where: { id } });
-    if (!post || post.orgId !== orgId) return res.status(404).json({ success: false, message: "Not found" });
-    const updated = await prisma.post.update({ where: { id }, data: { content } });
+    if (!post || post.orgId !== orgId)
+      return res.status(404).json({ success: false, message: "Not found" });
+    const updated = await prisma.post.update({
+      where: { id },
+      data: { content },
+    });
     return res.json({ success: true, data: updated });
   } catch (e) {
     return res.status(500).json({ success: false, message: e });
@@ -80,7 +84,8 @@ export const deletePost: RequestHandler = async (req, res) => {
   const id = req.params.id as string;
   try {
     const post = await prisma.post.findUnique({ where: { id } });
-    if (!post || post.orgId !== orgId) return res.status(404).json({ success: false, message: "Not found" });
+    if (!post || post.orgId !== orgId)
+      return res.status(404).json({ success: false, message: "Not found" });
     await prisma.post.delete({ where: { id } });
     return res.json({ success: true });
   } catch (e) {
@@ -93,31 +98,39 @@ export const publishNow: RequestHandler = async (req, res) => {
   const id = req.params.id as string;
   try {
     const post = await prisma.post.findUnique({ where: { id } });
-    if (!post || post.orgId !== orgId) return res.status(404).json({ success: false, message: "Not found" });
+    if (!post || post.orgId !== orgId)
+      return res.status(404).json({ success: false, message: "Not found" });
 
-    const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL;
-    if (!n8nWebhookUrl) return res.status(503).json({ success: false, message: "N8N_WEBHOOK_URL not configured" });
+    const pageId = process.env.FACEBOOK_PAGE_ID;
+    const accessToken = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
 
-    await fetch(n8nWebhookUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        platform: post.platform,
-        content: post.content,
-        images: post.images,
-        postId: post.id,
-        publishNow: true,
-      }),
-    });
+    if (!pageId || !accessToken) {
+      return res.status(503).json({
+        success: false,
+        message: "Facebook credentials not configured",
+      });
+    }
 
-    return res.json({ success: true });
+    const fbRes = await fetch(
+      `https://graph.facebook.com/v23.0/${pageId}/feed?message=${encodeURIComponent(post.content)}&access_token=${accessToken}`,
+      { method: "POST" },
+    );
+    const fbData = await fbRes.json();
+
+    if (!fbRes.ok || fbData.error) {
+      return res.status(500).json({
+        success: false,
+        message: fbData.error?.message ?? "Facebook post failed",
+      });
+    }
+
+    await prisma.post.update({ where: { id }, data: { published: true } });
+    return res.json({ success: true, fbPostId: fbData.id });
   } catch (e) {
-    console.error("createPost алдаа:", e);
+    console.error("publishNow алдаа:", e);
     return res.status(500).json({ success: false, message: String(e) });
   }
 };
-
-
 
 export const deleteAllPosts: RequestHandler = async (req, res) => {
   const orgId = req.clerkUserId!;
