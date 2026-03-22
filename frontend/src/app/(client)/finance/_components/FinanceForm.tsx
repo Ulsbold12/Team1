@@ -34,6 +34,8 @@ const CATEGORIES = {
 export default function FinanceForm({ onClose, onAdd }: FinanceFormProps) {
   const [type, setType] = useState<TransactionType>("income");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+  // Алдаатай:
+  // Зөв — бүгдийг нэг мөрөнд бич:
   const [categoryDetails, setCategoryDetails] = useState<
     Record<string, CategoryDetail>
   >({});
@@ -85,10 +87,11 @@ export default function FinanceForm({ onClose, onAdd }: FinanceFormProps) {
 
   const handleSubmit = () => {
     if (totalAmount === 0 || !date) return;
+
     Object.entries(categoryDetails).forEach(([label, detail]) => {
       const amt = parseFloat(detail.amount);
       if (amt > 0) {
-        onAdd?.({
+        onAdd({
           date,
           type,
           description: detail.note ? `${label} - ${detail.note}` : label,
@@ -96,7 +99,10 @@ export default function FinanceForm({ onClose, onAdd }: FinanceFormProps) {
         });
       }
     });
-    onClose();
+
+    setTimeout(() => {
+      onClose();
+    }, 100);
   };
 
   return (
@@ -109,7 +115,6 @@ export default function FinanceForm({ onClose, onAdd }: FinanceFormProps) {
       />
 
       <div className="overflow-y-auto flex-1 p-7">
-        {/* Header */}
         <div className="flex items-center gap-4 mb-7">
           <div
             className={`w-12 h-12 rounded-2xl bg-linear-to-br ${accentGradient} flex items-center justify-center text-xl shadow-lg ${accentShadow} transition-all duration-500`}
@@ -126,7 +131,6 @@ export default function FinanceForm({ onClose, onAdd }: FinanceFormProps) {
           </div>
         </div>
 
-        {/* Type Toggle */}
         <div className="grid grid-cols-2 gap-1.5 bg-white/4 rounded-2xl p-1.5 mb-6">
           {(["income", "expense"] as TransactionType[]).map((t) => (
             <button
@@ -149,7 +153,6 @@ export default function FinanceForm({ onClose, onAdd }: FinanceFormProps) {
           ))}
         </div>
 
-        {/* Categories */}
         <div className="mb-6">
           <label className="block text-[10px] font-black text-white/30 uppercase tracking-widest mb-3">
             Ангилал
@@ -176,7 +179,6 @@ export default function FinanceForm({ onClose, onAdd }: FinanceFormProps) {
             })}
           </div>
 
-          {/* Accordion list */}
           {selectedCategories.length > 0 && (
             <div className="flex flex-col gap-2">
               {selectedCategories.map((cat) => {
@@ -282,7 +284,6 @@ export default function FinanceForm({ onClose, onAdd }: FinanceFormProps) {
           )}
         </div>
 
-        {/* Date */}
         <div className="mb-7">
           <label className="block text-[10px] font-black text-white/30 uppercase tracking-widest mb-2">
             Огноо
@@ -302,7 +303,6 @@ export default function FinanceForm({ onClose, onAdd }: FinanceFormProps) {
 
         <div className="h-px bg-white/6 mb-6" />
 
-        {/* Footer */}
         <div className="flex gap-3 justify-end">
           <button
             onClick={onClose}

@@ -11,6 +11,7 @@ import {
   ShieldCheck,
   CreditCard,
   Receipt,
+  Bell,
 } from "lucide-react";
 import {
   Sidebar,
@@ -24,6 +25,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useUser } from "@clerk/nextjs";
+import { useNotificationStore } from "@/store/notificationStore";
+
 const navItems = [
   { label: "Нүүр", icon: Home, href: "/dashboard" },
   { label: "Санхүү AI", icon: Landmark, href: "/finance" },
@@ -37,7 +40,12 @@ const navItems = [
 export function AppSidebar() {
   const pathname = usePathname();
   const { user } = useUser();
-  const fullName = user ? `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() : "";
+  const { notifications } = useNotificationStore();
+  const unread = notifications.filter((n) => !n.read).length;
+
+  const fullName = user
+    ? `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim()
+    : "";
   const planName = (user?.publicMetadata?.plan as string) ?? "";
 
   return (
@@ -81,6 +89,26 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+
+              {/* Мэдэгдэл — унших тооны badge-тай */}
+              {/* Мэдэгдэл */}
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === "/notifications"}
+                  className="data-[active=true]:bg-[#5048e5]/10 data-[active=true]:text-[#5048e5]"
+                >
+                  <Link href="/notifications">
+                    <Bell className="w-4 h-4 shrink-0" />
+                    <span className="flex-1">Мэдэгдэл</span>
+                    {unread > 0 && (
+                      <span className="text-[10px] font-bold bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center shrink-0">
+                        {unread > 9 ? "9+" : unread}
+                      </span>
+                    )}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -96,11 +124,19 @@ export function AppSidebar() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span>{(user?.firstName?.[0] ?? user?.emailAddresses?.[0]?.emailAddress?.[0] ?? "?").toUpperCase()}</span>
+              <span>
+                {(
+                  user?.firstName?.[0] ??
+                  user?.emailAddresses?.[0]?.emailAddress?.[0] ??
+                  "?"
+                ).toUpperCase()}
+              </span>
             )}
           </div>
           <div className="flex flex-col overflow-hidden">
-            <p className="text-xs font-bold truncate">{fullName || user?.emailAddresses?.[0]?.emailAddress}</p>
+            <p className="text-xs font-bold truncate">
+              {fullName || user?.emailAddresses?.[0]?.emailAddress}
+            </p>
             <p className="text-[10px] text-sidebar-foreground/50 truncate">
               {planName || user?.emailAddresses?.[0]?.emailAddress}
             </p>

@@ -2,9 +2,11 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { Check, Zap, Crown } from "lucide-react";
+import { useNotificationStore } from "@/store/notificationStore";
 
 export default function BillingPage() {
   const { getToken } = useAuth();
+  const { addNotification } = useNotificationStore();
   const [patronage, setPatronage] = useState<"BASIC" | "PRO" | null>(null);
   const [loading, setLoading] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
@@ -12,9 +14,10 @@ export default function BillingPage() {
   useEffect(() => {
     async function fetchStatus() {
       const token = await getToken();
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/billing/status`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/billing/status`,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
       const data = await res.json();
       if (data.success) setPatronage(data.patronage);
     }
@@ -25,12 +28,26 @@ export default function BillingPage() {
     setLoading(true);
     try {
       const token = await getToken();
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/billing/checkout`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/billing/checkout`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       const data = await res.json();
-      if (data.url) window.location.href = data.url;
+      if (data.url) {
+        // ← Notification
+        addNotification({
+          category: "system",
+          title: "PRO тариф руу шилжиж байна",
+          desc: "Төлбөрийн хуудас руу чиглүүлж байна",
+          icon: Crown,
+          iconColor: "text-yellow-500",
+          iconBg: "bg-yellow-500/10",
+        });
+        window.location.href = data.url;
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -42,10 +59,13 @@ export default function BillingPage() {
     setPortalLoading(true);
     try {
       const token = await getToken();
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/billing/portal`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/billing/portal`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       const data = await res.json();
       if (data.url) window.location.href = data.url;
     } catch (e) {
@@ -81,7 +101,6 @@ export default function BillingPage() {
           </p>
         </div>
 
-        {/* Current plan banner */}
         {patronage && (
           <div className="flex items-center gap-3 p-4 rounded-xl border bg-background">
             {patronage === "PRO" ? (
@@ -91,7 +110,11 @@ export default function BillingPage() {
             )}
             <span className="font-medium">
               Одоогийн тариф:{" "}
-              <span className={patronage === "PRO" ? "text-yellow-500" : "text-blue-500"}>
+              <span
+                className={
+                  patronage === "PRO" ? "text-yellow-500" : "text-blue-500"
+                }
+              >
                 {patronage}
               </span>
             </span>
@@ -99,17 +122,19 @@ export default function BillingPage() {
               <button
                 onClick={handlePortal}
                 disabled={portalLoading}
-                className="ml-auto text-sm text-muted-foreground hover:text-foreground underline">
+                className="ml-auto text-sm text-muted-foreground hover:text-foreground underline"
+              >
                 {portalLoading ? "Уншиж байна..." : "Захиалга удирдах"}
               </button>
             )}
           </div>
         )}
 
-        {/* Pricing cards */}
         <div className="grid md:grid-cols-2 gap-6">
           {/* BASIC */}
-          <div className={`rounded-xl border p-6 bg-background space-y-6 ${patronage === "BASIC" ? "border-blue-500" : ""}`}>
+          <div
+            className={`rounded-xl border p-6 bg-background space-y-6 ${patronage === "BASIC" ? "border-blue-500" : ""}`}
+          >
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <Zap className="w-5 h-5 text-blue-500" />
@@ -123,7 +148,9 @@ export default function BillingPage() {
               <div className="flex items-baseline gap-1">
                 <span className="text-3xl font-bold">Үнэгүй</span>
               </div>
-              <p className="text-sm text-muted-foreground mt-1">Жижиг бизнест тохиромжтой</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                Жижиг бизнест тохиромжтой
+              </p>
             </div>
             <ul className="space-y-3">
               {basicFeatures.map((f) => (
@@ -135,13 +162,16 @@ export default function BillingPage() {
             </ul>
             <button
               disabled
-              className="w-full rounded-lg border px-4 py-2 text-sm font-medium opacity-50 cursor-not-allowed">
+              className="w-full rounded-lg border px-4 py-2 text-sm font-medium opacity-50 cursor-not-allowed"
+            >
               Одоогийн тариф
             </button>
           </div>
 
           {/* PRO */}
-          <div className={`rounded-xl border p-6 bg-background space-y-6 relative overflow-hidden ${patronage === "PRO" ? "border-yellow-500" : "border-[#5048e5]"}`}>
+          <div
+            className={`rounded-xl border p-6 bg-background space-y-6 relative overflow-hidden ${patronage === "PRO" ? "border-yellow-500" : "border-[#5048e5]"}`}
+          >
             <div className="absolute top-3 right-3 bg-[#5048e5] text-white text-xs px-2 py-0.5 rounded-full font-medium">
               Санал болгох
             </div>
@@ -159,7 +189,9 @@ export default function BillingPage() {
                 <span className="text-3xl font-bold">$30</span>
                 <span className="text-muted-foreground text-sm">/сар</span>
               </div>
-              <p className="text-sm text-muted-foreground mt-1">Өсч буй бизнест хязгааргүй боломж</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                Өсч буй бизнест хязгааргүй боломж
+              </p>
             </div>
             <ul className="space-y-3">
               {proFeatures.map((f) => (
@@ -173,14 +205,16 @@ export default function BillingPage() {
               <button
                 onClick={handlePortal}
                 disabled={portalLoading}
-                className="w-full rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 text-sm font-medium disabled:opacity-50">
+                className="w-full rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
+              >
                 {portalLoading ? "Уншиж байна..." : "Захиалга удирдах"}
               </button>
             ) : (
               <button
                 onClick={handleUpgrade}
                 disabled={loading}
-                className="w-full rounded-lg bg-[#5048e5] hover:bg-[#4038d4] text-white px-4 py-2 text-sm font-medium disabled:opacity-50">
+                className="w-full rounded-lg bg-[#5048e5] hover:bg-[#4038d4] text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
+              >
                 {loading ? "Уншиж байна..." : "PRO руу шилжих →"}
               </button>
             )}

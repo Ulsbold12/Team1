@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useAuth, useUser } from "@clerk/nextjs";
-import { Building2, User, Save, Loader2 } from "lucide-react";
+import { Building2, User, Save, Loader2, CheckCircle } from "lucide-react";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const INDUSTRIES = [
   { value: "TECH", label: "Мэдээллийн технологи" },
@@ -15,6 +16,7 @@ const INDUSTRIES = [
 export default function SettingsPage() {
   const { getToken } = useAuth();
   const { user } = useUser();
+  const { addNotification } = useNotificationStore();
 
   const [form, setForm] = useState({ name: "", industry: "" });
   const [loading, setLoading] = useState(true);
@@ -27,9 +29,7 @@ export default function SettingsPage() {
         const token = await getToken();
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/company`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          },
+          { headers: { Authorization: `Bearer ${token}` } },
         );
         const data = await res.json();
         if (data.success) {
@@ -62,6 +62,16 @@ export default function SettingsPage() {
       });
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
+
+      // ← Notification
+      addNotification({
+        category: "system",
+        title: "Компанийн мэдээлэл хадгалагдлаа",
+        desc: `${form.name} амжилттай шинэчлэгдлээ`,
+        icon: CheckCircle,
+        iconColor: "text-emerald-500",
+        iconBg: "bg-emerald-500/10",
+      });
     } catch (e) {
       console.error(e);
     } finally {
@@ -72,7 +82,6 @@ export default function SettingsPage() {
   return (
     <div className="flex-1 overflow-y-auto p-8 bg-muted/30">
       <div className="max-w-2xl mx-auto space-y-6">
-        {/* Header */}
         <div>
           <h1 className="text-2xl font-bold text-foreground">Тохиргоо</h1>
           <p className="text-sm text-muted-foreground mt-1">
@@ -80,7 +89,6 @@ export default function SettingsPage() {
           </p>
         </div>
 
-        {/* Profile card */}
         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-border p-6 space-y-4">
           <div className="flex items-center gap-2 mb-4">
             <User className="w-4 h-4 text-muted-foreground" />
@@ -137,7 +145,8 @@ export default function SettingsPage() {
                   onChange={(e) =>
                     setForm({ ...form, industry: e.target.value })
                   }
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-muted/30 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all">
+                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-muted/30 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all"
+                >
                   <option value="">Сонгоно уу</option>
                   {INDUSTRIES.map((i) => (
                     <option key={i.value} value={i.value}>
@@ -151,7 +160,8 @@ export default function SettingsPage() {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold disabled:opacity-50 transition-all">
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold disabled:opacity-50 transition-all"
+                >
                   {saving ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
