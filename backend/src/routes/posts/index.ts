@@ -111,9 +111,42 @@ export const publishNow: RequestHandler = async (req, res) => {
       });
     }
 
+    // Upload images first if any
+    const images: string[] = Array.isArray(post.images) ? (post.images as string[]) : [];
+    const photoIds: string[] = [];
+
+    for (const imageUrl of images) {
+      const photoRes = await fetch(
+        `https://graph.facebook.com/v23.0/${pageId}/photos`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            url: imageUrl,
+            published: false,
+            access_token: accessToken,
+          }),
+        },
+      );
+      const photoData = await photoRes.json();
+      if (photoData.id) photoIds.push(photoData.id);
+    }
+
+    const feedBody: Record<string, unknown> = {
+      message: post.content,
+      access_token: accessToken,
+    };
+    if (photoIds.length > 0) {
+      feedBody.attached_media = photoIds.map((pid) => ({ media_fbid: pid }));
+    }
+
     const fbRes = await fetch(
-      `https://graph.facebook.com/v23.0/${pageId}/feed?message=${encodeURIComponent(post.content)}&access_token=${accessToken}`,
-      { method: "POST" },
+      `https://graph.facebook.com/v23.0/${pageId}/feed`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(feedBody),
+      },
     );
     const fbData = await fbRes.json();
 
