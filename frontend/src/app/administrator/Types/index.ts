@@ -2,6 +2,7 @@ export type ClientType = {
   id: string;
   orgId: string;
   role: "EXECUTIVE" | "MANAGEMENT" | "MEMBER";
+  role: "EXECUTIVE" | "MANAGEMENT" | "MEMBER";
   email: string;
   firstname: string;
   lastname: string;
@@ -27,8 +28,8 @@ export type Post = {
   id: string;
   orgId: string;
   title: string;
-  content: string | string[] | any;
-  platform: string | any;
+  content: any;
+  platform: any;
   react: number;
   publishedAt: Date;
 };
@@ -54,6 +55,7 @@ export interface OrganizationInterface {
   PhoneNumber: String;
   address: string;
 }
+
 export type AdminType = {
   id: string;
   email: string;
@@ -64,7 +66,7 @@ export type AdminType = {
 };
 
 export type InvCode = {
-  optKey: Number;
+  optKey: number;
   expiresAt: Date;
 };
 export type Status = "Идэвхтэй" | "Хүлээгдэж буй" | "Идэвхгүй";
