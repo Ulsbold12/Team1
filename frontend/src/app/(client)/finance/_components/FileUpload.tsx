@@ -7,15 +7,13 @@ import {
   UploadCloud,
   FileSpreadsheet,
   Trash,
-  Lightbulb,
   AlertTriangle,
-  Sparkles,
-  TrendingDown,
-  TrendingUp,
-  CheckCircle2,
-  Plus,
   PenLine,
   Download,
+  FileText,
+  AlertCircle,
+  TrendingUp,
+  TrendingDown,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -24,6 +22,7 @@ import { Dashboard } from "./Dashboard";
 import { GraphicSection } from "./GraphicSection";
 import FinanceForm from "./FinanceForm";
 import { FinanceReport } from "./FinanceReport";
+import { useNotificationStore } from "@/store/notificationStore";
 
 interface Transaction {
   [key: string]: string | number;
@@ -32,12 +31,10 @@ interface UploadedFile {
   name: string;
   data: Transaction[];
 }
-
 interface FileUploadProps {
   onResult?: (result: any) => void;
 }
 
-// Date object болон бусад утгыг "YYYY-MM-DD" string болгон хөрвүүлнэ
 const toDateString = (val: any): string => {
   if (val instanceof Date) {
     const y = val.getFullYear();
@@ -48,7 +45,6 @@ const toDateString = (val: any): string => {
   return String(val ?? "");
 };
 
-// Банк бүрийн өөр өөр column нэрийг стандарт нэрэнд normalize хийнэ
 const COLUMN_ALIASES: Record<string, string[]> = {
   Огноо: [
     "огноо",
@@ -115,14 +111,12 @@ const normalizeHeader = (header: string): string => {
   return header;
 };
 
-// Excel-ийн header мөрийг олж, банк бүрийн column нэрийг normalize хийж parse хийнэ
 const parseExcelData = (buffer: ArrayBuffer): Transaction[] => {
   const workbook = XLSX.read(buffer, { type: "array", cellDates: true });
   const sheetName = workbook.SheetNames[0];
   const worksheet = workbook.Sheets[sheetName];
   const rawData = XLSX.utils.sheet_to_json<any[]>(worksheet, { header: 1 });
 
-  // Огноо эсвэл Date/date агуулсан header мөрийг хайна
   const dateAliases = COLUMN_ALIASES["Огноо"].map((a) => a.toLowerCase());
   const headerRowIndex = rawData.findIndex((row) => {
     if (!Array.isArray(row)) return false;
@@ -158,7 +152,6 @@ const parseExcelData = (buffer: ArrayBuffer): Transaction[] => {
     })
     .filter((tx) => tx["Огноо"]);
 
-  // Хэрэв Орлого болон Зарлага олдоогүй бол "Дүн" эсвэл "Amount" баганыг шалгана
   const hasIncome = rows.some(
     (r) => r["Орлого"] !== "" && r["Орлого"] !== undefined,
   );
@@ -187,7 +180,6 @@ const parseExcelData = (buffer: ArrayBuffer): Transaction[] => {
   return rows;
 };
 
-// "2024-06-04 15:35:12" → "2024-06"
 const getMonthKey = (dateVal: string | number): string => {
   const str = String(dateVal);
   const match = str.match(/^(\d{4})[-./](\d{2})/);
@@ -218,56 +210,61 @@ const getMonthLabel = (key: string): string => {
 
 export default function FileUpload({ onResult }: FileUploadProps) {
   const { getToken } = useAuth();
+  const { addNotification } = useNotificationStore();
+
   const [uploadedFiles, setUploadeddFiles] = useState<UploadedFile[]>([]);
   const [manualTransactions, setManualTransactions] = useState<Transaction[]>(
     [],
   );
   const [showManualForm, setShowManualForm] = useState(false);
   const [aiResult, setAiResult] = useState<any>(null);
-
-  useEffect(() => {
-    const loadSavedAnalysis = async () => {
-      try {
-        const token = await getToken();
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/finance/analysis`,
-          { headers: { Authorization: `Bearer ${token}` } },
-        );
-        if (res.ok) {
-          const data = await res.json();
-          if (data.success && data.data?.length > 0) {
-            const latest = data.data[0];
-            const restored = {
-              summary: latest.summary,
-              tips: latest.tips,
-              monthly: latest.monthly,
-              income: (latest.categories as any)?.income ?? [],
-              expenses: (latest.categories as any)?.expenses ?? [],
-            };
-            setAiResult(restored);
-            onResult?.(restored);
-          }
-        }
-      } catch (_) {}
-    };
-    loadSavedAnalysis();
-  }, []);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedMonths, setSelectedMonths] = useState<Set<string>>(new Set());
   const [activeTab, setActiveTab] = useState<string>("нийт");
   const [showDuplicates, setShowDuplicates] = useState(false);
   const [isPdfLoading, setIsPdfLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [monthIndex, setMonthIndex] = useState(-1);
   const pdfRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [monthIndex, setMonthIndex] = useState(-1);
+
+  useEffect(() => {
+    const loadSavedAnalysis = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+        if (!apiUrl) {
+          console.warn("NEXT_PUBLIC_API_URL тохируулаагүй байна");
+          return;
+        }
+        const token = await getToken();
+        const res = await fetch(`${apiUrl}/api/finance/analysis`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.success && data.data?.length > 0) {
+          const latest = data.data[0];
+          const restored = {
+            summary: latest.summary,
+            tips: latest.tips,
+            monthly: latest.monthly,
+            income: (latest.categories as any)?.income ?? [],
+            expenses: (latest.categories as any)?.expenses ?? [],
+          };
+          setAiResult(restored);
+          onResult?.(restored);
+        }
+      } catch (error) {
+        console.warn("Хадгалсан шинжилгээ ачааллахад алдаа:", error);
+      }
+    };
+    loadSavedAnalysis();
+  }, []);
 
   const downloadPDF = () => {
     if (!aiResult) return;
     setIsPdfLoading(true);
-
     const date = new Date().toLocaleDateString("mn-MN");
-
     const catRows = (cats: { name: string; total: number }[]) =>
       cats
         .map(
@@ -275,7 +272,6 @@ export default function FileUpload({ onResult }: FileUploadProps) {
             `<tr><td>${c.name}</td><td style="text-align:right">₮${c.total.toLocaleString()}</td></tr>`,
         )
         .join("");
-
     const monthlyRows = (aiResult.monthly ?? [])
       .map(
         (m: {
@@ -302,14 +298,12 @@ export default function FileUpload({ onResult }: FileUploadProps) {
         },
       )
       .join("");
-
     const tipsHtml = (aiResult.tips ?? [])
       .map(
         (t: string, i: number) =>
           `<li style="margin-bottom:8px">${i + 1}. ${t}</li>`,
       )
       .join("");
-
     const totalIncome = (aiResult.income ?? []).reduce(
       (s: number, c: { total: number }) => s + c.total,
       0,
@@ -318,7 +312,6 @@ export default function FileUpload({ onResult }: FileUploadProps) {
       (s: number, c: { total: number }) => s + c.total,
       0,
     );
-
     const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
     <title>Санхүүгийн тайлан</title>
     <style>
@@ -358,7 +351,6 @@ export default function FileUpload({ onResult }: FileUploadProps) {
     <ul>${tipsHtml}</ul>
     <script>window.onload=()=>{window.print();}<\/script>
     </body></html>`;
-
     const win = window.open("", "_blank");
     if (win) {
       win.document.write(html);
@@ -385,7 +377,6 @@ export default function FileUpload({ onResult }: FileUploadProps) {
     return Array.from(months).sort();
   }, [allTransactions]);
 
-  // Давхардсан гүйлгээ илрүүлэх — original + давхардсан хос болгон хадгална
   const { uniqueTransactions, duplicates } = useMemo(() => {
     const seen = new Map<string, Transaction>();
     const unique: Transaction[] = [];
@@ -402,7 +393,6 @@ export default function FileUpload({ onResult }: FileUploadProps) {
     return { uniqueTransactions: unique, duplicates: dupes };
   }, [allTransactions]);
 
-  // Сонгосон саруудаар шүүнэ; manual гүйлгээ үргэлж орно
   const filteredTransactions = useMemo(() => {
     if (selectedMonths.size === 0) return uniqueTransactions;
     return uniqueTransactions.filter(
@@ -438,6 +428,17 @@ export default function FileUpload({ onResult }: FileUploadProps) {
     try {
       const parsedFiles = await Promise.all(readFilesPromises);
       setUploadeddFiles((prev) => [...prev, ...parsedFiles]);
+
+      // ← Файл оруулсан notification
+      const totalTx = parsedFiles.reduce((s, f) => s + f.data.length, 0);
+      addNotification({
+        category: "finance",
+        title: "Дансны хуулга нэмэгдлээ",
+        desc: `${parsedFiles.length} файл, нийт ${totalTx} гүйлгээ оруулагдлаа`,
+        icon: FileText,
+        iconColor: "text-[#5048e5]",
+        iconBg: "bg-[#5048e5]/10",
+      });
     } catch (error) {
       console.error("Өгөгдлүүдийг нэгтгэх үед алдаа гарлаа.", error);
     }
@@ -464,7 +465,9 @@ export default function FileUpload({ onResult }: FileUploadProps) {
     e.preventDefault();
     setIsDragging(false);
     const files = Array.from(e.dataTransfer.files).filter((f) =>
-      [".xlsx", ".xls", ".csv"].some((ext) => f.name.toLowerCase().endsWith(ext)),
+      [".xlsx", ".xls", ".csv"].some((ext) =>
+        f.name.toLowerCase().endsWith(ext),
+      ),
     );
     await processFiles(files);
   };
@@ -497,17 +500,45 @@ export default function FileUpload({ onResult }: FileUploadProps) {
         headers: { "Content-type": "application/json" },
         body: JSON.stringify({ transactions: transactionsWithMonth }),
       });
+
       if (!response.ok) {
         const text = await response.text();
+
+        // ← API алдааны notification
+        addNotification({
+          category: "finance",
+          title: "Шинжилгээ амжилтгүй боллоо",
+          desc: text.includes("OPENAI_API_KEY")
+            ? "OpenAI түлхүүр тохируулаагүй байна"
+            : `Сервер алдаа (${response.status})`,
+          icon: AlertCircle,
+          iconColor: "text-red-500",
+          iconBg: "bg-red-500/10",
+        });
+
         throw new Error(
           `API алдаа (${response.status}): ${text.slice(0, 200)}`,
         );
       }
+
       const result = await response.json();
-      console.log("aiResult:", result);
       setAiResult(result);
       setActiveTab("нийт");
       onResult?.(result);
+
+      // ← Амжилттай notification
+      addNotification({
+        category: "finance",
+        title: "Санхүүгийн шинжилгээ дууслаа",
+        desc: `${filteredTransactions.length} гүйлгээ амжилттай шинжлэгдлээ`,
+        icon: FileText,
+        iconColor: "text-[#5048e5]",
+        iconBg: "bg-[#5048e5]/10",
+      });
+
+      // Backend хадгалах
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      if (!apiUrl) return;
 
       const token = await getToken();
       const authHeader = {
@@ -515,7 +546,7 @@ export default function FileUpload({ onResult }: FileUploadProps) {
         Authorization: `Bearer ${token}`,
       };
 
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/finance/analysis`, {
+      await fetch(`${apiUrl}/api/finance/analysis`, {
         method: "POST",
         headers: authHeader,
         body: JSON.stringify({
@@ -524,61 +555,34 @@ export default function FileUpload({ onResult }: FileUploadProps) {
           monthly: result.monthly ?? null,
           tips: result.tips,
         }),
-      });
+      }).catch(() => {});
 
-      const monthly: {
-        month: string;
-        revenue: number;
-        expense: number;
-        netProfit: number;
-      }[] =
-        Array.isArray(result.monthly) && result.monthly.length > 0
-          ? result.monthly
-          : result.revenue != null || result.expense != null
-            ? [
-                {
-                  month: new Date().toISOString(),
-                  revenue: result.revenue ?? 0,
-                  expense: result.expense ?? 0,
-                  netProfit:
-                    result.netProfit ??
-                    (result.revenue ?? 0) - (result.expense ?? 0),
-                },
-              ]
-            : [];
-
+      const monthly = Array.isArray(result.monthly) ? result.monthly : [];
       for (const m of monthly) {
         const raw = m as any;
-        // income/expenses can be arrays (from AI) or plain numbers
-        const revenue =
-          typeof raw.revenue === "number"
+        const revenue = Array.isArray(raw.income)
+          ? raw.income.reduce(
+              (s: number, c: { total: number }) => s + (c.total ?? 0),
+              0,
+            )
+          : typeof raw.revenue === "number"
             ? raw.revenue
-            : Array.isArray(raw.income)
-              ? (raw.income as { total: number }[]).reduce(
-                  (s, c) => s + (c.total ?? 0),
-                  0,
-                )
-              : typeof raw.income === "number"
-                ? raw.income
-                : 0;
-        const expense =
-          typeof raw.expense === "number"
+            : 0;
+        const expense = Array.isArray(raw.expenses)
+          ? raw.expenses.reduce(
+              (s: number, c: { total: number }) => s + (c.total ?? 0),
+              0,
+            )
+          : typeof raw.expense === "number"
             ? raw.expense
-            : Array.isArray(raw.expenses)
-              ? (raw.expenses as { total: number }[]).reduce(
-                  (s, c) => s + (c.total ?? 0),
-                  0,
-                )
-              : typeof raw.expenses === "number"
-                ? raw.expenses
-                : 0;
+            : 0;
         const netProfit = raw.netProfit ?? revenue - expense;
-        // "2025-01" → "2025-01-01" so Date parses correctly
         const monthStr =
           typeof raw.month === "string" && raw.month.length === 7
             ? raw.month + "-01"
             : raw.month;
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/finance`, {
+
+        await fetch(`${apiUrl}/api/finance`, {
           method: "POST",
           headers: authHeader,
           body: JSON.stringify({
@@ -587,10 +591,20 @@ export default function FileUpload({ onResult }: FileUploadProps) {
             expense,
             netProfit,
           }),
-        });
+        }).catch(() => {});
       }
     } catch (error) {
       console.error("Алдаа гарлаа:", error);
+
+      // ← Network болон бусад алдааны notification
+      addNotification({
+        category: "finance",
+        title: "Шинжилгээ амжилтгүй боллоо",
+        desc: "AI шинжилгээ хийхэд алдаа гарлаа",
+        icon: AlertCircle,
+        iconColor: "text-red-500",
+        iconBg: "bg-red-500/10",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -648,18 +662,32 @@ export default function FileUpload({ onResult }: FileUploadProps) {
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
-              className={`flex flex-col items-center justify-center gap-3 w-full rounded-2xl border-2 border-dashed cursor-pointer transition-all py-10 px-6 text-center
-                ${isDragging
+              className={`flex flex-col items-center justify-center gap-3 w-full rounded-2xl border-2 border-dashed cursor-pointer transition-all py-10 px-6 text-center ${
+                isDragging
                   ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
                   : "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/40 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/10"
-                }`}
+              }`}
             >
-              <div className={`w-14 h-14 rounded-full flex items-center justify-center transition-colors ${isDragging ? "bg-blue-100 dark:bg-blue-800" : "bg-slate-100 dark:bg-slate-700"}`}>
-                <UploadCloud className={`w-7 h-7 transition-colors ${isDragging ? "text-blue-500" : "text-slate-400 dark:text-slate-400"}`} />
+              <div
+                className={`w-14 h-14 rounded-full flex items-center justify-center transition-colors ${
+                  isDragging
+                    ? "bg-blue-100 dark:bg-blue-800"
+                    : "bg-slate-100 dark:bg-slate-700"
+                }`}
+              >
+                <UploadCloud
+                  className={`w-7 h-7 transition-colors ${
+                    isDragging
+                      ? "text-blue-500"
+                      : "text-slate-400 dark:text-slate-400"
+                  }`}
+                />
               </div>
               <div>
                 <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                  {isDragging ? "Файлыг энд тавина уу" : "Файлаа энд чирж тавь эсвэл сонго"}
+                  {isDragging
+                    ? "Файлыг энд тавина уу"
+                    : "Файлаа энд чирж тавь эсвэл сонго"}
                 </p>
                 <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
                   Excel (.xlsx, .xls) болон CSV файл дэмжинэ
@@ -668,7 +696,10 @@ export default function FileUpload({ onResult }: FileUploadProps) {
               <button
                 type="button"
                 className="mt-1 px-5 py-2 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-colors shadow-sm"
-                onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  fileInputRef.current?.click();
+                }}
               >
                 Файл сонгох
               </button>
@@ -713,7 +744,7 @@ export default function FileUpload({ onResult }: FileUploadProps) {
               </div>
             )}
 
-            {/* Бэлэн мөнгөний гүйлгээ нэмэх */}
+            {/* Бэлэн мөнгөний гүйлгээ */}
             <Button
               variant="outline"
               size="sm"
@@ -736,6 +767,21 @@ export default function FileUpload({ onResult }: FileUploadProps) {
                     _manual: 1,
                   };
                   setManualTransactions((prev) => [...prev, tx]);
+
+                  // ← Бэлэн мөнгөний notification
+                  addNotification({
+                    category: "finance",
+                    title:
+                      type === "income"
+                        ? "Орлого бүртгэгдлээ"
+                        : "Зарлага бүртгэгдлээ",
+                    desc: `${description} — ₮${Number(amount).toLocaleString()}`,
+                    icon: type === "income" ? TrendingUp : TrendingDown,
+                    iconColor:
+                      type === "income" ? "text-emerald-500" : "text-red-500",
+                    iconBg:
+                      type === "income" ? "bg-emerald-500/10" : "bg-red-500/10",
+                  });
                 }}
               />
             )}
@@ -760,7 +806,6 @@ export default function FileUpload({ onResult }: FileUploadProps) {
 
                 {showDuplicates && (
                   <div className="border border-amber-200 dark:border-amber-700 rounded-md overflow-hidden text-xs">
-                    {/* Header */}
                     <div className="grid grid-cols-[90px_1fr_100px] bg-amber-100 dark:bg-amber-900/30 px-3 py-2 font-semibold text-amber-800 dark:text-amber-300 border-b border-amber-200 dark:border-amber-700">
                       <span>Огноо</span>
                       <span>Гүйлгээний утга</span>
@@ -778,7 +823,11 @@ export default function FileUpload({ onResult }: FileUploadProps) {
                           >
                             <div className="flex flex-col gap-0.5">
                               <span
-                                className={`text-[10px] font-semibold px-1.5 py-0.5 rounded w-fit ${label === "Анхны" ? "bg-slate-200 dark:bg-slate-600 text-slate-600 dark:text-slate-300" : "bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400"}`}
+                                className={`text-[10px] font-semibold px-1.5 py-0.5 rounded w-fit ${
+                                  label === "Анхны"
+                                    ? "bg-slate-200 dark:bg-slate-600 text-slate-600 dark:text-slate-300"
+                                    : "bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400"
+                                }`}
                               >
                                 {label}
                               </span>
@@ -854,7 +903,7 @@ export default function FileUpload({ onResult }: FileUploadProps) {
               <Button
                 onClick={analyzeWithAI}
                 disabled={isLoading || filteredTransactions.length === 0}
-                variant={"outline"}
+                variant="outline"
                 className="w-fit bg-blue-600 text-white"
               >
                 {isLoading ? "Шинжилж байна..." : "AI-аар шинжлүүлэх"}
@@ -875,6 +924,7 @@ export default function FileUpload({ onResult }: FileUploadProps) {
           </CardContent>
         </Card>
       </div>
+
       <div>
         {monthlyGroups.length > 0 && (
           <div>
@@ -901,7 +951,6 @@ export default function FileUpload({ onResult }: FileUploadProps) {
                 →
               </button>
             </div>
-
             <FinanceReport
               aiResult={currentMonthAiResult}
               transactions={currentMonthTx.map((tx) => ({
