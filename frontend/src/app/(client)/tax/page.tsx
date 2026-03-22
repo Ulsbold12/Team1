@@ -13,6 +13,7 @@ import {
   Calendar,
   TrendingUp,
 } from "lucide-react";
+import { apiFetch } from "@/lib/apiFetch";
 
 interface FinanceRecord {
   id: string;
@@ -120,12 +121,14 @@ export default function TaxPage() {
   );
   const [employeeCount, setEmployeeCount] = useState(1);
   const [avgSalary, setAvgSalary] = useState(1_000_000);
+  const [manualRevenue, setManualRevenue] = useState<number | "">("");
+  const [manualNetProfit, setManualNetProfit] = useState<number | "">("");
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
 
   useEffect(() => {
     getToken().then((token) => {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/finance`, {
+      apiFetch(`${process.env.NEXT_PUBLIC_API_URL}/api/finance`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((r) => r.json())
@@ -144,9 +147,11 @@ export default function TaxPage() {
     return d.getFullYear() === selectedYear && quarter.months.includes(d.getMonth() + 1);
   });
 
-  const revenue = filtered.reduce((s, r) => s + (r.revenue ?? 0), 0);
+  const autoRevenue = filtered.reduce((s, r) => s + (r.revenue ?? 0), 0);
   const expense = filtered.reduce((s, r) => s + (r.expense ?? 0), 0);
-  const netProfit = filtered.reduce((s, r) => s + (r.netProfit ?? 0), 0);
+  const autoNetProfit = filtered.reduce((s, r) => s + (r.netProfit ?? 0), 0);
+  const revenue = manualRevenue !== "" ? manualRevenue : autoRevenue;
+  const netProfit = manualNetProfit !== "" ? manualNetProfit : autoNetProfit;
 
   const vat = revenue * 0.1;
   const cit = netProfit > 0 ? netProfit * 0.1 : 0;
@@ -302,8 +307,30 @@ export default function TaxPage() {
       {/* НД inputs + donut chart */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-card border border-border rounded-xl p-6 space-y-4">
-          <h2 className="font-semibold text-sm text-foreground">НД тооцооллын мэдээлэл</h2>
+          <h2 className="font-semibold text-sm text-foreground">Тооцооллын мэдээлэл</h2>
           <div className="space-y-3">
+            <div>
+              <label className="text-xs text-muted-foreground block mb-1.5">
+                Нийт орлого (₮) {autoRevenue > 0 && <span className="text-emerald-600">· автомат: {fmt(autoRevenue)}</span>}
+              </label>
+              <input
+                type="number" min={0} step={10000}
+                value={manualRevenue === "" ? autoRevenue : manualRevenue}
+                onChange={(e) => { setManualRevenue(e.target.value === "" ? "" : +e.target.value); setSent(false); }}
+                className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#5048e5]/30"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground block mb-1.5">
+                Цэвэр ашиг (₮) {autoNetProfit > 0 && <span className="text-emerald-600">· автомат: {fmt(autoNetProfit)}</span>}
+              </label>
+              <input
+                type="number" min={0} step={10000}
+                value={manualNetProfit === "" ? autoNetProfit : manualNetProfit}
+                onChange={(e) => { setManualNetProfit(e.target.value === "" ? "" : +e.target.value); setSent(false); }}
+                className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#5048e5]/30"
+              />
+            </div>
             <div>
               <label className="text-xs text-muted-foreground block mb-1.5">Ажилчдын тоо</label>
               <input

@@ -4,10 +4,10 @@ import "dotenv/config";
 import { clerkMiddleware } from "@clerk/express";
 import { requireAuth } from "./middleware/requireAuth";
 import {
-  Auditlog,
   createCompany,
   deleteCompany,
   getAuditLog,
+  getUsersofOrgbyId,
   readCompanydataById,
 } from "./routes/admin";
 
@@ -106,13 +106,14 @@ app.post("/api/billing/portal", requireAuth, createPortal);
 //admin routers
 app.post("/api/admin", adminAccess);
 app.get("/api/admin/companies", AdminAuth, getCompanyData);
-app.get("/api/admin/comapnies/:id", requireAuth, readCompanydataById);
+app.get("/api/admin/companies/:orgId", AdminAuth, readCompanydataById);
 app.post("/api/admin/companies", AdminAuth, createCompany);
 app.delete("/api/admin/companies", AdminAuth, deleteCompany);
 app.get("/api/admin/clients", AdminAuth, getUsersData);
+app.get("/api/admin/companies/:orgId/members", AdminAuth, getUsersofOrgbyId);
 
 //activities log fetch request
-app.get("/auditlog", getAuditLog);
+app.get("/api/auditlog", getAuditLog);
 
 const PORT = process.env.PORT || 8888;
 app.listen(PORT, () => {

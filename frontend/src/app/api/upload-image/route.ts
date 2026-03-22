@@ -1,13 +1,6 @@
-import { v2 as cloudinary } from "cloudinary";
 import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
@@ -17,15 +10,30 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Valid image file required." }, { status: 400 });
   }
 
+  const apiKey = process.env.IMGBB_API_KEY;
+  if (!apiKey) {
+    return NextResponse.json({ error: "IMGBB_API_KEY not configured." }, { status: 500 });
+  }
+
   try {
     const buffer = Buffer.from(await file.arrayBuffer());
-    const result = await new Promise<{ secure_url: string }>((resolve, reject) => {
-      cloudinary.uploader.upload_stream({ folder: "flowai" }, (err, res) => {
-        if (err || !res) return reject(err);
-        resolve(res as { secure_url: string });
-      }).end(buffer);
+    const base64 = buffer.toString("base64");
+
+    const body = new URLSearchParams();
+    body.append("key", apiKey);
+    body.append("image", base64);
+
+    const res = await fetch("https://api.imgbb.com/1/upload", {
+      method: "POST",
+      body,
     });
-    return NextResponse.json({ url: result.secure_url });
+    const data = await res.json();
+
+    if (!res.ok || !data.data?.url) {
+      return NextResponse.json({ error: data.error?.message ?? "Upload failed" }, { status: 500 });
+    }
+
+    return NextResponse.json({ url: data.data.url });
   } catch (e) {
     console.error("Upload error:", e);
     return NextResponse.json({ error: String(e) }, { status: 500 });

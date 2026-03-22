@@ -1,14 +1,8 @@
 import type { RequestHandler } from "express";
-
 import prisma from "../../lib/prisma";
-export async function Auditlog(
-  clientId: string,
-  action: string,
-  target: string,
-  details?: object,
-) {
-  await prisma.auditLog.create({ data: { clientId, target, action, details } });
-}
+import { customAlphabet } from "nanoid";
+
+//admin controlled audit log
 
 export const getAuditLog: RequestHandler = async (_, res) => {
   try {
@@ -16,7 +10,7 @@ export const getAuditLog: RequestHandler = async (_, res) => {
     if (!log) {
       return res
         .status(404)
-        .json({ success: false, message: "bi eron yaj c code bicij sursi" });
+        .json({ success: false, message: "auditLog error" });
     }
     return res.status(201).json(log);
   } catch (e) {

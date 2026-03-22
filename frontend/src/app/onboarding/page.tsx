@@ -38,7 +38,6 @@ export default function OnboardingPage() {
 
   const { user: clerkUser, isLoaded } = useUser();
   const [newMform, setNewMform] = useState({
-    id: "",
     role: "",
     optKey: "",
   });
@@ -47,6 +46,7 @@ export default function OnboardingPage() {
     try {
       const getMe = async () => {
         const token = await getToken();
+        if (token) console.log(token);
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/onboarding`,
           {
@@ -132,13 +132,22 @@ export default function OnboardingPage() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          id: newMform.id,
           role: newMform.role,
           optKey: newMform.optKey,
+          email: clerkUser?.primaryEmailAddress?.emailAddress,
+          firstname: clerkUser?.firstName ?? "",
+          lastname: clerkUser?.lastName ?? "",
         }),
       },
     );
-    console.log(res);
+    const data = await res.json();
+    if (data.success) {
+      await session?.reload();
+      window.location.href = "/dashboard";
+    } else {
+      alert(`Алдаа: ${data.message ?? JSON.stringify(data)}`);
+    }
+    setLoading(false);
   }
   return (
     <div className="relative flex min-h-screen items-center justify-center">
@@ -153,17 +162,6 @@ export default function OnboardingPage() {
         {existing === true && (
           <>
             <form onSubmit={handleRegisterMember} className="space-y-4">
-              <div>
-                <label className="text-sm font-medium">Компани ID *</label>
-                <input
-                  required
-                  className="mt-1 w-full rounded-md border px-3 py-2 bg-background"
-                  value={newMform.id}
-                  onChange={(e) =>
-                    setNewMform({ ...newMform, id: e.target.value })
-                  }
-                />
-              </div>
               <div>
                 <label className="text-sm font-medium">
                   Your role within the organization
@@ -225,7 +223,7 @@ export default function OnboardingPage() {
                 setExisting(false);
               }}
             >
-              Register as authorized member of your organization?
+              Create a new organization instead?
             </Button>
             <form></form>
           </>

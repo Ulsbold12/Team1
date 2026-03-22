@@ -2,13 +2,11 @@ import type { RequestHandler } from "express";
 import prisma from "../../lib/prisma";
 import { clerkClient } from "../../lib/clerkClient";
 import { customAlphabet, nanoid } from "nanoid";
-import { Auditlog } from "../admin";
 export const registerOrganization: RequestHandler = async (req, res) => {
   try {
     const clerkId = req.clerkUserId;
-    const user = await clerkClient.users.getUser(clerkId as string);
     if (!clerkId) {
-      return res.status(401).json({ message: "Unathourized" });
+      return res.status(403).json({ message: "Unathourized" });
     }
     const data = req.body;
     const generateID = customAlphabet("QWERYUISXCDFBSYDWBC", 12);
@@ -25,31 +23,46 @@ export const registerOrganization: RequestHandler = async (req, res) => {
 
     //the section where the clerkid member is added:
 
+    const clerkUser = await clerkClient.users.getUser(clerkId);
+
     const newOrg = await prisma.organization.create({
       data: {
         id: newOrgId,
         name: data.name,
         industry: data.industry,
-        address: data.address,
-        phoneNumber: data.phoneNumber,
-        emailAddress: data.email,
-        description: data.description,
-        members: { connect: { id: clerkId } },
+        address: data.address ?? "",
+        phoneNumber: data.phoneNumber ?? "",
+        emailAddress: data.email ?? "",
+        description: data.description ?? "",
         patronage: "BASIC",
       },
     });
-
-    if (newOrg) {
-      await clerkClient.users.updateUser(clerkId, {
-        publicMetadata: { onboardingComplete: true },
-      });
+    if (!newOrg) {
+      return res
+        .status(500)
+        .json({ message: "failed to register org [registerOrg.ts]" });
     }
-    await Auditlog(newOrg.name, "was created", `by ${user.fullName}`, {
-      success: true,
+
+    await prisma.client.upsert({
+      where: { id: clerkId },
+      update: { orgId: newOrgId, role: "EXECUTIVE" },
+      create: {
+        id: clerkId,
+        orgId: newOrgId,
+        role: "EXECUTIVE",
+        email: clerkUser.emailAddresses[0]?.emailAddress ?? "",
+        firstname: clerkUser.firstName ?? "",
+        lastname: clerkUser.lastName ?? "",
+      },
     });
+
+    await clerkClient.users.updateUser(clerkId, {
+      publicMetadata: { onboardingComplete: true },
+    });
+
     return res.status(200).json({ message: "New Org Registered", newOrg });
-  } catch (e) {
-    console.log(e);
-    return res.status(500).json({ message: "Somethign went wrong" });
+  } catch (e: any) {
+    console.error("[registerOrganization] error:", e);
+    return res.status(500).json({ message: e?.message ?? "Something went wrong" });
   }
 };

@@ -20,10 +20,9 @@ const AdminPage = () => {
       setLoading(true);
       setError("");
       const res = await loginAdmin(username, password);
-      console.log(res);
       if (res.data.success) {
         const token = res.data.res;
-        localStorage.setItem("accessToken", token);
+        localStorage.setItem("adminToken", token);
         alert("Youkoso, Supa-Dupa Admin-Sama!");
         router.push("/administrator/main");
       }

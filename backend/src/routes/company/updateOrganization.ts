@@ -34,7 +34,7 @@ export const getCompany: RequestHandler = async (req, res) => {
   try {
     const clerkId = req.clerkUserId;
     if (!clerkId) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({ message: "clerkId not found" });
     }
 
     const client = await prisma.client.findUnique({

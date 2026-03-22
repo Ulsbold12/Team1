@@ -23,9 +23,9 @@ import { SectionHeader } from "@/app/(client)/dashboard/_components/dashboard/Se
 import { useAuth } from "@clerk/nextjs";
 import { Card, CardContent } from "@/components/ui/card";
 import { useUser } from "@clerk/nextjs";
+import { apiFetch } from "@/lib/apiFetch";
 
-export function useCountdown(expiresAt: Date) {
-  const [countdown, setCountDown] = useState();
+function useCountdown(expiresAt: Date) {
   const [timeLeft, setTimeLeft] = useState("");
 
   useEffect(() => {
@@ -53,6 +53,11 @@ export function useCountdown(expiresAt: Date) {
   return timeLeft;
 }
 
+function CountdownDisplay({ expiresAt }: { expiresAt: Date }) {
+  const timeLeft = useCountdown(expiresAt);
+  return <>{timeLeft}</>;
+}
+
 const AdminPage = () => {
   const [members, setMembers] = useState<ClientType[]>([]);
   const [loading, setLoading] = useState(false);
@@ -68,7 +73,7 @@ const AdminPage = () => {
       const token = await getToken();
       setLoading(true);
       try {
-        const res = await fetch(
+        const res = await apiFetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/company/members`,
           {
             method: "GET",
@@ -80,7 +85,7 @@ const AdminPage = () => {
         );
         const response = await res.json();
 
-        setMembers(response.data);
+        setMembers(response.data ?? []);
         setLoading(false);
       } catch (e) {
         console.log(e);
@@ -95,7 +100,7 @@ const AdminPage = () => {
     async function load() {
       try {
         const token = await getToken();
-        const res = await fetch(
+        const res = await apiFetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/company`,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -118,8 +123,7 @@ const AdminPage = () => {
     const token = await getToken();
 
     try {
-      setCodeloading(true);
-      const res = await fetch(
+      const res = await apiFetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/onboarding/getcode`,
         {
           method: "GET",
@@ -130,18 +134,20 @@ const AdminPage = () => {
         },
       );
       const data = await res.json();
-      console.log(data);
-      setCode(data);
-      setCodeloading(false);
+      console.log("[getcode]", data);
+      if (data.optKey) {
+        setCode(data);
+      } else {
+        alert(`Алдаа: ${data.message ?? JSON.stringify(data)}`);
+      }
     } catch (e) {
       console.log(e);
-    } finally {
-      setCodeloading(false);
+      alert("Сервертэй холбогдож чадсангүй");
     }
   };
   const timeLeft = useCountdown(code ? new Date(code.expiresAt) : new Date());
   return (
-    <div className="flex-1 overflow-y-auto p-8 space-y-8 bg-muted/30 text-foreground">
+    <div className="flex-1 overflow-y-auto p-8 space-y-8 bg-muted/30 text-foreground no-scrollbar">
       <section>
         <h2 className="text-3xl font-black text-foreground tracking-tight">
           Admin Dashboard
@@ -160,27 +166,19 @@ const AdminPage = () => {
 
           <Button
             className="bg-[#5048e5] hover:bg-[#4038d4] text-white"
-            onClick={() => {
-              handleGetCode();
-            }}
-            disabled={codeloading}
+            onClick={handleGetCode}
           >
-            {code ? (
-              <>
-                Your code: {code.optKey}, expires at: {timeLeft}
-              </>
-            ) : (
-              <>
-                {codeloading ? (
-                  <>
-                    <LoaderCircle className="animate-spin ease-in-out duration-[600000ms]" />
-                  </>
-                ) : (
-                  <>Get Code </>
-                )}
-              </>
-            )}
+            Get Code
           </Button>
+          {code !== "" && typeof code === "object" && (
+            <div className="mt-3 p-4 rounded-lg bg-muted border border-border space-y-1">
+              <p className="text-xs text-muted-foreground">Урилгын код (10 минут хүчинтэй)</p>
+              <p className="text-3xl font-mono font-bold tracking-widest text-[#5048e5]">{code.optKey}</p>
+              <p className="text-xs text-muted-foreground">
+                Дуусах хугацаа: <CountdownDisplay expiresAt={new Date(code.expiresAt)} />
+              </p>
+            </div>
+          )}
         </div>
       </section>
 

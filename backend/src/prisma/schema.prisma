@@ -50,6 +50,8 @@ model Client {
   createdAt  DateTime         @default(now())
   ofOrg      Organization?    @relation(fields: [orgId], references: [id])
   auditLogs  AuditLog[]
+  phoneNumber String?
+  personalEmail String?
 }
 
 model Finance {
@@ -125,11 +127,27 @@ enum Subscription {
   PRO
 }
 
+
+
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  JOIN
+}
+
+enum AuditTarget {
+  ORGANIZATION
+  CLIENT
+  INVITE_CODE
+  PATRONAGE
+}
 model AuditLog {
   id       String   @id @default(cuid())
   clientId String
-  action   String
-  target   String
+  action   AuditAction
+  target   AuditTarget
   details  Json?
   date     DateTime @default(now())
   client   Client   @relation(fields: [clientId], references: [id])
