@@ -23,14 +23,20 @@ const Footer = () => {
           </div>
           <span
             className="font-bold text-lg"
-            style={{ color: "#E8F4FF", fontFamily: "Syne, sans-serif", letterSpacing: "-0.02em" }}
+            style={{
+              color: "#E8F4FF",
+              fontFamily: "Syne, sans-serif",
+              letterSpacing: "-0.02em",
+            }}
           >
             FlowAI
           </span>
         </div>
 
-        {/* Links */}
-        <div className="flex flex-wrap items-center gap-6 text-sm" style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}>
+        <div
+          className="flex flex-wrap items-center gap-6 text-sm"
+          style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+        >
           {[
             { label: "Нууцлалын бодлого", href: "#" },
             { label: "Үйлчилгээний нөхцөл", href: "#" },
@@ -47,10 +53,28 @@ const Footer = () => {
           ))}
         </div>
 
-        {/* Copyright */}
+        <div
+          className="flex flex-wrap items-center gap-6 text-sm"
+          style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+        >
+          {[{ label: "99117473", href: "#" }].map(({ label, href }) => (
+            <Link
+              key={label}
+              href={href}
+              className="transition-colors"
+              style={{ color: "#6B8BAE" }}
+            >
+              {label}
+            </Link>
+          ))}
+        </div>
+
         <p
           className="text-sm text-center"
-          style={{ color: "#3A5068", fontFamily: "Plus Jakarta Sans, sans-serif" }}
+          style={{
+            color: "#3A5068",
+            fontFamily: "Plus Jakarta Sans, sans-serif",
+          }}
         >
           © {new Date().getFullYear()} FlowAI. Бүх эрх хамгаалагдсан.
         </p>

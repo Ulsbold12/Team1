@@ -1,4 +1,11 @@
-const banks = ["Хаан банк", "Голомт банк", "Хас банк", "ТДБ банк", "Капитал банк", "Ариг банк"];
+const banks = [
+  "Хаан банк",
+  "Голомт банк",
+  "Хас банк",
+  "ТДБ банк",
+  "Капитал банк",
+  "Ариг банк",
+];
 
 export default function TrustedBy() {
   return (
@@ -12,7 +19,10 @@ export default function TrustedBy() {
       <div className="container mx-auto px-6 py-12">
         <p
           className="text-center text-xs font-semibold tracking-[0.15em] uppercase mb-8"
-          style={{ color: "#6B8BAE", fontFamily: "Plus Jakarta Sans, sans-serif" }}
+          style={{
+            color: "#ffffff",
+            fontFamily: "Plus Jakarta Sans, sans-serif",
+          }}
         >
           Монголын тэргүүлэх банкуудтай холбогддог
         </p>
@@ -35,7 +45,10 @@ export default function TrustedBy() {
         </div>
 
         {/* Trust stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-12 pt-12" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+        <div
+          className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-12 pt-12"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}
+        >
           {[
             { n: "500+", l: "Идэвхтэй бизнес" },
             { n: "10,000+", l: "Тайлан үүсгэгдсэн" },
@@ -51,7 +64,10 @@ export default function TrustedBy() {
               </div>
               <div
                 className="text-sm"
-                style={{ color: "#6B8BAE", fontFamily: "Plus Jakarta Sans, sans-serif" }}
+                style={{
+                  color: "#6B8BAE",
+                  fontFamily: "Plus Jakarta Sans, sans-serif",
+                }}
               >
                 {l}
               </div>
