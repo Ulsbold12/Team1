@@ -60,7 +60,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       const res = await adminApi.get("/api/admin/companies");
 
       const data = res.data.companyData;
-      setCompanies(data);
+      setCompanies(Array.isArray(data) ? data : []);
     } catch (e) {
       console.error(e);
     }
@@ -69,8 +69,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     try {
       const res = await adminApi.get("/api/admin/clients");
       const data = res.data.usersData;
-
-      setAllUsers(data);
+      setAllUsers(Array.isArray(data) ? data : []);
     } catch (e) {
       console.log(e);
     }
@@ -116,7 +115,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   async function fetchAuditLog() {
     try {
       const res = await adminApi.get("/api/auditlog");
-      setAuditlog(res.data);
+      setAuditlog(Array.isArray(res.data) ? res.data : []);
     } catch (e) {
       console.error(e);
     }

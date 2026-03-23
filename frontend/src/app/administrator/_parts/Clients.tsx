@@ -110,8 +110,7 @@ export function Clients() {
     role: "",
   });
   const { allusers } = useAdmin();
-  const client = allusers.filter((u) => u.role === "EXECUTIVE");
-  console.log("clients", client);
+  const client = allusers;
 
   const openRead = (user: User) => {
     setSelectedUser(user);
