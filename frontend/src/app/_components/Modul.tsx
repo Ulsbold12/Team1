@@ -10,7 +10,10 @@ const features = [
     subtitle: "AI шинжилгээ",
     desc: "Excel болон PDF хуулгаа оруулахад AI тань орлого, зарлагыг автоматаар ангилж, санхүүгийн дүр зургийг гаргана.",
     mock: (
-      <div className="mt-5 rounded-xl p-4" style={{ background: "rgba(0,0,0,0.3)" }}>
+      <div
+        className="mt-5 rounded-xl p-4"
+        style={{ background: "rgba(0,0,0,0.3)" }}
+      >
         <div className="flex items-center gap-3 mb-3">
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center"
@@ -31,9 +34,17 @@ const features = [
           { l: "Борлуулалт", v: "₮8.4M", c: "#00D4FF" },
           { l: "Зардал", v: "₮5.1M", c: "#F5A623" },
         ].map(({ l, v, c }) => (
-          <div key={l} className="flex justify-between items-center py-1.5" style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-            <span className="text-xs" style={{ color: "#6B8BAE" }}>{l}</span>
-            <span className="text-xs font-semibold" style={{ color: c }}>{v}</span>
+          <div
+            key={l}
+            className="flex justify-between items-center py-1.5"
+            style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
+          >
+            <span className="text-xs" style={{ color: "#6B8BAE" }}>
+              {l}
+            </span>
+            <span className="text-xs font-semibold" style={{ color: c }}>
+              {v}
+            </span>
           </div>
         ))}
       </div>
@@ -52,14 +63,24 @@ const features = [
         {[
           { label: "НӨАТ тайлан", status: "Бэлэн", color: "#28C840" },
           { label: "ААН тайлан", status: "Бэлэн", color: "#28C840" },
-          { label: "НД тайлан", status: "Боловсруулж байна…", color: "#F5A623" },
+          {
+            label: "НД тайлан",
+            status: "Боловсруулж байна…",
+            color: "#F5A623",
+          },
         ].map(({ label, status, color }) => (
           <div
             key={label}
             className="flex items-center justify-between rounded-lg px-4 py-3"
-            style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.04)" }}
+            style={{
+              background: "rgba(0,0,0,0.3)",
+              border: "1px solid rgba(255,255,255,0.04)",
+            }}
           >
-            <span className="text-xs font-semibold" style={{ color: "#E8F4FF" }}>
+            <span
+              className="text-xs font-semibold"
+              style={{ color: "#E8F4FF" }}
+            >
               {label}
             </span>
             <span
@@ -107,7 +128,8 @@ const features = [
           </div>
         </div>
         <div className="text-xs leading-relaxed" style={{ color: "#6B8BAE" }}>
-          "2024 оны 12-р сард бидний борлуулалт 24% өслөө! 🎉 Та бидний үйлчилгээний талаар..."
+          "2024 оны 12-р сард бидний борлуулалт 24% өслөө! 🎉 Та бидний
+          үйлчилгээний талаар..."
         </div>
         <div className="flex gap-4 mt-3 text-xs" style={{ color: "#6B8BAE" }}>
           <span>👍 142 like</span>
@@ -135,7 +157,8 @@ const features = [
             color: "#34D399",
           }}
         >
-          🤖 &nbsp;"Таны зардлын 23% нь бэлэн мөнгөний гүйлгээ юм. Онлайн төлбөртэй шилжүүлбэл НӨАТ-ын буцаан олголтод хамрагдана."
+          🤖 &nbsp;"Таны зардлын 23% нь бэлэн мөнгөний гүйлгээ юм. Онлайн
+          төлбөртэй шилжүүлбэл НӨАТ-ын буцаан олголтод хамрагдана."
         </div>
         <div
           className="rounded-xl px-4 py-3 text-xs leading-relaxed"
@@ -156,77 +179,95 @@ export default function Modul() {
   return (
     <section
       className="py-24"
-      style={{ background: "linear-gradient(180deg, #050B15 0%, #081426 100%)" }}
+      style={{
+        background: "linear-gradient(180deg, #050B15 0%, #081426 100%)",
+      }}
     >
       <div className="container mx-auto px-6">
         {/* Section header */}
         <div className="max-w-2xl mb-16">
-          <p
-            className="text-xs font-semibold tracking-[0.15em] uppercase mb-4"
-            style={{ color: "#00D4FF", fontFamily: "Plus Jakarta Sans, sans-serif" }}
-          >
-            Боломжуудыг нь нээ
-          </p>
           <h2
             className="text-4xl lg:text-5xl font-black leading-tight mb-4"
-            style={{ color: "#E8F4FF", fontFamily: "Syne, sans-serif", letterSpacing: "-0.02em" }}
+            style={{
+              color: "#E8F4FF",
+              fontFamily: "Syne, sans-serif",
+              letterSpacing: "-0.02em",
+            }}
           >
             Нэг платформ,
             <br />
-            бүх санхүүгийн хэрэгтэй
+            бүх санхүүгийн хэрэгцээ
           </h2>
           <p
             className="text-base"
-            style={{ color: "#6B8BAE", fontFamily: "Plus Jakarta Sans, sans-serif" }}
+            style={{
+              color: "#1877F2",
+              fontFamily: "Plus Jakarta Sans, sans-serif",
+            }}
           >
-            Монгол жижиг бизнесүүдийн санхүүгийн бүх ажлыг автоматжуулсан AI систем.
+            Монгол жижиг бизнесүүдийн санхүүгийн бүх ажлыг автоматжуулсан AI
+            систем.
           </p>
         </div>
 
         {/* Feature grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {features.map(({ icon: Icon, color, bg, border, title, subtitle, desc, mock }) => (
-            <div
-              key={title}
-              className="rounded-2xl p-7 transition-all duration-300"
-              style={{
-                background: "#0D1829",
-                border: `1px solid ${border}`,
-                boxShadow: `0 0 40px ${bg}`,
-              }}
-            >
-              {/* Icon */}
+          {features.map(
+            ({
+              icon: Icon,
+              color,
+              bg,
+              border,
+              title,
+              subtitle,
+              desc,
+              mock,
+            }) => (
               <div
-                className="w-11 h-11 rounded-xl flex items-center justify-center mb-5"
-                style={{ background: bg, border: `1px solid ${border}` }}
+                key={title}
+                className="rounded-2xl p-7 transition-all duration-300"
+                style={{
+                  background: "#0D1829",
+                  border: `1px solid ${border}`,
+                  boxShadow: `0 0 40px ${bg}`,
+                }}
               >
-                <Icon className="w-5 h-5" style={{ color }} />
-              </div>
+                {/* Icon */}
+                <div
+                  className="w-11 h-11 rounded-xl flex items-center justify-center mb-5"
+                  style={{ background: bg, border: `1px solid ${border}` }}
+                >
+                  <Icon className="w-5 h-5" style={{ color }} />
+                </div>
 
-              {/* Text */}
-              <div
-                className="text-xs font-semibold tracking-wide uppercase mb-1"
-                style={{ color, fontFamily: "Plus Jakarta Sans, sans-serif" }}
-              >
-                {subtitle}
-              </div>
-              <h3
-                className="text-xl font-bold mb-3"
-                style={{ color: "#E8F4FF", fontFamily: "Syne, sans-serif" }}
-              >
-                {title}
-              </h3>
-              <p
-                className="text-sm leading-relaxed"
-                style={{ color: "#6B8BAE", fontFamily: "Plus Jakarta Sans, sans-serif" }}
-              >
-                {desc}
-              </p>
+                {/* Text */}
+                <div
+                  className="text-xs font-semibold tracking-wide uppercase mb-1"
+                  style={{ color, fontFamily: "Plus Jakarta Sans, sans-serif" }}
+                >
+                  {subtitle}
+                </div>
+                <h3
+                  className="text-xl font-bold mb-3"
+                  style={{ color: "#E8F4FF", fontFamily: "Syne, sans-serif" }}
+                >
+                  {title}
+                </h3>
+                <p
+                  className="text-sm leading-relaxed"
+                  style={{
+                    color: "#6B8BAE",
+                    fontFamily: "Plus Jakarta Sans, sans-serif",
+                  }}
+                >
+                  {desc}
+                </p>
 
-              {/* Mock UI */}
-              {mock}
-            </div>
-          ))}
+                {/* Mock UI */}
+                {mock}
+              </div>
+            ),
+          )}
         </div>
       </div>
     </section>

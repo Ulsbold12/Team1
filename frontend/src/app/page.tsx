@@ -8,13 +8,12 @@ import Modul from "./_components/Modul";
 import Cta from "./_components/Cta";
 
 export default function Home() {
-
   return (
     <div className="relative min-h-screen" style={{ background: "#050B15" }}>
       <Header />
       <Hero />
-      <Trusted />
       <Modul />
+      <Trusted />
       <Cta />
       <Footer />
     </div>
