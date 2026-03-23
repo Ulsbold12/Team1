@@ -89,9 +89,6 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-
-              {/* Мэдэгдэл — унших тооны badge-тай */}
-              {/* Мэдэгдэл */}
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild

@@ -34,8 +34,6 @@ const CATEGORIES = {
 export default function FinanceForm({ onClose, onAdd }: FinanceFormProps) {
   const [type, setType] = useState<TransactionType>("income");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-  // Алдаатай:
-  // Зөв — бүгдийг нэг мөрөнд бич:
   const [categoryDetails, setCategoryDetails] = useState<
     Record<string, CategoryDetail>
   >({});

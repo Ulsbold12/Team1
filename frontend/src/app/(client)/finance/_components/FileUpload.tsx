@@ -232,10 +232,7 @@ export default function FileUpload({ onResult }: FileUploadProps) {
     const loadSavedAnalysis = async () => {
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-        if (!apiUrl) {
-          console.warn("NEXT_PUBLIC_API_URL тохируулаагүй байна");
-          return;
-        }
+        if (!apiUrl) return;
         const token = await getToken();
         const res = await fetch(`${apiUrl}/api/finance/analysis`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -290,11 +287,11 @@ export default function FileUpload({ onResult }: FileUploadProps) {
             0,
           );
           return `
-          <tr style="background:#f8fafc"><td colspan="2" style="font-weight:600;padding:8px 12px;border-top:2px solid #e2e8f0">${label}</td></tr>
-          <tr><td style="padding-left:24px;color:#059669">Нийт орлого</td><td style="text-align:right;color:#059669">₮${incTotal.toLocaleString()}</td></tr>
-          ${catRows(m.income ?? [])}
-          <tr><td style="padding-left:24px;color:#e11d48">Нийт зарлага</td><td style="text-align:right;color:#e11d48">₮${expTotal.toLocaleString()}</td></tr>
-          ${catRows(m.expenses ?? [])}`;
+        <tr style="background:#f8fafc"><td colspan="2" style="font-weight:600;padding:8px 12px;border-top:2px solid #e2e8f0">${label}</td></tr>
+        <tr><td style="padding-left:24px;color:#059669">Нийт орлого</td><td style="text-align:right;color:#059669">₮${incTotal.toLocaleString()}</td></tr>
+        ${catRows(m.income ?? [])}
+        <tr><td style="padding-left:24px;color:#e11d48">Нийт зарлага</td><td style="text-align:right;color:#e11d48">₮${expTotal.toLocaleString()}</td></tr>
+        ${catRows(m.expenses ?? [])}`;
         },
       )
       .join("");
@@ -428,8 +425,6 @@ export default function FileUpload({ onResult }: FileUploadProps) {
     try {
       const parsedFiles = await Promise.all(readFilesPromises);
       setUploadeddFiles((prev) => [...prev, ...parsedFiles]);
-
-      // ← Файл оруулсан notification
       const totalTx = parsedFiles.reduce((s, f) => s + f.data.length, 0);
       addNotification({
         category: "finance",
@@ -502,23 +497,15 @@ export default function FileUpload({ onResult }: FileUploadProps) {
       });
 
       if (!response.ok) {
-        const text = await response.text();
-
-        // ← API алдааны notification
         addNotification({
           category: "finance",
           title: "Шинжилгээ амжилтгүй боллоо",
-          desc: text.includes("OPENAI_API_KEY")
-            ? "OpenAI түлхүүр тохируулаагүй байна"
-            : `Сервер алдаа (${response.status})`,
+          desc: "Түр хүлээгээд дахин оролдоно уу",
           icon: AlertCircle,
           iconColor: "text-red-500",
           iconBg: "bg-red-500/10",
         });
-
-        throw new Error(
-          `API алдаа (${response.status}): ${text.slice(0, 200)}`,
-        );
+        return;
       }
 
       const result = await response.json();
@@ -526,7 +513,6 @@ export default function FileUpload({ onResult }: FileUploadProps) {
       setActiveTab("нийт");
       onResult?.(result);
 
-      // ← Амжилттай notification
       addNotification({
         category: "finance",
         title: "Санхүүгийн шинжилгээ дууслаа",
@@ -536,7 +522,6 @@ export default function FileUpload({ onResult }: FileUploadProps) {
         iconBg: "bg-[#5048e5]/10",
       });
 
-      // Backend хадгалах
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
       if (!apiUrl) return;
 
@@ -595,12 +580,10 @@ export default function FileUpload({ onResult }: FileUploadProps) {
       }
     } catch (error) {
       console.error("Алдаа гарлаа:", error);
-
-      // ← Network болон бусад алдааны notification
       addNotification({
         category: "finance",
         title: "Шинжилгээ амжилтгүй боллоо",
-        desc: "AI шинжилгээ хийхэд алдаа гарлаа",
+        desc: "Интернэт холболтоо шалгаад дахин оролдоно уу",
         icon: AlertCircle,
         iconColor: "text-red-500",
         iconBg: "bg-red-500/10",
@@ -656,7 +639,6 @@ export default function FileUpload({ onResult }: FileUploadProps) {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Drag & drop upload zone */}
             <div
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -744,7 +726,6 @@ export default function FileUpload({ onResult }: FileUploadProps) {
               </div>
             )}
 
-            {/* Бэлэн мөнгөний гүйлгээ */}
             <Button
               variant="outline"
               size="sm"
@@ -767,8 +748,6 @@ export default function FileUpload({ onResult }: FileUploadProps) {
                     _manual: 1,
                   };
                   setManualTransactions((prev) => [...prev, tx]);
-
-                  // ← Бэлэн мөнгөний notification
                   addNotification({
                     category: "finance",
                     title:
