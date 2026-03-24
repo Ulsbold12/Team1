@@ -6,6 +6,7 @@ import { requireAuth } from "./middleware/requireAuth";
 import {
   createCompany,
   deleteCompany,
+  deleteUser,
   getAuditLog,
   getUsersofOrgbyId,
   readCompanydataById,
@@ -41,7 +42,6 @@ import { Chat } from "./routes/ai/chat";
 import { getCompanyData, getUsersData, adminAccess } from "./routes/admin";
 import { AdminAuth } from "./middleware/adminAuth";
 import { registerOrganization } from "./routes/client/regitserOrganization";
-
 import { getCompany, updateCompany } from "./routes/company/updateOrganization";
 import {
   getBillingStatus,
@@ -49,8 +49,8 @@ import {
   stripeWebhook,
   createPortal,
 } from "./routes/billing";
-import { ActivityStatus, aiLimiting } from "./routes/client/activityStatus";
-
+import { aiLimiting } from "./routes/client/aiLimiting";
+import { ActivityStatus } from "./middleware/activitystatus";
 const app = express();
 app.use(
   cors({
@@ -69,7 +69,6 @@ app.post(
 app.use(express.json());
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
-app.post("/api/chat", Chat);
 
 app.use(clerkMiddleware());
 app.use(ActivityStatus);
@@ -85,18 +84,23 @@ app.post("/api/company/members", requireAuth, UpdateMember);
 //finance routes
 
 app.get("/api/finance", requireAuth, getFinance);
-app.post("/api/finance", requireAuth, createFinance);
+app.post("/api/finance", requireAuth, aiLimiting, createFinance);
 app.get("/api/finance/analysis", requireAuth, getAnalyses);
-app.post("/api/finance/analysis", requireAuth, saveAnalysis);
+app.post("/api/finance/analysis", requireAuth, aiLimiting, saveAnalysis);
 //automation marketin routes?
 app.get("/api/posts", requireAuth, getPosts);
-app.post("/api/posts", requireAuth, createPost);
+app.post("/api/posts", requireAuth, aiLimiting, createPost);
 app.put("/api/posts/:id", requireAuth, updatePost);
 // app.delete("/api/posts", requireAuth, deleteAllPosts);
 app.delete("/api/posts/:id", requireAuth, deletePost);
 app.post("/api/posts/:id/publish-now", requireAuth, publishNow);
 app.get("/api/marketing/strategy", requireAuth, getMarketingStrategy);
-app.post("/api/marketing/strategy", requireAuth, saveMarketingStrategy);
+app.post(
+  "/api/marketing/strategy",
+  requireAuth,
+  aiLimiting,
+  saveMarketingStrategy,
+);
 app.get("/api/facebook/pending-posts", requireApiKey, getPendingPosts);
 app.post("/api/facebook/posts/:id/publish", requireApiKey, markPublished);
 
@@ -111,6 +115,7 @@ app.get("/api/admin/companies", AdminAuth, getCompanyData);
 app.get("/api/admin/companies/:orgId", AdminAuth, readCompanydataById);
 app.post("/api/admin/companies", AdminAuth, createCompany);
 app.delete("/api/admin/companies/:orgId", AdminAuth, deleteCompany);
+app.delete("/api/admin/clients/:clientId", AdminAuth, deleteUser);
 app.get("/api/admin/clients", AdminAuth, getUsersData);
 app.get("/api/admin/companies/:orgId/members", AdminAuth, getUsersofOrgbyId);
 
@@ -118,10 +123,8 @@ app.get("/api/admin/companies/:orgId/members", AdminAuth, getUsersofOrgbyId);
 app.get("/api/auditlog", getAuditLog);
 
 //ai limiting
-app.post("/api/limiting", requireAuth, aiLimiting);
 
-
-
+app.post("/api/chat", Chat);
 const PORT = process.env.PORT || 8888;
 app.listen(PORT, () => {
   console.log(`Backend running on port ${PORT}`);

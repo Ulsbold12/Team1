@@ -19,6 +19,8 @@ model Organization {
   phoneNumber          String
   stripeCustomerId     String?
   stripeSubscriptionId String?
+  facebookAccessToken  String?
+  facebookPageId       String?
   aiUsages             AiUsage[]
   members              Client[]
   financeData          Finance[]
@@ -27,6 +29,7 @@ model Organization {
   marketinAIUsages     MarketinAIUsage[]
   marketingStrategy    MarketingStrategy?
   posts                Post[]
+  sales                Sales[]
 }
 
 model MarketingStrategy {
@@ -117,7 +120,7 @@ model AuditLog {
   clientId String
   action   AuditAction
   target   AuditTarget
-  details  Json?
+  details  String?
   date     DateTime    @default(now())
   client   Client      @relation(fields: [clientId], references: [id])
 }
@@ -129,6 +132,7 @@ model AiUsage {
   date     DateTime     @default(now())
   client   Client       @relation(fields: [clientId], references: [id])
   org      Organization @relation(fields: [orgId], references: [id])
+
 }
 
 model MarketinAIUsage {
@@ -172,4 +176,12 @@ enum AuditTarget {
   CLIENT
   INVITE_CODE
   PATRONAGE
+}
+
+model Sales {
+  id      String       @id @default(cuid())
+  buyer   Organization @relation(fields: [orgId], references: [id])
+  orgId   String
+  date    DateTime
+  product Subscription
 }

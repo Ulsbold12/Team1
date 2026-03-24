@@ -92,17 +92,21 @@ export async function POST(request: NextRequest) {
 
     const aiResult = JSON.parse(responseText);
 
-    const usageRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/limiting`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const usageRes = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/limiting`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          clientId: clientId as string,
+        }),
       },
-      body: JSON.stringify({
-        clientId: clientId as string,
-      }),
-    });
+    );
 
     const usageData = await usageRes.json();
+    console.log(usageData);
 
     // if limit reached, stop here
     if (usageRes.status === 429) {

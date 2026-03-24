@@ -34,7 +34,9 @@ const fields = [
 
 export function Companies() {
   // ✅ ONE place for all state — no duplicates
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState<
+    "read" | "edit" | "create" | "delete" | null
+  >(null);
   const [selectedCompany, setSelectedCompany] =
     useState<OrganizationInterface | null>(null);
   const [loadadd, setLoadadd] = useState(false);
@@ -51,13 +53,13 @@ export function Companies() {
   // ✅ Simple and clean - one function to open sheet
   async function handleSelectCompany(company: OrganizationInterface) {
     setSelectedCompany(company);
-    setSheetOpen(true);
+    setSheetOpen("read");
     await fetchUsersOfCompanies(company.id);
   }
 
   // ✅ One function to close sheet
   function closeSheet() {
-    setSheetOpen(false);
+    setSheetOpen(null);
     setSelectedCompany(null);
   }
 
@@ -79,6 +81,7 @@ export function Companies() {
   async function handleDeleteCompany(id: string) {
     try {
       const res = await deleteCompany(id);
+      console.log(res);
     } catch (e) {
       console.log(e);
     }
@@ -168,7 +171,6 @@ export function Companies() {
                     <p className="text-foreground font-semibold text-sm">
                       {company.name}
                     </p>
-                    <Badge variant="outline">[LOG_ACTIVITY]</Badge>
                   </div>
                   <p className="text-muted-foreground text-xs mt-0.5">
                     {company.industry}
@@ -208,7 +210,7 @@ export function Companies() {
       </div>
 
       <Sheet
-        open={sheetOpen}  
+        open={sheetOpen === "read"}
         onOpenChange={(open) => {
           if (!open) closeSheet();
         }}

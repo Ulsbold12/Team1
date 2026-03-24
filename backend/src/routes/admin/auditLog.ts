@@ -13,7 +13,6 @@ export const getAuditLog: RequestHandler = async (_, res) => {
         .status(404)
         .json({ success: false, message: "auditLog error" });
     }
-    const clientReference = log.map((l) => l.clientId);
 
 
     return res.status(201).json(log);
