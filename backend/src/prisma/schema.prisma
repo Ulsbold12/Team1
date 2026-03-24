@@ -117,11 +117,7 @@ model AuditLog {
   clientId String
   action   AuditAction
   target   AuditTarget
-<<<<<<< Updated upstream
   details  Json?
-=======
-  details  String
->>>>>>> Stashed changes
   date     DateTime    @default(now())
   client   Client      @relation(fields: [clientId], references: [id])
 }

@@ -2,6 +2,7 @@ import type { RequestHandler } from "express";
 import prisma from "../../lib/prisma";
 import { customAlphabet } from "nanoid";
 import { clerkClient } from "../../lib/clerkClient";
+import { Prisma } from "@prisma/client";
 
 export const getCodeForMember: RequestHandler = async (req, res) => {
   try {
@@ -34,12 +35,10 @@ export const getCodeForMember: RequestHandler = async (req, res) => {
         });
         clientRecord = { orgId: clerkId, role: "EXECUTIVE" };
       } else {
-        return res
-          .status(404)
-          .json({
-            success: false,
-            message: "Organization not found. Please complete onboarding.",
-          });
+        return res.status(404).json({
+          success: false,
+          message: "Organization not found. Please complete onboarding.",
+        });
       }
     }
 
@@ -99,32 +98,34 @@ export const registerMember: RequestHandler = async (req, res) => {
     }
 
     // all good — create member and delete code together ✅
-    const result = await prisma.$transaction(async (tx: typeof prisma) => {
-      const newMember = await tx.client.create({
-        data: {
-          id: clerkId as string,
-          orgId: code.orgId, // comes from the invite code, not req.body
-          role,
-          email,
-          firstname,
-          lastname,
-        },
-      });
+    const result = await prisma.$transaction(
+      async (tx: Prisma.TransactionClient) => {
+        const newMember = await tx.client.create({
+          data: {
+            id: clerkId as string,
+            orgId: code.orgId, // comes from the invite code, not req.body
+            role,
+            email,
+            firstname,
+            lastname,
+          },
+        });
 
-      await tx.inviteCode.delete({
-        where: { code: optKey },
-      });
-      //recording activity
-      await prisma.auditLog.create({
-        data: {
-          clientId: clerkId as string,
-          target: "INVITE_CODE",
-          action: "UPDATE",
-          details: `${newMember.id}`,
-        },
-      });
-      return newMember;
-    });
+        await tx.inviteCode.delete({
+          where: { code: optKey },
+        });
+        //recording activity
+        await prisma.auditLog.create({
+          data: {
+            clientId: clerkId as string,
+            target: "INVITE_CODE",
+            action: "UPDATE",
+            details: `${newMember.id}`,
+          },
+        });
+        return newMember;
+      },
+    );
 
     await clerkClient.users.updateUser(clerkId as string, {
       publicMetadata: { onboardingComplete: true },
