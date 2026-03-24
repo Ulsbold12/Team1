@@ -1,5 +1,5 @@
 import type { RequestHandler } from "express";
-import  prisma  from "../../lib/prisma";
+import prisma from "../../lib/prisma";
 import jwt from "jsonwebtoken";
 export const adminAccess: RequestHandler = async (req, res) => {
   try {
@@ -7,6 +7,7 @@ export const adminAccess: RequestHandler = async (req, res) => {
     if (!username || !password) {
       return res.status(403).json({ message: "VPODKAAA", success: false });
     }
+    console.log(req.body);
     const usernameMatch = await prisma.administrator.findUnique({
       where: { username: username },
     });
@@ -22,7 +23,6 @@ export const adminAccess: RequestHandler = async (req, res) => {
       { adminId: usernameMatch.id, username: usernameMatch.username },
       `${process.env.ACCESSTOKEN}`,
     );
-
     return res.status(201).json({ success: true, res: accessToken });
   } catch (e) {
     console.error(e);

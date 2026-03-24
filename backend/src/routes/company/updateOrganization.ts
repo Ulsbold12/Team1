@@ -64,6 +64,7 @@ export const getCompany: RequestHandler = async (req, res) => {
     }
     const company = await prisma.organization.findUnique({
       where: { id: orgId },
+      include: { members: true },
     });
     return res.status(200).json({ success: true, data: { ofOrg: company } });
   } catch (error) {

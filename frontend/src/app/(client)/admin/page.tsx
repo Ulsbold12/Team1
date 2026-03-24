@@ -71,27 +71,25 @@ const AdminPage = () => {
   const { getToken } = useAuth();
 
   useEffect(() => {
-    async function load() {
-      try {
-        setLoadingA(true);
-        const token = await getToken();
-        const res = await apiFetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/company`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          },
-        );
-
-        const data = await res.json();
-        setCompany(data.company);
-        setLoadingA(false);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoadingA(false);
+    async function fetchCompany() {
+      setLoading(true);
+      const token = await getToken();
+      const res = await apiFetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/company`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      const data = await res.json();
+      if (data.success) {
+        const c = data.data.ofOrg;
+        setCompany(c);
+        setMembers(c.members);
       }
+
+      setLoading(false);
     }
-    load();
+    fetchCompany();
   }, []);
 
   const handleGetCode = async () => {
@@ -188,6 +186,7 @@ const AdminPage = () => {
           <p className="text-sm text-muted-foreground">
             Update members settings
           </p>
+          <p className={`text-2xl font-bold`}>Members ({members.length})</p>
           {loading ? (
             <div className="w-full h-full flex justify-center items-center">
               <LoaderCircle className="animate-spin ease-in-out duration-300" />
@@ -219,7 +218,6 @@ const AdminPage = () => {
               ))}
             </>
           )}
-          <p className={`text-2xl font-bold`}>Members ({members.length})</p>
         </div>
       </section>
 

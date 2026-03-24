@@ -46,7 +46,7 @@ export default function MainPage() {
             const Icon = item.icon;
             return (
               <button
-                className={`flex gap-5 py-2 w-full ease-in-out duration-300 hover:bg-gray-700/50 rounded-xl hover:px-2`}
+                className={`flex gap-5 py-2 w-full ease-in-out duration-300 hover:bg-gray-700/50 rounded-xl hover:px-2 text-foreground`}
                 key={item.ref}
                 onClick={() => setActive(item.ref as DisplayTypes)}
               >

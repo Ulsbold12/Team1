@@ -73,7 +73,9 @@ const AdminPage = () => {
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
           <Button
-            onClick={handleClick}
+            onClick={() => {
+              handleClick();
+            }}
             disabled={loading}
             className="bg-[#5048e5] hover:bg-[#4038d4] text-white w-full mt-1"
           >

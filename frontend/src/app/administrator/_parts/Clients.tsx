@@ -253,21 +253,17 @@ export function Clients() {
                   <Calendar size={14} className="shrink-0" />
                   Joined {new Date(selectedUser.createdAt).toLocaleDateString()}
                 </div>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    {" "}
-                    <Button
-                      variant={"destructive"}
-                      onClick={() => {
-                        deleteUserById(selectedUser.id as string);
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </DialogTrigger>
-                  <DialogHeader>Delete User</DialogHeader>
-                  <DialogContent></DialogContent>
-                </Dialog>
+                <Button>
+                  
+                </Button>
+                <Button
+                  variant={"destructive"}
+                  onClick={() => {
+                    deleteUserById(selectedUser.id as string);
+                  }}
+                >
+                  Delete
+                </Button>
               </div>
             </div>
           )}

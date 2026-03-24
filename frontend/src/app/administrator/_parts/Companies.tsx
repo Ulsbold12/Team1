@@ -1,11 +1,4 @@
 "use client";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from "@/components/ui/dialog";
 
 import { adminApi } from "@/lib/adminApi";
 
@@ -20,7 +13,15 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Building2, Phone, Mail, MapPin, MoreVertical } from "lucide-react";
+import { Popover } from "radix-ui";
+import {
+  Building2,
+  Phone,
+  Mail,
+  MapPin,
+  MoreVertical,
+  Loader2Icon,
+} from "lucide-react";
 import { useAdmin } from "../provider/adminProvider";
 
 const fields = [
@@ -34,13 +35,14 @@ const fields = [
 
 export function Companies() {
   // ✅ ONE place for all state — no duplicates
-  const [sheetOpen, setSheetOpen] = useState<
-    "read" | "edit" | "create" | "delete" | null
-  >(null);
+  const [sheetOpen, setSheetOpen] = useState<"read" | "edit" | "create" | null>(
+    null,
+  );
   const [selectedCompany, setSelectedCompany] =
     useState<OrganizationInterface | null>(null);
   const [loadadd, setLoadadd] = useState(false);
   const { companies, fetchUsersOfCompanies, deleteCompany } = useAdmin();
+  const [readloading, setReadloading] = useState(false);
   const [form, setForm] = useState({
     name: "",
     industry: "",
@@ -52,9 +54,13 @@ export function Companies() {
 
   // ✅ Simple and clean - one function to open sheet
   async function handleSelectCompany(company: OrganizationInterface) {
+    setReadloading(true);
     setSelectedCompany(company);
     setSheetOpen("read");
     await fetchUsersOfCompanies(company.id);
+    if (company) {
+      setReadloading(false);
+    }
   }
 
   // ✅ One function to close sheet
@@ -87,59 +93,6 @@ export function Companies() {
     }
   }
 
-  const AddCompanyComp = () => {
-    return (
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button>Add Company</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogTitle>Add Company</DialogTitle>
-          <DialogDescription>
-            Fill in the details to register a new company.
-          </DialogDescription>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {fields.map((field) => (
-              <div key={field.key}>
-                <label className="text-sm font-medium">{field.label}</label>
-                {field.type === "select" ? (
-                  <select
-                    required
-                    className="mt-1 w-full rounded-md border px-3 py-2 bg-background"
-                    value={form[field.key as keyof typeof form]}
-                    onChange={(e) =>
-                      setForm({ ...form, [field.key]: e.target.value })
-                    }
-                  >
-                    <option value="">Сонгоно уу</option>
-                    <option value="TECH">TECH</option>
-                    <option value="HEALTHCARE">HEALTHCARE</option>
-                    <option value="RETAIL">RETAIL</option>
-                  </select>
-                ) : (
-                  <input
-                    type={field.type}
-                    className="mt-1 w-full rounded-md border px-3 py-2 bg-background"
-                    value={form[field.key as keyof typeof form]}
-                    onChange={(e) =>
-                      setForm({ ...form, [field.key]: e.target.value })
-                    }
-                  />
-                )}
-              </div>
-            ))}
-            <button
-              type="submit"
-              disabled={loadadd}
-              className="w-full rounded-md bg-primary px-4 py-2 text-primary-foreground font-medium disabled:opacity-50"
-            >
-              {loadadd ? "Saving..." : "Add"}
-            </button>
-          </form>
-        </DialogContent>
-      </Dialog>
-    );
-  };
   return (
     <div className="flex-1 overflow-y-auto p-8 space-y-8 bg-muted/30 text-foreground">
       {/* Header */}
@@ -151,11 +104,19 @@ export function Companies() {
           <p className="text-muted-foreground mt-1 text-white">
             Manage all registered organizations
           </p>
-          <AddCompanyComp />
+          <Button
+            size={"icon"}
+            variant={"ghost"}
+            onClick={() => {
+              setSheetOpen("create");
+              setSelectedCompany(null);
+            }}
+          >
+            +
+          </Button>
         </div>
       </div>
       <div className="w-full h-full overflow-scroll">
-        {" "}
         <div className="flex flex-col gap-3">
           {companies.length !== 0 ? (
             companies.map((company) => (
@@ -212,7 +173,7 @@ export function Companies() {
       <Sheet
         open={sheetOpen === "read"}
         onOpenChange={(open) => {
-          if (!open) closeSheet();
+          if (!open) console.log("open");
         }}
       >
         <SheetContent className="w-105 overflow-y-auto p-6 ">
@@ -221,45 +182,126 @@ export function Companies() {
           </SheetHeader>
 
           {selectedCompany && (
-            <div className="mt-6 flex flex-col gap-4">
-              <DetailRow label="Industry" value={selectedCompany.industry} />
-              <DetailRow label="Plan" value={selectedCompany.patronage} />
-              <DetailRow
-                label="Created"
-                value={JSON.stringify(selectedCompany.createdAt)}
-              />
-              <div className="border-t border-border pt-4 flex flex-col gap-3">
-                <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <MapPin size={14} className="mt-0.5 shrink-0" />
-                  {selectedCompany.address}
-                </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Phone size={14} className="shrink-0" />
-                  {selectedCompany.phoneNumber as any}
-                </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Mail size={14} className="shrink-0" />
-                  {selectedCompany.emailAddress}
-                </div>
-              </div>
-              <div className="border-t border-border pt-4">
-                <p className="text-xs text-muted-foreground mb-1">
-                  Description
-                </p>
-                <p className="text-sm">{selectedCompany.description}</p>
-              </div>{" "}
-              <Button
-                variant={"destructive"}
-                onClick={() => {
-                  handleDeleteCompany(selectedCompany.id);
-                }}
-              >
-                Delete
-              </Button>
-            </div>
+            <>
+              {sheetOpen === "read" && (
+                <>
+                  {readloading ? (
+                    <div
+                      className={`w-full h-full flex justify-center items-center `}
+                    >
+                      <Loader2Icon className="animate-spin duration-300" />
+                    </div>
+                  ) : (
+                    <div className="mt-6 flex flex-col gap-4">
+                      <DetailRow
+                        label="Industry"
+                        value={selectedCompany.industry}
+                      />
+                      <DetailRow
+                        label="Plan"
+                        value={selectedCompany.patronage}
+                      />
+                      <DetailRow
+                        label="Created"
+                        value={JSON.stringify(selectedCompany.createdAt)}
+                      />
+                      <div className="border-t border-border pt-4 flex flex-col gap-3">
+                        <div className="flex items-start gap-2 text-sm text-muted-foreground">
+                          <MapPin size={14} className="mt-0.5 shrink-0" />
+                          {selectedCompany.address}
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Phone size={14} className="shrink-0" />
+                          {selectedCompany.phoneNumber as any}
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Mail size={14} className="shrink-0" />
+                          {selectedCompany.emailAddress}
+                        </div>
+                      </div>
+                      <div className="border-t border-border pt-4">
+                        <p className="text-xs text-muted-foreground mb-1">
+                          Description
+                        </p>
+                        <p className="text-sm">{selectedCompany.description}</p>
+                      </div>
+                      <Button
+                        variant={"destructive"}
+                        onClick={() => {
+                          handleDeleteCompany(selectedCompany.id);
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  )}
+                </>
+              )}
+            </>
           )}
         </SheetContent>
       </Sheet>
+      {sheetOpen === "create" && (
+        <Sheet
+          open={sheetOpen === "create"}
+          onOpenChange={(open) => {
+            if (!open) closeSheet();
+          }}
+        >
+          <SheetContent className="w-105 overflow-y-auto p-6 ">
+            <SheetHeader />
+            <div className="mt-6 flex flex-col gap-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {fields.map((field) => (
+                  <div key={field.key}>
+                    <label className="text-sm font-medium">{field.label}</label>
+                    {field.type === "select" ? (
+                      <select
+                        required
+                        className="mt-1 w-full rounded-md border px-3 py-2 bg-background"
+                        value={form[field.key as keyof typeof form]}
+                        onChange={(e) =>
+                          setForm({
+                            ...form,
+                            [field.key]: e.target.value,
+                          })
+                        }
+                      >
+                        <option value="">Сонгоно уу</option>
+                        <option value="TECH">TECH</option>
+                        <option value="HEALTHCARE">HEALTHCARE</option>
+                        <option value="RETAIL">RETAIL</option>
+                        <option value="FINANCE">FINANCE</option>
+                        <option value="EDUCATION">EDUCATION</option>
+                        <option value="MANUFACTURING">MANUFACTURING</option>
+                      </select>
+                    ) : (
+                      <input
+                        type={field.type}
+                        className="mt-1 w-full rounded-md border px-3 py-2 bg-background"
+                        value={form[field.key as keyof typeof form]}
+                        onChange={(e) =>
+                          setForm({
+                            ...form,
+                            [field.key]: e.target.value,
+                          })
+                        }
+                      />
+                    )}
+                  </div>
+                ))}
+                <button
+                  type="submit"
+                  disabled={loadadd}
+                  className="w-full rounded-md bg-primary px-4 py-2 text-primary-foreground font-medium disabled:opacity-50"
+                >
+                  {loadadd ? "Saving..." : "Add"}
+                </button>
+              </form>
+            </div>
+          </SheetContent>
+        </Sheet>
+      )}
     </div>
   );
 }
