@@ -9,18 +9,13 @@ const Footer = () => {
       }}
     >
       <div className="container mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
-        {/* Logo */}
-        <div className="flex items-center gap-2.5">
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black"
-            style={{
-              background: "linear-gradient(135deg, #00D4FF, #0090CC)",
-              color: "#050B15",
-              fontFamily: "Syne, sans-serif",
-            }}
-          >
-            ✦
-          </div>
+        <div className="flex items-center ">
+          <img
+            className="w-18 h-15 rounded-lg flex items-center justify-center"
+            src="./pinl.png"
+            alt="FlowAI Logo"
+          />
+
           <span
             className="font-bold text-lg"
             style={{
@@ -57,7 +52,7 @@ const Footer = () => {
           className="flex flex-wrap items-center gap-6 text-sm"
           style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
         >
-          {[{ label: "99117473", href: "#" }].map(({ label, href }) => (
+          {[{ label: "+976 99117473", href: "#" }].map(({ label, href }) => (
             <Link
               key={label}
               href={href}

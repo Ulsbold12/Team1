@@ -45,19 +45,19 @@ const Intro = () => {
       <div className="container mx-auto px-6 pt-28 pb-20 grid lg:grid-cols-2 gap-16 items-center relative z-10">
         <div>
           <div
-            className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full text-xs font-semibold tracking-wide"
+            className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full text-[18px] font-meinbold tracking-wide"
             style={{
               background: "rgba(0, 212, 255, 0.08)",
               border: "1px solid rgba(0, 212, 255, 0.2)",
               color: "#00D4FF",
-              fontFamily: "Plus Jakarta Sans, sans-serif",
+              fontFamily: "Syne, sans-serif",
             }}
           >
             🇲🇳 &nbsp;Монгол жижиг бизнесүүдэд зориулагдсан
           </div>
 
           <h1
-            className="text-5xl lg:text-[5.5rem] font-black leading-[0.95] mb-6 tracking-tight"
+            className="text-5xl lg:text-[5.5rem] font-black leading-[0.9] mb-6 tracking-tight"
             style={{ color: "#E8F4FF", fontFamily: "Syne, sans-serif" }}
           >
             Санхүүгийн
@@ -69,6 +69,7 @@ const Intro = () => {
                 background: "linear-gradient(90deg, #00D4FF, #7DD3FC)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
+                fontFamily: "Syne, sans-serif",
               }}
             >
               AI-д даатга
@@ -79,14 +80,17 @@ const Intro = () => {
             className="text-lg mb-10 max-w-md leading-relaxed"
             style={{
               color: "#6B8BAE",
-              fontFamily: "Plus Jakarta Sans, sans-serif",
+              fontFamily: "Syne, sans-serif",
             }}
           >
             Банкны хуулгаа оруулж, НӨАТ · ААН · НД тайлангаа автоматаар үүсгэ.
             Facebook-т автоматаар нийтэл. Монгол хэлээр санхүүгийн зөвлөгөө ав.
           </p>
 
-          <div className="flex gap-10 mb-10">
+          <div
+            className="flex gap-10 mb-10 font-medium"
+            style={{ color: "#6B8BAE", fontFamily: "Syne, sans-serif" }}
+          >
             {[
               { n: "500+", l: "Бизнес" },
               { n: "10,000+", l: "Тайлан" },
@@ -95,7 +99,10 @@ const Intro = () => {
               <div key={l}>
                 <div
                   className="text-3xl font-black"
-                  style={{ color: "#00D4FF", fontFamily: "Syne, sans-serif" }}
+                  style={{
+                    color: "#00D4FF",
+                    fontFamily: "Plus Jakarta Sans, sans-serif",
+                  }}
                 >
                   {n}
                 </div>
@@ -122,7 +129,7 @@ const Intro = () => {
                     background: "linear-gradient(135deg, #00D4FF, #0090CC)",
                     color: "#050B15",
                     boxShadow: "0 0 32px rgba(0, 212, 255, 0.3)",
-                    fontFamily: "Plus Jakarta Sans, sans-serif",
+                    fontFamily: "Syne, sans-serif",
                   }}
                 >
                   Үнэгүй эхлэх
@@ -160,7 +167,7 @@ const Intro = () => {
                 className="ml-3 text-xs"
                 style={{
                   color: "#6B8BAE",
-                  fontFamily: "Plus Jakarta Sans, sans-serif",
+                  fontFamily: "Syne, sans-serif",
                 }}
               >
                 FlowAI · Банкны хуулга шинжилгээ
@@ -185,7 +192,7 @@ const Intro = () => {
                   className="text-sm font-semibold truncate"
                   style={{
                     color: "#E8F4FF",
-                    fontFamily: "Plus Jakarta Sans, sans-serif",
+                    fontFamily: "Syne, sans-serif",
                   }}
                 >
                   Хаан_Банк_2024_12.xlsx
@@ -196,7 +203,10 @@ const Intro = () => {
               </div>
               <div
                 className="text-sm font-bold"
-                style={{ color: "#00D4FF", fontFamily: "Syne, sans-serif" }}
+                style={{
+                  color: "#00D4FF",
+                  fontFamily: "Plus Jakarta Sans, sans-serif",
+                }}
               >
                 87%
               </div>

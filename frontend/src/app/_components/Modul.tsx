@@ -184,7 +184,6 @@ export default function Modul() {
       }}
     >
       <div className="container mx-auto px-6">
-        {/* Section header */}
         <div className="max-w-2xl mb-16">
           <h2
             className="text-4xl lg:text-5xl font-black leading-tight mb-4"
@@ -210,7 +209,6 @@ export default function Modul() {
           </p>
         </div>
 
-        {/* Feature grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {features.map(
             ({
@@ -232,7 +230,6 @@ export default function Modul() {
                   boxShadow: `0 0 40px ${bg}`,
                 }}
               >
-                {/* Icon */}
                 <div
                   className="w-11 h-11 rounded-xl flex items-center justify-center mb-5"
                   style={{ background: bg, border: `1px solid ${border}` }}
@@ -240,7 +237,6 @@ export default function Modul() {
                   <Icon className="w-5 h-5" style={{ color }} />
                 </div>
 
-                {/* Text */}
                 <div
                   className="text-xs font-semibold tracking-wide uppercase mb-1"
                   style={{ color, fontFamily: "Plus Jakarta Sans, sans-serif" }}
@@ -263,7 +259,6 @@ export default function Modul() {
                   {desc}
                 </p>
 
-                {/* Mock UI */}
                 {mock}
               </div>
             ),

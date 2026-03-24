@@ -1,10 +1,11 @@
 const banks = [
-  "Хаан банк",
-  "Голомт банк",
-  "Хас банк",
-  "ТДБ банк",
-  "Капитал банк",
-  "Ариг банк",
+  <img className="h-10" src="./turiinbank.png" alt="Bank Logo" />,
+  <img className="h-10" src="./golomt.png" alt="Bank Logo" />,
+  <img className="h-10" src="./khas.png" alt="Bank Logo" />,
+  <img className="h-10" src="./tdb.png" alt="Bank Logo" />,
+  <img className="h-10" src="./kapital.png" alt="Bank Logo" />,
+  <img className="h-10" src="./arigbank.png" alt="Bank Logo" />,
+  <img className="h-10" src="./unnamed.png" alt="Bank Logo" />,
 ];
 
 export default function TrustedBy() {
@@ -28,9 +29,9 @@ export default function TrustedBy() {
         </p>
 
         <div className="flex flex-wrap justify-center gap-3">
-          {banks.map((bank) => (
+          {banks.map((bank, index) => (
             <div
-              key={bank}
+              key={index}
               className="px-5 py-2.5 rounded-full text-sm font-medium transition-all"
               style={{
                 background: "rgba(0,212,255,0.05)",
@@ -43,8 +44,6 @@ export default function TrustedBy() {
             </div>
           ))}
         </div>
-
-        {/* Trust stats */}
         <div
           className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-12 pt-12"
           style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}
@@ -52,13 +51,16 @@ export default function TrustedBy() {
           {[
             { n: "500+", l: "Идэвхтэй бизнес" },
             { n: "10,000+", l: "Тайлан үүсгэгдсэн" },
-            { n: "₮2.4 тэр.", l: "Боловсруулсан гүйлгээ" },
+            { n: "₮2.4", l: "Боловсруулсан гүйлгээ" },
             { n: "99.9%", l: "Тайлангийн нарийвчлал" },
           ].map(({ n, l }) => (
             <div key={l} className="text-center">
               <div
                 className="text-3xl font-black mb-1"
-                style={{ color: "#00D4FF", fontFamily: "Syne, sans-serif" }}
+                style={{
+                  color: "#00D4FF",
+                  fontFamily: "Plus Jakarta Sans , sans-serif",
+                }}
               >
                 {n}
               </div>
