@@ -202,7 +202,9 @@ export default function ContentForm({
                 className="text-[12px] px-2 py-1.5 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#5048e5]/30"
               />
               <label className="flex items-center gap-1.5 cursor-pointer ml-auto">
-                <span className="text-[11px] text-gray-500 dark:text-gray-400">Авто</span>
+                <span className="text-[11px] text-gray-500 dark:text-gray-400">
+                  Авто
+                </span>
                 <div
                   onClick={() => setAutoPost(!autoPost)}
                   className={`relative w-8 h-4 rounded-full transition-colors cursor-pointer ${autoPost ? "bg-[#5048e5]" : "bg-gray-300 dark:bg-gray-600"}`}
