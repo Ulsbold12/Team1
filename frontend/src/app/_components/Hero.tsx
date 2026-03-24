@@ -3,11 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Upload, TrendingUp, CheckCircle } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { useEffect } from "react";
+import { SignInButton, SignedOut } from "@clerk/nextjs";
 
-const Intro = () => {
+export default function Intro() {
   return (
     <section
       className="relative overflow-hidden"
@@ -352,18 +352,22 @@ const Intro = () => {
       </div>
     </section>
   );
-};
+}
 
 const Hero = () => {
-  const { user } = useUser();
-
+  const { isLoaded, isSignedIn, user } = useUser();
   const router = useRouter();
-  useEffect(() => {
-    if (user?.id) {
-      router.push("/onboarding");
-    }
-  }, []);
-  return <>{!user?.id && <Intro />}</>;
-};
 
-export default Hero;
+  const onboardingComplete = user?.publicMetadata?.onboardingComplete;
+
+  useEffect(() => {
+    if (!isLoaded || !isSignedIn) return;
+
+    router.replace(onboardingComplete ? "/dashboard" : "/onboarding");
+  }, [isLoaded, isSignedIn, onboardingComplete, router]);
+
+  if (!isLoaded) return null;
+  if (!isSignedIn) return <Intro />;
+
+  return null;
+};

@@ -18,24 +18,22 @@ export const Header = () => {
     >
       <div className="container mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center ">
-          <div className="flex items-center ">
-            <img
-              className="w-18 h-15 rounded-lg flex items-center justify-center"
-              src="./pinl.png"
-              alt="FlowAI Logo"
-            />
+          <img
+            className="w-18 h-15 rounded-lg flex items-center justify-center"
+            src="./pinl.png"
+            alt="FlowAI Logo"
+          />
 
-            <span
-              className="font-bold text-lg"
-              style={{
-                color: "#E8F4FF",
-                fontFamily: "Syne, sans-serif",
-                letterSpacing: "-0.02em",
-              }}
-            >
-              FlowAI
-            </span>
-          </div>
+          <span
+            className="font-bold text-lg"
+            style={{
+              color: "#E8F4FF",
+              fontFamily: "Syne, sans-serif",
+              letterSpacing: "-0.02em",
+            }}
+          >
+            FlowAI
+          </span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
