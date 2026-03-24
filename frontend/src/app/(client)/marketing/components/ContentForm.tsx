@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { Platform, PLATFORMS, PLATFORM_COLORS } from "../types";
+import { useNotificationStore } from "@/store/notificationStore";
+import { Bell } from "lucide-react";
 
 export interface GeneratedPreview {
   platform: Platform;
@@ -46,6 +48,26 @@ export default function ContentForm({
   const [autoPost, setAutoPost] = useState(true);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
+
+  const addNotification = useNotificationStore(
+    (state) => state.addNotification,
+  );
+
+  const handleSchedule = (
+    preview: GeneratedPreview,
+    scheduleTime: string,
+    isAutoPost: boolean,
+  ) => {
+    onSchedule(preview, scheduleTime, isAutoPost);
+    addNotification({
+      category: "marketing",
+      title: "Контент төлөвлөгөө үүсгэлээ",
+      desc: `"${preview.title}" нийтлэлийг ${preview.platform} дээр ${scheduleTime} цагт ${isAutoPost ? "автоматаар" : "гараар"} нийтлүүлэхээр төлөвлөгөө үүсгэлээ.`,
+      icon: Bell,
+      iconColor: "#5048e5",
+      iconBg: "#e6e2ff",
+    });
+  };
 
   const handleGenerate = async () => {
     if (!name.trim()) {
@@ -202,7 +224,9 @@ export default function ContentForm({
                 className="text-[12px] px-2 py-1.5 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#5048e5]/30"
               />
               <label className="flex items-center gap-1.5 cursor-pointer ml-auto">
-                <span className="text-[11px] text-gray-500 dark:text-gray-400">Авто</span>
+                <span className="text-[11px] text-gray-500 dark:text-gray-400">
+                  Авто
+                </span>
                 <div
                   onClick={() => setAutoPost(!autoPost)}
                   className={`relative w-8 h-4 rounded-full transition-colors cursor-pointer ${autoPost ? "bg-[#5048e5]" : "bg-gray-300 dark:bg-gray-600"}`}
@@ -214,7 +238,10 @@ export default function ContentForm({
               </label>
             </div>
             <button
-              onClick={() => onSchedule(generatedPreview, time, autoPost)}
+              onClick={() =>
+                generatedPreview &&
+                handleSchedule(generatedPreview, time, autoPost)
+              }
               className="w-full py-2 rounded-lg text-[12px] font-bold text-white bg-[#5048e5] hover:bg-[#4038d4] transition-colors"
             >
               Хуанлид нэмэх →

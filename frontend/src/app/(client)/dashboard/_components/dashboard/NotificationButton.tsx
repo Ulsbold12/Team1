@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Bell } from "lucide-react";
+import { Bell, X } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useNotificationStore } from "@/store/notificationStore";
@@ -16,7 +16,8 @@ const FILTERS = [
 type FilterKey = (typeof FILTERS)[number]["key"];
 
 export function NotificationButton() {
-  const { notifications, markOneRead, markAllRead } = useNotificationStore();
+  const { notifications, markOneRead, markAllRead, deleteNotification } =
+    useNotificationStore();
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState<FilterKey>("all");
   const ref = useRef<HTMLDivElement>(null);
@@ -121,34 +122,46 @@ export function NotificationButton() {
                 return (
                   <div
                     key={n.id}
-                    onClick={() => markOneRead(n.id)}
-                    className={`flex gap-3 px-4 py-3 cursor-pointer hover:bg-muted/50 transition-colors ${
-                      !n.read ? "bg-muted/30" : ""
-                    }`}
+                    className={`flex gap-3 px-4 py-3 cursor-pointer hover:bg-muted/50 transition-colors group ${!n.read ? "bg-muted/30" : ""}`}
                   >
                     <div
-                      className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${n.iconBg}`}
+                      onClick={() => markOneRead(n.id)}
+                      className="flex-1 min-w-0 flex gap-3"
                     >
-                      <Icon className={`w-4 h-4 ${n.iconColor}`} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p
-                        className={`text-sm font-medium ${
-                          n.read ? "text-muted-foreground" : "text-foreground"
-                        }`}
+                      <div
+                        className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${n.iconBg}`}
                       >
-                        {n.title}
-                      </p>
-                      <p className="text-xs text-muted-foreground truncate">
-                        {n.desc}
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-0.5">
-                        {n.time}
-                      </p>
+                        <Icon className={`w-4 h-4 ${n.iconColor}`} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p
+                          className={`text-sm font-medium ${
+                            n.read ? "text-muted-foreground" : "text-foreground"
+                          }`}
+                        >
+                          {n.title}
+                        </p>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {n.desc}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {n.time}
+                        </p>
+                      </div>
+                      {!n.read && (
+                        <div className="w-2 h-2 rounded-full bg-[#5048e5] shrink-0 mt-1.5" />
+                      )}
                     </div>
-                    {!n.read && (
-                      <div className="w-2 h-2 rounded-full bg-[#5048e5] shrink-0 mt-1.5" />
-                    )}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteNotification(n.id);
+                      }}
+                      className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-all shrink-0"
+                      title="Устгах"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
                 );
               })

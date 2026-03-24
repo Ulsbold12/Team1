@@ -19,6 +19,7 @@ type NotificationStore = {
   markOneRead: (id: number) => void;
   markAllRead: () => void;
   clearAll: () => void;
+  deleteNotification: (id: number) => void;
 };
 
 export const useNotificationStore = create<NotificationStore>((set) => ({
@@ -45,4 +46,9 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
     })),
 
   clearAll: () => set({ notifications: [] }),
+
+  deleteNotification: (id) =>
+    set((state) => ({
+      notifications: state.notifications.filter((n) => n.id !== id),
+    })),
 }));

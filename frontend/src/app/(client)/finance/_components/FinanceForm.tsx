@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import { useNotificationStore } from "@/store/notificationStore";
+import { Bell } from "lucide-react";
 
 type TransactionType = "income" | "expense";
 
@@ -39,6 +41,10 @@ export default function FinanceForm({ onClose, onAdd }: FinanceFormProps) {
   >({});
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+
+  const addNotification = useNotificationStore(
+    (state) => state.addNotification,
+  );
 
   const isIncome = type === "income";
   const selectedCategories = Object.keys(categoryDetails);
@@ -86,6 +92,7 @@ export default function FinanceForm({ onClose, onAdd }: FinanceFormProps) {
   const handleSubmit = () => {
     if (totalAmount === 0 || !date) return;
 
+    setSaving(true);
     Object.entries(categoryDetails).forEach(([label, detail]) => {
       const amt = parseFloat(detail.amount);
       if (amt > 0) {
@@ -97,8 +104,19 @@ export default function FinanceForm({ onClose, onAdd }: FinanceFormProps) {
         });
       }
     });
+    const typeLabel = type === "income" ? "Орлого" : "Зарлага";
+    const categories = selectedCategories.join(", ");
+    addNotification({
+      category: "finance",
+      title: "Санхүүгийн мэдээлэл баталгаажлаа",
+      desc: `${typeLabel}: ₮${totalAmount.toLocaleString()} (${categories})`,
+      icon: Bell,
+      iconColor: type === "income" ? "#10b981" : "#f43f5e",
+      iconBg: type === "income" ? "#d1fae5" : "#ffe4e6",
+    });
 
     setTimeout(() => {
+      setSaving(false);
       onClose();
     }, 100);
   };

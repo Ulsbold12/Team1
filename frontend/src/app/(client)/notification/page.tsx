@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Bell, CheckCircle2, Trash2 } from "lucide-react";
+import { Bell, CheckCircle2, Trash2, X } from "lucide-react";
 import { useNotificationStore } from "@/store/notificationStore";
 import { Button } from "@/components/ui/button";
 
@@ -15,8 +15,13 @@ const FILTERS = [
 type FilterKey = (typeof FILTERS)[number]["key"];
 
 export default function NotificationsPage() {
-  const { notifications, markAllRead, markOneRead, clearAll } =
-    useNotificationStore();
+  const {
+    notifications,
+    markAllRead,
+    markOneRead,
+    clearAll,
+    deleteNotification,
+  } = useNotificationStore();
   const [filter, setFilter] = useState<FilterKey>("all");
 
   const filtered =
@@ -129,7 +134,7 @@ export default function NotificationsPage() {
               <div
                 key={n.id}
                 onClick={() => markOneRead(n.id)}
-                className={`flex gap-4 p-4 rounded-xl border cursor-pointer transition-colors ${
+                className={`flex gap-4 p-4 rounded-xl border cursor-pointer transition-colors group ${
                   !n.read
                     ? "bg-background border-[#5048e5]/20 hover:border-[#5048e5]/40"
                     : "bg-background border-border hover:bg-muted/50"
@@ -157,6 +162,16 @@ export default function NotificationsPage() {
                       {!n.read && (
                         <div className="w-2 h-2 rounded-full bg-[#5048e5]" />
                       )}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteNotification(n.id);
+                        }}
+                        className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-all shrink-0"
+                        title="Устгах"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
 
