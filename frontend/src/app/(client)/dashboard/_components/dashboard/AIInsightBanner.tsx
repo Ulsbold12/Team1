@@ -28,6 +28,7 @@ export function AIInsightBanner() {
         })
         .catch(console.error);
     });
+    
   }, [getToken]);
 
   if (!summary && !tip) return null;

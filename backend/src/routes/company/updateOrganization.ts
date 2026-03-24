@@ -24,7 +24,14 @@ export const updateCompany: RequestHandler = async (req, res) => {
         ...(facebookAccessToken !== undefined && { facebookAccessToken }),
       },
     });
-
+    await prisma.auditLog.create({
+      data: {
+        clientId: `${client.firstname} ${client.lastname}`,
+        action: `UPDATE`,
+        target: "ORGANIZATION",
+        details: JSON.stringify(updated),
+      },
+    });
     return res.status(200).json({ success: true, data: updated });
   } catch (error) {
     console.error(error);

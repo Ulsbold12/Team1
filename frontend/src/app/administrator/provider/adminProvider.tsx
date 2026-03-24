@@ -5,7 +5,7 @@ import {
   ReactNode,
   useContext,
   useState,
-  useEffect
+  useEffect,
 } from "react";
 import { OrganizationInterface } from "../Types";
 import { Dispatch, SetStateAction } from "react";
@@ -24,6 +24,7 @@ interface AdminContextType {
   fetchAuditLog: () => Promise<void>;
   createCompany: (data: OrganizationInterface) => Promise<void>;
   deleteCompany: (id: string) => Promise<void>;
+  deleteUserById: (clientId: string) => Promise<void>;
   auditLog: AuditLogtype[] | [];
 }
 
@@ -111,7 +112,16 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       console.log(e);
     }
   }
-
+  async function deleteUserById(clientId: string) {
+    try {
+      const res = await adminApi.delete(`/api/clients/${clientId}`);
+      if (res) {
+        console.log(res);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
   async function fetchAuditLog() {
     try {
       const res = await adminApi.get("/api/auditlog");
@@ -127,7 +137,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     fetchAuditLog();
   }, [lastAccessTime]);
 
-  console.log("adminprivoder", companies)
+  console.log("adminprivoder", companies);
   return (
     <AdminContext.Provider
       value={{
@@ -144,6 +154,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
         fetchAuditLog,
         createCompany,
         deleteCompany,
+        deleteUserById,
         auditLog,
       }}
     >

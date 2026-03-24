@@ -1,35 +1,28 @@
 import type { RequestHandler } from "express";
 import prisma from "../../lib/prisma";
 
-export const ActivityStatus: RequestHandler = async (req, res, next) => {
-  const clientId = req.clerkUserId;
-  if (clientId) {
-    await prisma.client.update({
-      where: { id: clientId },
-      data: { lastSeenAt: new Date() },
-    });
-  }
-  next();
-};
-
-export const aiLimiting: RequestHandler = async (req, res) => {
+export const aiLimiting: RequestHandler = async (req, res, next) => {
   try {
     const { clientId } = req.body;
+    if (clientId) {
+      return res
+        .status(403)
+        .json({ message: "invalid request", success: false });
+    }
     const client = await prisma.client.findUnique({ where: { id: clientId } });
     const orgId = client?.orgId;
 
-    if (!clientId || !orgId) {
-      return res.status(404).json({ message: "invalid req" });
-    }
-
     const targetCompany = await prisma.organization.findUnique({
-      where: { id: orgId },
+      where: { id: orgId as string },
     });
-
+    if (!targetCompany) {
+      return res.status(404).json({ message: "org not found" });
+    }
     if (targetCompany?.patronage === "BASIC") {
       const usageThisMonth = await prisma.aiUsage.count({
         where: {
-          orgId,
+          id: orgId as string,
+
           date: {
             gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
           },
@@ -44,10 +37,10 @@ export const aiLimiting: RequestHandler = async (req, res) => {
     }
 
     await prisma.aiUsage.create({
-      data: { clientId, orgId },
+      data: { clientId: client?.id as string, orgId: orgId as string },
     });
 
-    return res.status(200).json({ success: true });
+    next();
   } catch (e) {
     console.log(e);
     return res.status(500).json({ success: false, message: "ai tracking" });

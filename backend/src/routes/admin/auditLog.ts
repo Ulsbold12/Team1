@@ -13,6 +13,8 @@ export const getAuditLog: RequestHandler = async (_, res) => {
         .status(404)
         .json({ success: false, message: "auditLog error" });
     }
+
+
     return res.status(201).json(log);
   } catch (e) {
     console.log(e);

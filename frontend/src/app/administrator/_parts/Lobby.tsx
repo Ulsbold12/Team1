@@ -1,9 +1,9 @@
-
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, Users, TrendingUp } from "lucide-react";
 import { useAdmin } from "../provider/adminProvider";
+import { useEffect } from "react";
 const MOCK_STATS = {
   totalRegisteredOrgs: 124,
   activeUsers: 3_841,
@@ -11,7 +11,8 @@ const MOCK_STATS = {
 };
 
 export function Lobby() {
-  const { auditLog } = useAdmin();
+  const { auditLog, companies, allusers } = useAdmin();
+
   return (
     <div className="flex-1 overflow-y-auto p-8 space-y-8 bg-muted/30 text-foreground">
       <section>
@@ -25,13 +26,13 @@ export function Lobby() {
         <StatCard
           icon={<Building2 className="w-5 h-5 text-[#5048e5]" />}
           label="Total Registered Org."
-          value={String(MOCK_STATS.totalRegisteredOrgs)}
+          value={JSON.stringify(companies.length)}
           iconBg="bg-[#5048e5]/10"
         />
         <StatCard
           icon={<Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />}
           label="Active Users"
-          value={MOCK_STATS.activeUsers.toLocaleString()}
+          value={JSON.stringify(allusers.length)}
           iconBg="bg-blue-500/10"
         />
         <StatCard
