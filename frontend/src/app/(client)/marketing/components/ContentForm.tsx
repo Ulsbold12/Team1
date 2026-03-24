@@ -64,8 +64,8 @@ export default function ContentForm({
       title: "Контент төлөвлөгөө үүсгэлээ",
       desc: `"${preview.title}" нийтлэлийг ${preview.platform} дээр ${scheduleTime} цагт ${isAutoPost ? "автоматаар" : "гараар"} нийтлүүлэхээр төлөвлөгөө үүсгэлээ.`,
       icon: Bell,
-      iconColor: "#5048e5",
-      iconBg: "#e6e2ff",
+      iconColor: "text-violet-500",
+      iconBg: "bg-violet-500/10",
     });
   };
 
@@ -143,7 +143,6 @@ export default function ContentForm({
       </div>
 
       <div className="px-5 py-4 space-y-4 flex-1">
-        {/* Product name */}
         <div>
           <label className="block text-[11px] font-semibold text-gray-700 dark:text-gray-200 mb-1.5">
             Бүтээгдэхүүний нэр
