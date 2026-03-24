@@ -26,6 +26,8 @@ interface AdminContextType {
   deleteCompany: (id: string) => Promise<void>;
   deleteUserById: (clientId: string) => Promise<void>;
   auditLog: AuditLogtype[] | [];
+  loading: boolean;
+  fetchError: boolean;
 }
 
 type AuditLogtype = {
@@ -48,6 +50,8 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const [lastAccessTime, setLastAccessTime] = useState("");
   const [auditLog, setAuditlog] = useState<AuditLogtype[]>([]);
   const [showSideBar, setShowSideBar] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
 
   useEffect(() => {
     const time = new Date();
@@ -56,24 +60,14 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   async function fetchCompaniesData() {
-    //function for getting all data of companies
-    try {
-      const res = await adminApi.get("/api/admin/companies");
-
-      const data = res.data.companyData;
-      setCompanies(Array.isArray(data) ? data : []);
-    } catch (e) {
-      console.error(e);
-    }
+    const res = await adminApi.get("/api/admin/companies");
+    const data = res.data.companyData;
+    setCompanies(Array.isArray(data) ? data : []);
   }
   async function fetchAllOwners() {
-    try {
-      const res = await adminApi.get("/api/admin/clients");
-      const data = res.data.usersData;
-      setAllUsers(Array.isArray(data) ? data : []);
-    } catch (e) {
-      console.log(e);
-    }
+    const res = await adminApi.get("/api/admin/clients");
+    const data = res.data.usersData;
+    setAllUsers(Array.isArray(data) ? data : []);
   }
   async function fetchCompanyById(orgId: string) {
     try {
@@ -132,9 +126,11 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   }
 
   useEffect(() => {
-    fetchCompaniesData();
-    fetchAllOwners();
-    fetchAuditLog();
+    setLoading(true);
+    setFetchError(false);
+    Promise.all([fetchCompaniesData(), fetchAllOwners(), fetchAuditLog()])
+      .catch(() => setFetchError(true))
+      .finally(() => setLoading(false));
   }, [lastAccessTime]);
 
   console.log("adminprivoder", companies);
@@ -156,6 +152,8 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
         deleteCompany,
         deleteUserById,
         auditLog,
+        loading,
+        fetchError,
       }}
     >
       {children}

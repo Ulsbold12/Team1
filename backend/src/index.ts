@@ -115,6 +115,22 @@ app.get("/api/admin/companies", AdminAuth, getCompanyData);
 app.get("/api/admin/companies/:orgId", AdminAuth, readCompanydataById);
 app.post("/api/admin/companies", AdminAuth, createCompany);
 app.delete("/api/admin/companies/:orgId", AdminAuth, deleteCompany);
+app.put("/api/admin/companies/:orgId/plan", AdminAuth, async (req, res) => {
+  try {
+    const { orgId } = req.params;
+    const { patronage } = req.body as { patronage: string };
+    if (!["BASIC", "PRO"].includes(patronage)) {
+      return res.status(400).json({ success: false, message: "Invalid plan" });
+    }
+    const updated = await (await import("./lib/prisma")).default.organization.update({
+      where: { id: orgId },
+      data: { patronage: patronage as "BASIC" | "PRO" },
+    });
+    return res.status(200).json({ success: true, updated });
+  } catch (e) {
+    return res.status(500).json({ success: false });
+  }
+});
 app.delete("/api/admin/clients/:clientId", AdminAuth, deleteUser);
 app.get("/api/admin/clients", AdminAuth, getUsersData);
 app.get("/api/admin/companies/:orgId/members", AdminAuth, getUsersofOrgbyId);

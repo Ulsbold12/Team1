@@ -19,16 +19,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  MoreHorizontal,
   User,
-  Trash2,
-  Eye,
-  Pencil,
   Mail,
   Calendar,
   Building2,
   MoreVertical,
   MapPin,
+  Search,
 } from "lucide-react";
 import { ClientType } from "../Types";
 import {
@@ -57,8 +54,11 @@ export function Clients() {
     phone: "",
     role: "",
   });
-  const { allusers, fetchCompanyById, singleorg, deleteUserById } = useAdmin();
-  const client = allusers;
+  const { allusers, fetchCompanyById, singleorg, deleteUserById, loading, fetchError } = useAdmin();
+  const [search, setSearch] = useState("");
+  const client = allusers.filter((u) =>
+    `${u.firstname} ${u.lastname} ${u.email}`.toLowerCase().includes(search.toLowerCase())
+  );
 
   const openRead = (user: ClientType) => {
     setSelectedUser(user);
@@ -96,23 +96,34 @@ export function Clients() {
         <h2 className="text-3xl font-black text-foreground tracking-tight">
           Users
         </h2>
-        <p className="text-muted-foreground mt-1 text-white">
+        <p className="text-muted-foreground mt-1 text-black">
           Manage all registered users
         </p>
       </div>
+      <div className="relative">
+        <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          placeholder="Хэрэглэгч хайх..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="pl-9"
+        />
+      </div>
       <div className={`w-full h-full overflow-scroll`}>
-        {" "}
         <div className="flex flex-col gap-3">
-          {client.length === 0 ? (
-            <>Loading</>
+          {loading ? (
+            <p className="text-sm text-muted-foreground py-4">Ачааллаж байна...</p>
+          ) : fetchError ? (
+            <p className="text-sm text-red-500 py-4">Backend холбогдохгүй байна.</p>
+          ) : client.length === 0 ? (
+            <p className="text-sm text-muted-foreground py-4">Хэрэглэгч олдсонгүй</p>
           ) : (
             <>
               {" "}
               {client.map((user) => (
                 <div
                   key={user.id}
-                  className="bg-card border border-border rounded-xl px-5 py-4 flex items-center gap-4 shadow-sm hover:border-[#5048e5]/30 transition-colors"
-                >
+                  className="bg-card border border-border rounded-xl px-5 py-4 flex items-center gap-4 shadow-sm hover:border-[#5048e5]/30 transition-colors">
                   <div className="w-9 h-9 bg-[#5048e5]/10 rounded-full flex items-center justify-center shrink-0">
                     <User size={15} className="text-[#5048e5]" />
                   </div>
@@ -128,8 +139,7 @@ export function Clients() {
                           isRecentlyActive(user.lastSeenAt)
                             ? "bg-green-500/10 text-green-600 border-green-500/20 text-xs dark:text-green-400"
                             : "bg-red-500/10 text-red-600 border-red-500/20 text-xs dark:text-red-400"
-                        }`}
-                      >
+                        }`}>
                         <p className="text-xs text-gray-400">Last active: </p>
                         {isRecentlyActive(user.lastSeenAt) ? (
                           <span className="text-green-500 text-xs">
@@ -147,8 +157,7 @@ export function Clients() {
 
                   <Badge
                     variant="outline"
-                    className={`${roleColors[user.role] ?? ""} text-xs shrink-0`}
-                  >
+                    className={`${roleColors[user.role] ?? ""} text-xs shrink-0`}>
                     {user.role}
                   </Badge>
 
@@ -169,8 +178,7 @@ export function Clients() {
                     onClick={() => {
                       setSelectedUser(user);
                       setSheetMode("read");
-                    }}
-                  >
+                    }}>
                     <MoreVertical size={16} />
                   </Button>
                 </div>
@@ -208,8 +216,7 @@ export function Clients() {
                       isRecentlyActive(selectedUser.lastSeenAt)
                         ? "bg-green-500/10 text-green-600 border-green-500/20 text-xs dark:text-green-400"
                         : "bg-red-500/10 text-red-600 border-red-500/20 text-xs dark:text-red-400"
-                    }
-                  >
+                    }>
                     {isRecentlyActive(selectedUser.lastSeenAt) ? (
                       <>Active</>
                     ) : (
@@ -255,18 +262,24 @@ export function Clients() {
                 </div>
                 <Dialog>
                   <DialogTrigger asChild>
-                    {" "}
-                    <Button
-                      variant={"destructive"}
-                      onClick={() => {
-                        deleteUserById(selectedUser.id as string);
-                      }}
-                    >
-                      Delete
-                    </Button>
+                    <Button variant="destructive">Delete User</Button>
                   </DialogTrigger>
-                  <DialogHeader>Delete User</DialogHeader>
-                  <DialogContent></DialogContent>
+                  <DialogContent>
+                    <DialogHeader>Delete User</DialogHeader>
+                    <p className="text-sm text-muted-foreground">
+                      {selectedUser.firstname} {selectedUser.lastname}-г устгахдаа итгэлтэй байна уу?
+                    </p>
+                    <div className="flex gap-2 justify-end mt-2">
+                      <Button
+                        variant="destructive"
+                        onClick={() => {
+                          deleteUserById(selectedUser.id as string);
+                          closeSheet();
+                        }}>
+                        Тийм, устга
+                      </Button>
+                    </div>
+                  </DialogContent>
                 </Dialog>
               </div>
             </div>

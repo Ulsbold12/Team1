@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Upload, TrendingUp, CheckCircle } from "lucide-react";
 import Link from "next/link";
