@@ -208,7 +208,7 @@ export function Companies() {
       </div>
 
       <Sheet
-        open={sheetOpen}
+        open={sheetOpen}  
         onOpenChange={(open) => {
           if (!open) closeSheet();
         }}

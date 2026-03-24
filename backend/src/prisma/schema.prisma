@@ -5,7 +5,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
 }
 
 model Organization {
@@ -20,14 +19,14 @@ model Organization {
   phoneNumber          String
   stripeCustomerId     String?
   stripeSubscriptionId String?
+  aiUsages             AiUsage[]
   members              Client[]
   financeData          Finance[]
   financeAnalyses      FinanceAnalysis[]
   InviteCode           InviteCode[]
+  marketinAIUsages     MarketinAIUsage[]
   marketingStrategy    MarketingStrategy?
   posts                Post[]
-  aiUsages             AiUsage[]
-  marketinAIUsages     MarketinAIUsage[]
 }
 
 model MarketingStrategy {
@@ -51,12 +50,12 @@ model Client {
   lastname         String
   profilePic       String?
   createdAt        DateTime          @default(now())
-  ofOrg            Organization?     @relation(fields: [orgId], references: [id])
-  auditLogs        AuditLog[]
-  phoneNumber      String?
-  personalEmail    String?
   lastSeenAt       DateTime          @default(now())
+  personalEmail    String?
+  phoneNumber      String?
   aiUsages         AiUsage[]
+  auditLogs        AuditLog[]
+  ofOrg            Organization?     @relation(fields: [orgId], references: [id])
   marketinAIUsages MarketinAIUsage[]
 }
 
@@ -113,6 +112,34 @@ model InviteCode {
   Organization Organization @relation(fields: [orgId], references: [id])
 }
 
+model AuditLog {
+  id       String      @id @default(cuid())
+  clientId String
+  action   AuditAction
+  target   AuditTarget
+  details  Json?
+  date     DateTime    @default(now())
+  client   Client      @relation(fields: [clientId], references: [id])
+}
+
+model AiUsage {
+  id       String       @id @default(cuid())
+  clientId String
+  orgId    String
+  date     DateTime     @default(now())
+  client   Client       @relation(fields: [clientId], references: [id])
+  org      Organization @relation(fields: [orgId], references: [id])
+}
+
+model MarketinAIUsage {
+  id       String       @id @default(cuid())
+  clientId String
+  orgId    String
+  date     DateTime     @default(now())
+  client   Client       @relation(fields: [clientId], references: [id])
+  org      Organization @relation(fields: [orgId], references: [id])
+}
+
 enum Industry {
   TECH
   FINANCE
@@ -145,32 +172,4 @@ enum AuditTarget {
   CLIENT
   INVITE_CODE
   PATRONAGE
-}
-
-model AuditLog {
-  id       String      @id @default(cuid())
-  clientId String
-  action   AuditAction
-  target   AuditTarget
-  details  Json?
-  date     DateTime    @default(now())
-  client   Client      @relation(fields: [clientId], references: [id])
-}
-
-model AiUsage {
-  id       String       @id @default(cuid())
-  clientId String
-  orgId    String
-  date     DateTime     @default(now())
-  client   Client       @relation(fields: [clientId], references: [id])
-  org      Organization @relation(fields: [orgId], references: [id])
-}
-
-model MarketinAIUsage {
-  id       String       @id @default(cuid())
-  clientId String
-  orgId    String
-  date     DateTime     @default(now())
-  client   Client       @relation(fields: [clientId], references: [id])
-  org      Organization @relation(fields: [orgId], references: [id])
 }

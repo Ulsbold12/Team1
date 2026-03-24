@@ -34,7 +34,12 @@ export const getCodeForMember: RequestHandler = async (req, res) => {
         });
         clientRecord = { orgId: clerkId, role: "EXECUTIVE" };
       } else {
-        return res.status(404).json({ success: false, message: "Organization not found. Please complete onboarding." });
+        return res
+          .status(404)
+          .json({
+            success: false,
+            message: "Organization not found. Please complete onboarding.",
+          });
       }
     }
 
@@ -109,7 +114,15 @@ export const registerMember: RequestHandler = async (req, res) => {
       await tx.inviteCode.delete({
         where: { code: optKey },
       });
-
+      //recording activity
+      await prisma.auditLog.create({
+        data: {
+          clientId: clerkId as string,
+          target: "INVITE_CODE",
+          action: "UPDATE",
+          details: `${newMember.id}`,
+        },
+      });
       return newMember;
     });
 
