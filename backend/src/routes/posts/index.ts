@@ -101,8 +101,9 @@ export const publishNow: RequestHandler = async (req, res) => {
     if (!post || post.orgId !== orgId)
       return res.status(404).json({ success: false, message: "Not found" });
 
-    const pageId = process.env.FACEBOOK_PAGE_ID;
-    const accessToken = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
+    const org = await prisma.organization.findUnique({ where: { id: orgId } });
+    const pageId = org?.facebookPageId || process.env.FACEBOOK_PAGE_ID;
+    const accessToken = org?.facebookAccessToken || process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
 
     if (!pageId || !accessToken) {
       return res.status(503).json({

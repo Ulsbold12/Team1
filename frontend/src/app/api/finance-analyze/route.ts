@@ -67,11 +67,24 @@ export async function POST(request: NextRequest) {
     { "name": "Банкны шимтгэл", "total": 0 },
     { "name": "Бусад", "total": 0 }
   ],
-  "monthly": [
+ "monthly": [
     {
       "month": "2025-01",
-      "income": [{ "name": "Борлуулалтын орлого", "total": 0 }],
-      "expenses": [{ "name": "Хоол хүнс", "total": 0 }]
+      "income": [
+        { "name": "Борлуулалтын орлого", "total": 0 },
+        { "name": "Зээл", "total": 0 }
+      ],
+      "expenses": [
+        { "name": "Цалин", "total": 0 },
+        { "name": "Хоол хүнс", "total": 0 },
+        { "name": "Тээвэр", "total": 0 },
+        { "name": "Бараа материал", "total": 0 },
+        { "name": "Тоног төхөөрөмж", "total": 0 },
+        { "name": "Орон байр/Түрээс", "total": 0 },
+        { "name": "Харилцаа холбоо", "total": 0 },
+        { "name": "Банкны шимтгэл", "total": 0 },
+        { "name": "Бусад", "total": 0 }
+      ]
     }
   ],
   "tips": ["Монгол хэлээр зөвлөгөө 1", "Монгол хэлээр зөвлөгөө 2", "Монгол хэлээр зөвлөгөө 3"]

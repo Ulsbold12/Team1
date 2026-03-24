@@ -14,30 +14,29 @@ export default function MarketingPage() {
   const [targetAudience, setTargetAudience] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState<string | null>(null);
-  const [advice, setAdvice] = useState<string | null>(() => {
-    if (typeof window === "undefined") return null;
-    return localStorage.getItem("marketing_advice") || null;
-  });
-  const [posts, setPosts] = useState<Post[]>(() => {
-    if (typeof window === "undefined") return [];
-    try { return JSON.parse(localStorage.getItem("marketing_posts") || "[]"); } catch { return []; }
-  });
-  const [visiblePosts, setVisiblePosts] = useState(() => {
-    if (typeof window === "undefined") return 0;
-    try { return JSON.parse(localStorage.getItem("marketing_posts") || "[]").length; } catch { return 0; }
-  });
+  const [advice, setAdvice] = useState<string | null>(null);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [visiblePosts, setVisiblePosts] = useState(0);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [sessionExpired, setSessionExpired] = useState(false);
   const [savedPosts, setSavedPosts] = useState<SavedPost[]>([]);
   const [savedPostsLoading, setSavedPostsLoading] = useState(true);
-  const [images, setImages] = useState<ImageItem[]>(() => {
-    if (typeof window === "undefined") return [];
+  const [images, setImages] = useState<ImageItem[]>([]);
+  const { getToken, userId } = useAuth();
+
+  // userId бэлэн болмогц тухайн хэрэглэгчийн өгөгдлийг уншина
+  useEffect(() => {
+    if (!userId || typeof window === "undefined") return;
     try {
-      const stored: { name: string; blobUrl: string }[] = JSON.parse(localStorage.getItem("marketing_images") || "[]");
-      return stored.map((img) => ({ name: img.name, preview: img.blobUrl, blobUrl: img.blobUrl, uploading: false }));
-    } catch { return []; }
-  });
-  const { getToken } = useAuth();
+      const savedAdvice = localStorage.getItem(`marketing_advice_${userId}`);
+      setAdvice(savedAdvice || null);
+      const savedPosts = JSON.parse(localStorage.getItem(`marketing_posts_${userId}`) || "[]");
+      setPosts(savedPosts);
+      setVisiblePosts(savedPosts.length);
+      const stored: { name: string; blobUrl: string }[] = JSON.parse(localStorage.getItem(`marketing_images_${userId}`) || "[]");
+      setImages(stored.map((img) => ({ name: img.name, preview: img.blobUrl, blobUrl: img.blobUrl, uploading: false })));
+    } catch { /* ignore */ }
+  }, [userId]);
 
   useEffect(() => {
     getToken().then((token) => {
@@ -81,26 +80,31 @@ export default function MarketingPage() {
   }, [getToken]);
 
   useEffect(() => {
-    localStorage.setItem("marketing_posts", JSON.stringify(posts));
-  }, [posts]);
+    if (!userId) return;
+    localStorage.setItem(`marketing_posts_${userId}`, JSON.stringify(posts));
+  }, [posts, userId]);
 
   useEffect(() => {
+    if (!userId) return;
     const uploaded = images.filter((img) => img.blobUrl && !img.uploading);
-    localStorage.setItem("marketing_images", JSON.stringify(uploaded.map((img) => ({ name: img.name, blobUrl: img.blobUrl }))));
-  }, [images]);
+    localStorage.setItem(`marketing_images_${userId}`, JSON.stringify(uploaded.map((img) => ({ name: img.name, blobUrl: img.blobUrl }))));
+  }, [images, userId]);
 
   useEffect(() => {
-    if (advice) localStorage.setItem("marketing_advice", advice);
-    else localStorage.removeItem("marketing_advice");
-  }, [advice]);
+    if (!userId) return;
+    if (advice) localStorage.setItem(`marketing_advice_${userId}`, advice);
+    else localStorage.removeItem(`marketing_advice_${userId}`);
+  }, [advice, userId]);
 
   function handleReset() {
     if (!confirm("Үүсгэсэн постуудыг устгах уу?")) return;
     setPosts([]);
     setAdvice(null);
     setVisiblePosts(0);
-    localStorage.removeItem("marketing_posts");
-    localStorage.removeItem("marketing_advice");
+    if (userId) {
+      localStorage.removeItem(`marketing_posts_${userId}`);
+      localStorage.removeItem(`marketing_advice_${userId}`);
+    }
   }
 
   async function uploadToBlobAndAdd(file: File) {
@@ -129,6 +133,8 @@ export default function MarketingPage() {
   }
 
   async function handleGenerate() {
+
+    
     if (!productName.trim() || !description.trim() || !targetAudience.trim()) return;
     setLoading(true);
     setAdvice(null);

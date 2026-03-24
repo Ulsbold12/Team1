@@ -1,56 +1,69 @@
 "use client";
 
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { useState } from "react";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Menu, X } from "lucide-react";
+
+const navLinks = [
+  { label: "Онцлог", href: "#features" },
+  { label: "Үнэ тариф", href: "#pricing" },
+  { label: "Холбоо барих", href: "#contact" },
+];
 
 export const Header = () => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleNavClick = (href: string) => {
+    setMobileOpen(false);
+    if (href.startsWith("#")) {
+      document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <header
+      className="sticky top-0 z-50 w-full bg-white"
       style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 50,
-        background: "rgba(5, 11, 21, 0.80)",
-        backdropFilter: "blur(20px)",
-        borderBottom: "1px solid rgba(0, 212, 255, 0.08)",
-      }}
-    >
+        borderBottom: "1px solid #E2E8F0",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+      }}>
       <div className="container mx-auto px-6 h-16 flex items-center justify-between">
+        {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5">
           <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black"
-            style={{
-              background: "linear-gradient(135deg, #00D4FF, #0090CC)",
-              boxShadow: "0 0 20px rgba(0, 212, 255, 0.4)",
-              color: "#050B15",
-              fontFamily: "Syne, sans-serif",
-            }}
-          >
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black text-white"
+            style={{ background: "#1A3560", fontFamily: "Syne, sans-serif" }}>
             ✦
           </div>
           <span
             className="font-bold text-lg"
-            style={{ color: "#E8F4FF", fontFamily: "Syne, sans-serif", letterSpacing: "-0.02em" }}
-          >
+            style={{
+              color: "#1A3560",
+              fontFamily: "Syne, sans-serif",
+              letterSpacing: "-0.02em",
+            }}>
             FlowAI
           </span>
         </Link>
-
+        {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-8">
-          {["Онцлог", "Үнэ", "Холбоо барих"].map((item) => (
-            <Link
-              key={item}
-              href="#"
-              className="text-sm transition-colors"
-              style={{ color: "#6B8BAE", fontFamily: "Plus Jakarta Sans, sans-serif" }}
-            >
-              {item}
-            </Link>
+          {navLinks.map(({ label, href }) => (
+            <button
+              key={label}
+              onClick={() => handleNavClick(href)}
+              className="text-sm font-medium transition-colors hover:text-[#1A3560] cursor-pointer bg-transparent border-none p-0"
+              style={{
+                color: "#64748B",
+                fontFamily: "Plus Jakarta Sans, sans-serif",
+              }}>
+              {label}
+            </button>
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-3">
           <SignedOut>
             <SignInButton mode="modal">
               <Button
@@ -60,8 +73,7 @@ export const Header = () => {
                   color: "#050B15",
                   boxShadow: "0 0 20px rgba(0, 212, 255, 0.25)",
                   fontFamily: "Plus Jakarta Sans, sans-serif",
-                }}
-              >
+                }}>
                 Эхлэх
               </Button>
             </SignInButton>
@@ -76,15 +88,92 @@ export const Header = () => {
                   color: "#E8F4FF",
                   background: "transparent",
                   fontFamily: "Plus Jakarta Sans, sans-serif",
-                }}
-              >
+                }}>
                 Dashboard
               </Button>
             </Link>
             <UserButton />
           </SignedIn>
         </div>
+        <button
+          className="md:hidden p-2 rounded-lg border transition-colors"
+          style={{
+            color: "#1A3560",
+            borderColor: "#E2E8F0",
+            background: mobileOpen ? "#F8FAFC" : "transparent",
+          }}
+          onClick={() => setMobileOpen((v) => !v)}
+          aria-label={mobileOpen ? "Цэс хаах" : "Цэс нээх"}>
+          {mobileOpen ? (
+            <X className="w-5 h-5" />
+          ) : (
+            <Menu className="w-5 h-5" />
+          )}
+        </button>
       </div>
+
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <div
+          className="md:hidden bg-white px-6 pb-6 pt-2 flex flex-col gap-1"
+          style={{ borderTop: "1px solid #E2E8F0" }}>
+          {navLinks.map(({ label, href }) => (
+            <button
+              key={label}
+              onClick={() => handleNavClick(href)}
+              className="text-left w-full py-3 px-4 rounded-xl text-sm font-medium transition-colors hover:bg-slate-50"
+              style={{
+                color: "#64748B",
+                fontFamily: "Plus Jakarta Sans, sans-serif",
+                border: "none",
+                background: "transparent",
+                cursor: "pointer",
+              }}>
+              {label}
+            </button>
+          ))}
+          <div
+            className="mt-3 pt-4 flex flex-col gap-2"
+            style={{ borderTop: "1px solid #E2E8F0" }}>
+            <SignedOut>
+              <Link href="/sign-in" onClick={() => setMobileOpen(false)}>
+                <Button
+                  variant="outline"
+                  className="w-full rounded-xl text-sm font-medium"
+                  style={{
+                    color: "#1A3560",
+                    borderColor: "#E2E8F0",
+                    fontFamily: "Plus Jakarta Sans, sans-serif",
+                  }}>
+                  Нэвтрэх
+                </Button>
+              </Link>
+              <Link href="/sign-up" onClick={() => setMobileOpen(false)}>
+                <Button
+                  className="w-full rounded-xl text-sm font-semibold text-white"
+                  style={{
+                    background: "#1A3560",
+                    fontFamily: "Plus Jakarta Sans, sans-serif",
+                  }}>
+                  Туршиж үзэх
+                </Button>
+              </Link>
+            </SignedOut>
+            <SignedIn>
+              <Link href="/dashboard" onClick={() => setMobileOpen(false)}>
+                <Button
+                  className="w-full rounded-xl text-sm font-semibold text-white"
+                  style={{
+                    background: "#1A3560",
+                    fontFamily: "Plus Jakarta Sans, sans-serif",
+                  }}>
+                  Dashboard
+                </Button>
+              </Link>
+            </SignedIn>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
