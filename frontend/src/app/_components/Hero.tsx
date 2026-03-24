@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Upload, TrendingUp, CheckCircle } from "lucide-react";
 import Link from "next/link";
 
-const Hero = () => {
+const Intro = () => {
   return (
     <section className="relative overflow-hidden bg-white">
       <div
@@ -261,6 +261,18 @@ const Hero = () => {
       </div>
     </section>
   );
+};
+
+const Hero = () => {
+  const { user } = useUser();
+
+  const router = useRouter();
+  useEffect(() => {
+    if (user?.id) {
+      router.push("/onboarding");
+    }
+  }, []);
+  return <>{!user?.id && <Intro />}</>;
 };
 
 export default Hero;

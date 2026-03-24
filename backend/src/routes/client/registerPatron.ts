@@ -6,7 +6,7 @@ import { clerkClient } from "../../lib/clerkClient";
 export const registerPatron: RequestHandler = async (req, res) => {
   try {
     const clerkId = req.clerkUserId;
-
+    const clerkUser = await clerkClient.users.getUser(clerkId as string);
     if (!clerkId) {
       return res.status(401).json({ message: "Unauthorized" });
     }
@@ -42,6 +42,7 @@ export const registerPatron: RequestHandler = async (req, res) => {
           email: data.email,
           firstname: data.firstname,
           lastname: data.lastname,
+          profilePic: clerkUser.imageUrl ?? "",
         },
       });
 
@@ -52,17 +53,13 @@ export const registerPatron: RequestHandler = async (req, res) => {
             clientId: clerkId,
             action: "CREATE",
             target: "ORGANIZATION",
-            details: {
-              organizationId: organization.name,
-            },
+            details: `${organization.name} with the ID ${organization.id}`,
           },
           {
             clientId: `${organization.id}`,
             action: "JOIN",
             target: "PATRONAGE",
-            details: {
-              patronage: organization.patronage,
-            },
+            details: `${organization.patronage} at ${organization.createdAt}`,
           },
         ],
       });

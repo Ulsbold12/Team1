@@ -1,6 +1,5 @@
 "use client";
 
-
 /**
  * Layout component that enforces onboarding completion and renders the dashboard shell.
  *
@@ -15,5 +14,5 @@ export default function SupaDupaAdminLayouttoDesu({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className={`w-full h-screen no-scrollbar overflow-hidden`}>{children}</div>;
+  return <div className={`w-full h-screen no-scrollbar`}>{children}</div>;
 }

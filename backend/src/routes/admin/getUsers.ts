@@ -5,7 +5,9 @@ import { clerkClient } from "../../lib/clerkClient";
 //check if admin id matches.
 export const getUsersData: RequestHandler = async (req, res) => {
   try {
-    const usersData = await prisma.client.findMany({});
+    const usersData = await prisma.client.findMany({
+      include: { ofOrg: true },
+    });
     if (!usersData) {
       return res.status(404).json({ message: "no data to be found" });
     }
@@ -19,18 +21,31 @@ export const getUsersData: RequestHandler = async (req, res) => {
 
 export const deleteUser: RequestHandler = async (req, res) => {
   try {
-    const { userId } = req.body;
-    if (!userId) {
+    const { clientId } = req.params;
+    if (!clientId) {
       return res
         .status(404)
         .json({ message: "orgId not found", success: false });
     }
+    const theOrgAssociated = await prisma.client.findUnique({
+      where: { id: clientId as string },
+      include: { ofOrg: true },
+    });
+    const org = await prisma.organization.findUnique({
+      where: { id: theOrgAssociated?.id },
+    });
+    if (org?.patronage === "BASIC") {
+      const deletedOrg = await prisma.organization.delete({
+        where: { id: org.id },
+      });
+      return deletedOrg;
+    }
     const deleted = await prisma.client.delete({
       where: {
-        id: userId as string,
+        id: clientId as string,
       },
     });
-    await clerkClient.users.deleteUser(userId);
+    await clerkClient.users.deleteUser(clientId as string);
     //deleting user from clerk
     if (!deleted) {
       return res
@@ -39,7 +54,7 @@ export const deleteUser: RequestHandler = async (req, res) => {
     }
     return res.status(200).json({
       success: true,
-      message: `deleted organization ${userId} successfully`,
+      message: `deleted, ${clientId} successfully`,
     });
   } catch (e) {
     console.log(e);
@@ -60,6 +75,9 @@ export const getUsersofOrgbyId: RequestHandler = async (req, res) => {
     const usersToReturn = await prisma.client.findMany({
       where: {
         orgId: orgId as string,
+      },
+      include: {
+        ofOrg: true,
       },
     });
     return res.status(200).json({ success: true, usersToReturn });

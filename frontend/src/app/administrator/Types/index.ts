@@ -7,6 +7,9 @@ export type ClientType = {
   lastname: string;
   createdAt: Date;
   lastSeenAt: Date;
+  profilePic?: string | null;
+  phoneNumber?: string;
+  ofOrg?: OrganizationInterface;
 };
 
 export type FinanceType = {

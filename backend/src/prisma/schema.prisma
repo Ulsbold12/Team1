@@ -25,10 +25,10 @@ model Organization {
   financeData          Finance[]
   financeAnalyses      FinanceAnalysis[]
   InviteCode           InviteCode[]
+  marketinAIUsages     MarketinAIUsage[]
   marketingStrategy    MarketingStrategy?
   posts                Post[]
-  aiUsages             AiUsage[]
-  marketinAIUsages     MarketinAIUsage[]
+  sales                Sales[]
 }
 
 model MarketingStrategy {
@@ -52,12 +52,12 @@ model Client {
   lastname         String
   profilePic       String?
   createdAt        DateTime          @default(now())
-  ofOrg            Organization?     @relation(fields: [orgId], references: [id])
-  auditLogs        AuditLog[]
-  phoneNumber      String?
-  personalEmail    String?
   lastSeenAt       DateTime          @default(now())
+  personalEmail    String?
+  phoneNumber      String?
   aiUsages         AiUsage[]
+  auditLogs        AuditLog[]
+  ofOrg            Organization?     @relation(fields: [orgId], references: [id])
   marketinAIUsages MarketinAIUsage[]
 }
 
@@ -114,6 +114,35 @@ model InviteCode {
   Organization Organization @relation(fields: [orgId], references: [id])
 }
 
+model AuditLog {
+  id       String      @id @default(cuid())
+  clientId String
+  action   AuditAction
+  target   AuditTarget
+  details  String?
+  date     DateTime    @default(now())
+  client   Client      @relation(fields: [clientId], references: [id])
+}
+
+model AiUsage {
+  id       String       @id @default(cuid())
+  clientId String
+  orgId    String
+  date     DateTime     @default(now())
+  client   Client       @relation(fields: [clientId], references: [id])
+  org      Organization @relation(fields: [orgId], references: [id])
+
+}
+
+model MarketinAIUsage {
+  id       String       @id @default(cuid())
+  clientId String
+  orgId    String
+  date     DateTime     @default(now())
+  client   Client       @relation(fields: [clientId], references: [id])
+  org      Organization @relation(fields: [orgId], references: [id])
+}
+
 enum Industry {
   TECH
   FINANCE
@@ -148,30 +177,10 @@ enum AuditTarget {
   PATRONAGE
 }
 
-model AuditLog {
-  id       String      @id @default(cuid())
-  clientId String
-  action   AuditAction
-  target   AuditTarget
-  details  Json?
-  date     DateTime    @default(now())
-  client   Client      @relation(fields: [clientId], references: [id])
-}
-
-model AiUsage {
-  id       String       @id @default(cuid())
-  clientId String
-  orgId    String
-  date     DateTime     @default(now())
-  client   Client       @relation(fields: [clientId], references: [id])
-  org      Organization @relation(fields: [orgId], references: [id])
-}
-
-model MarketinAIUsage {
-  id       String       @id @default(cuid())
-  clientId String
-  orgId    String
-  date     DateTime     @default(now())
-  client   Client       @relation(fields: [clientId], references: [id])
-  org      Organization @relation(fields: [orgId], references: [id])
+model Sales {
+  id      String       @id @default(cuid())
+  buyer   Organization @relation(fields: [orgId], references: [id])
+  orgId   String
+  date    DateTime
+  product Subscription
 }

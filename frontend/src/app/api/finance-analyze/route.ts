@@ -1,9 +1,11 @@
 // import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
+import { useUser } from "@clerk/nextjs";
 
 export async function POST(request: NextRequest) {
   try {
+    const { user } = useUser();
     if (!process.env.OPENAI_API_KEY) {
       return NextResponse.json(
         { error: "OPENAI_API_KEY тохируулагдаагүй байна." },
@@ -117,6 +119,7 @@ export async function POST(request: NextRequest) {
     );
 
     const usageData = await usageRes.json();
+    console.log(usageData);
 
     // if limit reached, stop here
     if (usageRes.status === 429) {

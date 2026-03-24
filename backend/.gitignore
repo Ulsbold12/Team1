@@ -2,6 +2,7 @@
 .env
 /dist
 src/prisma/generated
+
 .clerk
 
 

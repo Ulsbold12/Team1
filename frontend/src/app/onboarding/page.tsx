@@ -2,10 +2,8 @@
 
 import Prism from "@/components/Prism";
 import { Button } from "@/components/ui/button";
-
 import { useAuth, useClerk, useUser } from "@clerk/nextjs";
 import { useEffect, useRef, useState } from "react";
-
 import {
   Tooltip,
   TooltipContent,
@@ -88,8 +86,9 @@ export default function OnboardingPage() {
           body: JSON.stringify({
             name: form.name,
             industry: form.businessType,
-            email: user?.primaryEmailAddress?.emailAddress,
-            phoneNumber: form.phone ?? user?.primaryPhoneNumber?.phoneNumber,
+            email: clerkUser?.primaryEmailAddress?.emailAddress,
+            phoneNumber:
+              form.phone ?? clerkUser?.primaryPhoneNumber?.phoneNumber,
             address: form.address ?? "",
             description: form.description,
           }),
@@ -248,7 +247,7 @@ export default function OnboardingPage() {
                   <option value="">Сонгоно уу</option>
                   <option value="RETAIL">Худалдаа</option>
                   <option value="MANUFACTURING">Үйлдвэрлэл</option>
-                  <option value="HEALTHCARE">Үйлчилгээ</option>
+                  <option value="HEALTHCARE">Эмнэлэг</option>
                   <option value="TECH">Мэдээллийн технологи</option>
                   <option value="FINANCE">Санхүү</option>
                   <option value="EDUCATION">Боловсрол</option>

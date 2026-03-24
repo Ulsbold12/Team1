@@ -1,63 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
+
+import { OpenAI } from "openai";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-async function translateToMongolian(text: string): Promise<string> {
-  const apiKey = process.env.GOOGLE_TRANSLATE_API_KEY;
-  const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`;
-
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      q: text,
-      source: "en",
-      target: "mn",
-      format: "text",
-    }),
-  });
-
-  const data = await res.json();
-
-  if (!res.ok || data.error) {
-    throw new Error(data.error?.message ?? "Translation failed");
-  }
-
-  return data.data.translations[0].translatedText;
-}
-
-async function fixMongolianGrammar(
-  text: string,
-  openaiClient: OpenAI,
-): Promise<string> {
-  const res = await openaiClient.chat.completions.create({
-    model: "gpt-4o",
-    messages: [
-      {
-        role: "system",
-        content: `You are a native Mongolian language editor. You will receive Mongolian text that was machine-translated and may have grammar mistakes, unnatural phrasing, or awkward word order.
-
-Your job:
-- Fix grammar mistakes and unnatural phrasing
-- Make it sound like a real Mongolian person wrote it
-- Keep the meaning, tone, and structure exactly the same
-- Do NOT add exclamation marks
-- Do NOT make it more formal or more casual than the original
-- Do NOT add or remove sentences
-- Return ONLY the corrected Mongolian text, nothing else`,
-      },
-      {
-        role: "user",
-        content: text,
-      },
-    ],
-  });
-
-  return res.choices[0].message.content ?? text;
-}
+//read the user data and find org patronage.
+//if patronge=basic,
 
 export async function POST(request: NextRequest) {
   try {
