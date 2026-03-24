@@ -1,9 +1,5 @@
 "use client";
 
-<<<<<<< Updated upstream
-=======
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
->>>>>>> Stashed changes
 
 /**
  * Layout component that enforces onboarding completion and renders the dashboard shell.

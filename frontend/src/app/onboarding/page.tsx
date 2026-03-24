@@ -4,10 +4,6 @@ import Prism from "@/components/Prism";
 import { Button } from "@/components/ui/button";
 import { useAuth, useClerk, useUser } from "@clerk/nextjs";
 import { useEffect, useRef, useState } from "react";
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 import {
   Tooltip,
   TooltipContent,
@@ -30,19 +26,14 @@ export default function OnboardingPage() {
     phone: "",
     address: "",
   });
-<<<<<<< Updated upstream
-  const { user: clerkUser, isLoaded } = useUser();
-=======
 
   const { user } = useUser();
 
   const { user: clerkUser } = useUser();
->>>>>>> Stashed changes
   const [newMform, setNewMform] = useState({
     role: "",
     optKey: "",
   });
-
 
   useEffect(() => {
     try {
@@ -82,44 +73,34 @@ export default function OnboardingPage() {
     setLoading(true);
 
     try {
-<<<<<<< Updated upstream
-    const token = await getToken();
-    console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
-    console.log("Token:", token ? "ok" : "null");
-=======
       const token = await getToken();
->>>>>>> Stashed changes
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/onboarding/org`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/onboarding/org`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name: form.name,
+            industry: form.businessType,
+            email: clerkUser?.primaryEmailAddress?.emailAddress,
+            phoneNumber:
+              form.phone ?? clerkUser?.primaryPhoneNumber?.phoneNumber,
+            address: form.address ?? "",
+            description: form.description,
+          }),
         },
-        body: JSON.stringify({
-          name: form.name,
-          industry: form.businessType,
-          email: clerkUser?.primaryEmailAddress?.emailAddress,
-          phoneNumber: form.phone ?? clerkUser?.primaryPhoneNumber?.phoneNumber,
-          address: form.address ?? "",
-          description: form.description,
-        }),
-      },
-    );
+      );
 
-<<<<<<< Updated upstream
-    const data = await res.json();
-    console.log("Response status:", res.status, data);
-=======
       const data = await res.json();
->>>>>>> Stashed changes
 
-    if (res.ok) {
-      await session?.reload();
-      window.location.href = "/dashboard";
-    } else alert(`Алдаа: ${JSON.stringify(data)}`);
+      if (res.ok) {
+        await session?.reload();
+        window.location.href = "/dashboard";
+      } else alert(`Алдаа: ${JSON.stringify(data)}`);
     } catch (err) {
       console.error("Fetch error:", err);
       alert(`Network error: ${err}`);
