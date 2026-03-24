@@ -1,53 +1,32 @@
-import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export default function Cta() {
   return (
-    <section
-      className="py-24"
-      style={{ background: "#050B15" }}
-    >
+    <section id="pricing" className="py-24 bg-white">
       <div className="container mx-auto px-6">
         <div
           className="relative overflow-hidden rounded-3xl px-8 py-20 text-center"
-          style={{
-            background: "linear-gradient(135deg, #071628 0%, #0D2240 50%, #071628 100%)",
-            border: "1px solid rgba(0, 212, 255, 0.15)",
-            boxShadow: "0 0 120px rgba(0, 212, 255, 0.06) inset",
-          }}
+          style={{ background: "#1A3560" }}
         >
-          {/* Glow orbs */}
+          {/* Subtle pattern */}
           <div
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-64 rounded-full pointer-events-none"
+            className="absolute inset-0 pointer-events-none"
             style={{
-              background: "radial-gradient(ellipse, rgba(0,212,255,0.12) 0%, transparent 70%)",
-              transform: "translateX(-50%) translateY(-40%)",
+              backgroundImage: "radial-gradient(circle at 20% 50%, rgba(245,158,11,0.12) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(255,255,255,0.04) 0%, transparent 50%)",
             }}
           />
-          <div
-            className="absolute bottom-0 left-1/4 w-64 h-64 rounded-full pointer-events-none"
-            style={{
-              background: "radial-gradient(circle, rgba(245,166,35,0.06) 0%, transparent 70%)",
-              transform: "translateY(50%)",
-            }}
-          />
-          <div
-            className="absolute bottom-0 right-1/4 w-64 h-64 rounded-full pointer-events-none"
-            style={{
-              background: "radial-gradient(circle, rgba(167,139,250,0.06) 0%, transparent 70%)",
-              transform: "translateY(50%)",
-            }}
-          />
+          {/* Top gold accent line */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1 rounded-b-full" style={{ background: "#F59E0B" }} />
 
           <div className="relative z-10">
             {/* Badge */}
             <div
               className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full text-xs font-semibold tracking-wide"
               style={{
-                background: "rgba(0, 212, 255, 0.08)",
-                border: "1px solid rgba(0, 212, 255, 0.2)",
-                color: "#00D4FF",
+                background: "rgba(245,158,11,0.15)",
+                border: "1px solid rgba(245,158,11,0.3)",
+                color: "#FCD34D",
                 fontFamily: "Plus Jakarta Sans, sans-serif",
               }}
             >
@@ -55,27 +34,19 @@ export default function Cta() {
             </div>
 
             <h2
-              className="text-4xl md:text-6xl font-black leading-tight mb-6"
-              style={{ color: "#E8F4FF", fontFamily: "Syne, sans-serif", letterSpacing: "-0.03em" }}
+              className="text-4xl md:text-6xl font-black leading-tight mb-6 text-white"
+              style={{ fontFamily: "Syne, sans-serif", letterSpacing: "-0.03em" }}
             >
               Өсөлтөө
               <br />
-              <span
-                style={{
-                  background: "linear-gradient(90deg, #00D4FF, #7DD3FC)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                автоматжуулахад
-              </span>
+              <span style={{ color: "#F59E0B" }}>автоматжуулахад</span>
               <br />
               бэлэн үү?
             </h2>
 
             <p
               className="mx-auto max-w-xl mb-12 text-base leading-relaxed"
-              style={{ color: "#6B8BAE", fontFamily: "Plus Jakarta Sans, sans-serif" }}
+              style={{ color: "rgba(255,255,255,0.7)", fontFamily: "Plus Jakarta Sans, sans-serif" }}
             >
               FlowAI ашиглан санхүүгийн тайлангаа цаг хэмнэн гаргадаг мянга мянган
               Монгол бизнес эрхлэгчтэй нэгдэж, татварын тооцоогоо автоматжуул.
@@ -83,34 +54,31 @@ export default function Cta() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/sign-up">
-                <Button
-                  size="lg"
-                  className="rounded-xl font-semibold text-base px-10 py-6"
+                <button
+                  className="flex items-center gap-2 px-10 py-4 rounded-xl text-base font-bold transition-all hover:opacity-90"
                   style={{
-                    background: "linear-gradient(135deg, #00D4FF, #0090CC)",
-                    color: "#050B15",
-                    boxShadow: "0 0 40px rgba(0, 212, 255, 0.35)",
+                    background: "#F59E0B",
+                    color: "#1A3560",
+                    boxShadow: "0 4px 20px rgba(245,158,11,0.4)",
                     fontFamily: "Plus Jakarta Sans, sans-serif",
                   }}
                 >
                   Үнэгүй эхлэх
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
               </Link>
 
-              <Button
-                size="lg"
-                variant="outline"
-                className="rounded-xl text-base px-10 py-6"
+              <button
+                className="px-10 py-4 rounded-xl text-base font-semibold transition-all hover:bg-white/10"
                 style={{
-                  borderColor: "rgba(255,255,255,0.12)",
-                  color: "#E8F4FF",
+                  border: "1px solid rgba(255,255,255,0.2)",
+                  color: "white",
                   background: "transparent",
                   fontFamily: "Plus Jakarta Sans, sans-serif",
                 }}
               >
                 Борлуулалтын багтай холбогдох
-              </Button>
+              </button>
             </div>
           </div>
         </div>

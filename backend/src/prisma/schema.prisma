@@ -20,6 +20,8 @@ model Organization {
   phoneNumber          String
   stripeCustomerId     String?
   stripeSubscriptionId String?
+  facebookPageId       String?
+  facebookAccessToken  String?
   members              Client[]
   financeData          Finance[]
   financeAnalyses      FinanceAnalysis[]

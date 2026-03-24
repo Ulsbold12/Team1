@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useAuth, useUser } from "@clerk/nextjs";
-import { Building2, User, Save, Loader2 } from "lucide-react";
+import { Building2, User, Save, Loader2, Share2 } from "lucide-react";
 import { apiFetch } from "@/lib/apiFetch";
 
 const INDUSTRIES = [
@@ -18,6 +18,9 @@ export default function SettingsPage() {
   const { user } = useUser();
 
   const [form, setForm] = useState({ name: "", industry: "" });
+  const [fbForm, setFbForm] = useState({ facebookPageId: "", facebookAccessToken: "" });
+  const [fbSaving, setFbSaving] = useState(false);
+  const [fbSuccess, setFbSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -37,6 +40,10 @@ export default function SettingsPage() {
           setForm({
             name: data.data.ofOrg?.name ?? "",
             industry: data.data.ofOrg?.industry ?? "",
+          });
+          setFbForm({
+            facebookPageId: data.data.ofOrg?.facebookPageId ?? "",
+            facebookAccessToken: data.data.ofOrg?.facebookAccessToken ?? "",
           });
         }
       } catch (e) {
@@ -67,6 +74,28 @@ export default function SettingsPage() {
       console.error(e);
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleFbSave() {
+    setFbSaving(true);
+    setFbSuccess(false);
+    try {
+      const token = await getToken();
+      await apiFetch(`${process.env.NEXT_PUBLIC_API_URL}/api/company`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(fbForm),
+      });
+      setFbSuccess(true);
+      setTimeout(() => setFbSuccess(false), 3000);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setFbSaving(false);
     }
   }
 
@@ -168,6 +197,60 @@ export default function SettingsPage() {
               </div>
             </>
           )}
+        </div>
+        {/* Facebook credentials card */}
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-border p-6 space-y-5">
+          <div className="flex items-center gap-2">
+            <Share2 className="w-4 h-4 text-muted-foreground" />
+            <h2 className="font-semibold text-sm">Facebook Page тохиргоо</h2>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Өөрийн байгууллагын Facebook хуудасны мэдээллийг оруулна уу. Auto post болон нийтлэл үүсгэхэд ашиглагдана.
+          </p>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+              Facebook Page ID
+            </label>
+            <input
+              value={fbForm.facebookPageId}
+              onChange={(e) => setFbForm({ ...fbForm, facebookPageId: e.target.value })}
+              placeholder="ж.нь: 123456789012345"
+              className="w-full px-4 py-2.5 rounded-xl border border-border bg-muted/30 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+              Page Access Token
+            </label>
+            <input
+              type="password"
+              value={fbForm.facebookAccessToken}
+              onChange={(e) => setFbForm({ ...fbForm, facebookAccessToken: e.target.value })}
+              placeholder="EAAxxxxx..."
+              className="w-full px-4 py-2.5 rounded-xl border border-border bg-muted/30 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all"
+            />
+          </div>
+
+          <div className="flex items-center gap-3 pt-2">
+            <button
+              onClick={handleFbSave}
+              disabled={fbSaving}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold disabled:opacity-50 transition-all">
+              {fbSaving ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Save className="w-4 h-4" />
+              )}
+              Хадгалах
+            </button>
+            {fbSuccess && (
+              <span className="text-sm text-emerald-600 font-medium">
+                ✓ Амжилттай хадгалагдлаа
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>

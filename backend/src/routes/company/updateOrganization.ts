@@ -13,13 +13,15 @@ export const updateCompany: RequestHandler = async (req, res) => {
       return res.status(404).json({ message: "Client not found" });
     }
 
-    const { name, industry } = req.body;
+    const { name, industry, facebookPageId, facebookAccessToken } = req.body;
 
     const updated = await prisma.organization.update({
       where: { id: client.orgId ?? "" },
       data: {
         ...(name && { name }),
         ...(industry && { industry }),
+        ...(facebookPageId !== undefined && { facebookPageId }),
+        ...(facebookAccessToken !== undefined && { facebookAccessToken }),
       },
     });
 

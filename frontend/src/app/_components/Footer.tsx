@@ -2,35 +2,29 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer
-      style={{
-        background: "#050B15",
-        borderTop: "1px solid rgba(0,212,255,0.06)",
-      }}
-    >
+    <footer id="contact" style={{ background: "#F8FAFC", borderTop: "1px solid #E2E8F0" }}>
       <div className="container mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
         {/* Logo */}
         <div className="flex items-center gap-2.5">
           <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black"
-            style={{
-              background: "linear-gradient(135deg, #00D4FF, #0090CC)",
-              color: "#050B15",
-              fontFamily: "Syne, sans-serif",
-            }}
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black text-white"
+            style={{ background: "#1A3560", fontFamily: "Syne, sans-serif" }}
           >
             ✦
           </div>
           <span
             className="font-bold text-lg"
-            style={{ color: "#E8F4FF", fontFamily: "Syne, sans-serif", letterSpacing: "-0.02em" }}
+            style={{ color: "#1A3560", fontFamily: "Syne, sans-serif", letterSpacing: "-0.02em" }}
           >
             FlowAI
           </span>
         </div>
 
         {/* Links */}
-        <div className="flex flex-wrap items-center gap-6 text-sm" style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}>
+        <div
+          className="flex flex-wrap items-center gap-6 text-sm"
+          style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}
+        >
           {[
             { label: "Нууцлалын бодлого", href: "#" },
             { label: "Үйлчилгээний нөхцөл", href: "#" },
@@ -39,8 +33,8 @@ const Footer = () => {
             <Link
               key={label}
               href={href}
-              className="transition-colors"
-              style={{ color: "#6B8BAE" }}
+              className="transition-colors hover:text-slate-900"
+              style={{ color: "#64748B" }}
             >
               {label}
             </Link>
@@ -50,7 +44,7 @@ const Footer = () => {
         {/* Copyright */}
         <p
           className="text-sm text-center"
-          style={{ color: "#3A5068", fontFamily: "Plus Jakarta Sans, sans-serif" }}
+          style={{ color: "#94A3B8", fontFamily: "Plus Jakarta Sans, sans-serif" }}
         >
           © {new Date().getFullYear()} FlowAI. Бүх эрх хамгаалагдсан.
         </p>
