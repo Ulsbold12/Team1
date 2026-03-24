@@ -4,6 +4,10 @@ import Prism from "@/components/Prism";
 import { Button } from "@/components/ui/button";
 import { useAuth, useClerk, useUser } from "@clerk/nextjs";
 import { useEffect, useRef, useState } from "react";
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 import {
   Tooltip,
   TooltipContent,
@@ -11,9 +15,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { CircleHelp } from "lucide-react";
-
-//1. bug fix: detecting if user has a company id on her/his registry.
-//2. if yes -> continue aboard, if no, offer two choices: enter company ID || create company id
 
 export default function OnboardingPage() {
   const { getToken } = useAuth();
@@ -29,7 +30,14 @@ export default function OnboardingPage() {
     phone: "",
     address: "",
   });
+<<<<<<< Updated upstream
   const { user: clerkUser, isLoaded } = useUser();
+=======
+
+  const { user } = useUser();
+
+  const { user: clerkUser } = useUser();
+>>>>>>> Stashed changes
   const [newMform, setNewMform] = useState({
     role: "",
     optKey: "",
@@ -74,9 +82,13 @@ export default function OnboardingPage() {
     setLoading(true);
 
     try {
+<<<<<<< Updated upstream
     const token = await getToken();
     console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
     console.log("Token:", token ? "ok" : "null");
+=======
+      const token = await getToken();
+>>>>>>> Stashed changes
 
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/onboarding/org`,
@@ -97,8 +109,12 @@ export default function OnboardingPage() {
       },
     );
 
+<<<<<<< Updated upstream
     const data = await res.json();
     console.log("Response status:", res.status, data);
+=======
+      const data = await res.json();
+>>>>>>> Stashed changes
 
     if (res.ok) {
       await session?.reload();
@@ -142,6 +158,7 @@ export default function OnboardingPage() {
     }
     setLoading(false);
   }
+
   return (
     <div className="relative flex min-h-screen items-center justify-center">
       <div className="absolute inset-0 -z-10">
@@ -180,7 +197,6 @@ export default function OnboardingPage() {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        {/* asChild means the CircleHelp icon IS the trigger, not a wrapper button */}
                         <CircleHelp className="h-4 w-4 text-muted-foreground cursor-pointer" />
                       </TooltipTrigger>
                       <TooltipContent>
@@ -218,7 +234,6 @@ export default function OnboardingPage() {
             >
               Create a new organization instead?
             </Button>
-            <form></form>
           </>
         )}
         {existing === false && (

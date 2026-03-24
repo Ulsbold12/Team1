@@ -2,25 +2,34 @@
 
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Upload, TrendingUp, CheckCircle } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
-const Hero = () => {
+const Intro = () => {
   return (
     <section
       className="relative overflow-hidden"
-      style={{ background: "linear-gradient(160deg, #050B15 0%, #081426 60%, #050B15 100%)" }}
+      style={{
+        background:
+          "linear-gradient(160deg, #050B15 0%, #081426 60%, #050B15 100%)",
+      }}
     >
       {/* Ambient glow orbs */}
       <div
         className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full pointer-events-none"
         style={{
-          background: "radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 70%)",
+          background:
+            "radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 70%)",
           transform: "translateY(-30%)",
         }}
       />
       <div
         className="absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full pointer-events-none"
         style={{
-          background: "radial-gradient(circle, rgba(245,166,35,0.06) 0%, transparent 70%)",
+          background:
+            "radial-gradient(circle, rgba(245,166,35,0.06) 0%, transparent 70%)",
           transform: "translateY(30%)",
         }}
       />
@@ -73,7 +82,10 @@ const Hero = () => {
 
           <p
             className="text-lg mb-10 max-w-md leading-relaxed"
-            style={{ color: "#6B8BAE", fontFamily: "Plus Jakarta Sans, sans-serif" }}
+            style={{
+              color: "#6B8BAE",
+              fontFamily: "Plus Jakarta Sans, sans-serif",
+            }}
           >
             Банкны хуулгаа оруулж, НӨАТ · ААН · НД тайлангаа автоматаар үүсгэ.
             Facebook-т автоматаар нийтэл. Монгол хэлээр санхүүгийн зөвлөгөө ав.
@@ -95,7 +107,10 @@ const Hero = () => {
                 </div>
                 <div
                   className="text-sm mt-0.5"
-                  style={{ color: "#6B8BAE", fontFamily: "Plus Jakarta Sans, sans-serif" }}
+                  style={{
+                    color: "#6B8BAE",
+                    fontFamily: "Plus Jakarta Sans, sans-serif",
+                  }}
                 >
                   {l}
                 </div>
@@ -105,19 +120,24 @@ const Hero = () => {
 
           {/* CTAs */}
           <div className="flex flex-wrap gap-4">
-            <Button
-              size="lg"
-              className="rounded-xl font-semibold text-base px-8"
-              style={{
-                background: "linear-gradient(135deg, #00D4FF, #0090CC)",
-                color: "#050B15",
-                boxShadow: "0 0 32px rgba(0, 212, 255, 0.3)",
-                fontFamily: "Plus Jakarta Sans, sans-serif",
-              }}
-            >
-              Үнэгүй эхлэх
-              <ArrowRight className="ml-2 w-4 h-4" />
-            </Button>
+            <SignedOut>
+              <SignInButton mode="modal">
+                <Button
+                  size="lg"
+                  className="rounded-xl font-semibold text-base px-8"
+                  style={{
+                    background: "linear-gradient(135deg, #00D4FF, #0090CC)",
+                    color: "#050B15",
+                    boxShadow: "0 0 32px rgba(0, 212, 255, 0.3)",
+                    fontFamily: "Plus Jakarta Sans, sans-serif",
+                  }}
+                >
+                  Үнэгүй эхлэх
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </Button>
+              </SignInButton>
+            </SignedOut>
+
             <Button
               size="lg"
               variant="outline"
@@ -141,17 +161,30 @@ const Hero = () => {
             style={{
               background: "#0D1829",
               border: "1px solid rgba(0, 212, 255, 0.12)",
-              boxShadow: "0 0 80px rgba(0, 212, 255, 0.06), 0 40px 80px rgba(0,0,0,0.5)",
+              boxShadow:
+                "0 0 80px rgba(0, 212, 255, 0.06), 0 40px 80px rgba(0,0,0,0.5)",
             }}
           >
             {/* Window chrome */}
             <div className="flex items-center gap-2 mb-6">
-              <div className="w-3 h-3 rounded-full" style={{ background: "#FF5F57" }} />
-              <div className="w-3 h-3 rounded-full" style={{ background: "#FEBC2E" }} />
-              <div className="w-3 h-3 rounded-full" style={{ background: "#28C840" }} />
+              <div
+                className="w-3 h-3 rounded-full"
+                style={{ background: "#FF5F57" }}
+              />
+              <div
+                className="w-3 h-3 rounded-full"
+                style={{ background: "#FEBC2E" }}
+              />
+              <div
+                className="w-3 h-3 rounded-full"
+                style={{ background: "#28C840" }}
+              />
               <span
                 className="ml-3 text-xs"
-                style={{ color: "#6B8BAE", fontFamily: "Plus Jakarta Sans, sans-serif" }}
+                style={{
+                  color: "#6B8BAE",
+                  fontFamily: "Plus Jakarta Sans, sans-serif",
+                }}
               >
                 FlowAI · Банкны хуулга шинжилгээ
               </span>
@@ -174,7 +207,10 @@ const Hero = () => {
               <div className="flex-1 min-w-0">
                 <div
                   className="text-sm font-semibold truncate"
-                  style={{ color: "#E8F4FF", fontFamily: "Plus Jakarta Sans, sans-serif" }}
+                  style={{
+                    color: "#E8F4FF",
+                    fontFamily: "Plus Jakarta Sans, sans-serif",
+                  }}
                 >
                   Хаан_Банк_2024_12.xlsx
                 </div>
@@ -192,18 +228,41 @@ const Hero = () => {
 
             {/* Analysis bars */}
             {[
-              { label: "Нийт орлого", amount: "₮24,500,000", pct: "75%", color: "#00D4FF" },
-              { label: "Нийт зарлага", amount: "₮18,200,000", pct: "56%", color: "#F5A623" },
-              { label: "НӨАТ суурь", amount: "₮6,300,000", pct: "32%", color: "#28C840" },
+              {
+                label: "Нийт орлого",
+                amount: "₮24,500,000",
+                pct: "75%",
+                color: "#00D4FF",
+              },
+              {
+                label: "Нийт зарлага",
+                amount: "₮18,200,000",
+                pct: "56%",
+                color: "#F5A623",
+              },
+              {
+                label: "НӨАТ суурь",
+                amount: "₮6,300,000",
+                pct: "32%",
+                color: "#28C840",
+              },
             ].map(({ label, amount, pct, color }) => (
               <div key={label} className="mb-4">
                 <div className="flex justify-between text-xs mb-1.5">
-                  <span style={{ color: "#6B8BAE", fontFamily: "Plus Jakarta Sans, sans-serif" }}>
+                  <span
+                    style={{
+                      color: "#6B8BAE",
+                      fontFamily: "Plus Jakarta Sans, sans-serif",
+                    }}
+                  >
                     {label}
                   </span>
                   <span
                     className="font-semibold"
-                    style={{ color: "#E8F4FF", fontFamily: "Plus Jakarta Sans, sans-serif" }}
+                    style={{
+                      color: "#E8F4FF",
+                      fontFamily: "Plus Jakarta Sans, sans-serif",
+                    }}
                   >
                     {amount}
                   </span>
@@ -214,7 +273,11 @@ const Hero = () => {
                 >
                   <div
                     className="h-1.5 rounded-full"
-                    style={{ background: color, width: pct, boxShadow: `0 0 8px ${color}60` }}
+                    style={{
+                      background: color,
+                      width: pct,
+                      boxShadow: `0 0 8px ${color}60`,
+                    }}
                   />
                 </div>
               </div>
@@ -241,7 +304,10 @@ const Hero = () => {
               ))}
               <span
                 className="ml-auto text-xs font-semibold"
-                style={{ color: "#6B8BAE", fontFamily: "Plus Jakarta Sans, sans-serif" }}
+                style={{
+                  color: "#6B8BAE",
+                  fontFamily: "Plus Jakarta Sans, sans-serif",
+                }}
               >
                 2024 оны 12-р сар
               </span>
@@ -267,7 +333,10 @@ const Hero = () => {
             <div>
               <div
                 className="text-xs font-semibold"
-                style={{ color: "#E8F4FF", fontFamily: "Plus Jakarta Sans, sans-serif" }}
+                style={{
+                  color: "#E8F4FF",
+                  fontFamily: "Plus Jakarta Sans, sans-serif",
+                }}
               >
                 AI зөвлөгөө
               </div>
@@ -289,7 +358,10 @@ const Hero = () => {
             <CheckCircle className="w-4 h-4" style={{ color: "#28C840" }} />
             <div
               className="text-xs font-semibold"
-              style={{ color: "#E8F4FF", fontFamily: "Plus Jakarta Sans, sans-serif" }}
+              style={{
+                color: "#E8F4FF",
+                fontFamily: "Plus Jakarta Sans, sans-serif",
+              }}
             >
               Facebook нийтлэл илгээгдлээ
             </div>
@@ -298,6 +370,18 @@ const Hero = () => {
       </div>
     </section>
   );
+};
+
+const Hero = () => {
+  const { user } = useUser();
+
+  const router = useRouter();
+  useEffect(() => {
+    if (user?.id) {
+      router.push("/onboarding");
+    }
+  }, []);
+  return <>{!user?.id && <Intro />}</>;
 };
 
 export default Hero;

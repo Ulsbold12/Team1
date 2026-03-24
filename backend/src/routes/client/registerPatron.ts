@@ -52,17 +52,15 @@ export const registerPatron: RequestHandler = async (req, res) => {
             clientId: clerkId,
             action: "CREATE",
             target: "ORGANIZATION",
-            details: {
-              organizationId: organization.name,
-            },
+            details: `${organization.name} with the ID ${organization.id}`
           },
           {
             clientId: `${organization.id}`,
             action: "JOIN",
             target: "PATRONAGE",
-            details: {
-              patronage: organization.patronage,
-            },
+            details: `${organization
+              .patronage
+            } at ${organization.createdAt}`
           },
         ],
       });
