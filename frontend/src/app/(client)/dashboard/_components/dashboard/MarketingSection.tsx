@@ -6,6 +6,7 @@ import { useAuth } from "@clerk/nextjs";
 import { Rocket } from "lucide-react";
 import { SectionHeader } from "./SectionHeader";
 import { apiFetch } from "@/lib/apiFetch";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const PLATFORM_GRADIENTS: Record<string, string> = {
   LinkedIn: "from-blue-600 to-blue-400",
@@ -77,7 +78,18 @@ function RecentPosts({ posts, loading }: { posts: Post[]; loading: boolean }) {
       </div>
       <div className="divide-y divide-border">
         {loading && (
-          <p className="p-4 text-sm text-muted-foreground">Ачааллаж байна...</p>
+          <div className="divide-y divide-border">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="px-4 py-3 flex items-center gap-3">
+                <Skeleton className="w-9 h-9 rounded-xl shrink-0" />
+                <div className="flex-1 space-y-1.5">
+                  <Skeleton className="h-3.5 w-40" />
+                  <Skeleton className="h-3 w-24" />
+                </div>
+                <Skeleton className="h-4 w-10" />
+              </div>
+            ))}
+          </div>
         )}
         {!loading && posts.length === 0 && (
           <p className="p-4 text-sm text-muted-foreground">

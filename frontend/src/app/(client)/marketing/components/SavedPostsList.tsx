@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { SavedPost } from "./constants";
 import { SavedPostRow } from "./SavedPostRow";
 
@@ -28,7 +29,20 @@ export function SavedPostsList({ posts, loading, onUpdated, onDeleted, onDeleted
         </div>
       </CardHeader>
       <CardContent className="px-6 pb-6">
-        {loading && <p className="text-sm text-slate-400 dark:text-gray-500">Ачааллаж байна...</p>}
+        {loading && (
+          <div className="flex flex-col gap-3">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="rounded-xl border border-slate-200 dark:border-gray-700 p-4 space-y-2">
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-5 w-20 rounded-full" />
+                  <Skeleton className="h-4 w-28" />
+                </div>
+                <Skeleton className="h-3.5 w-full" />
+                <Skeleton className="h-3.5 w-3/4" />
+              </div>
+            ))}
+          </div>
+        )}
         {!loading && posts.length === 0 && (
           <p className="text-sm text-slate-400 dark:text-gray-500">Хадгалсан пост байхгүй байна.</p>
         )}
