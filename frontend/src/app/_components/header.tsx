@@ -28,26 +28,28 @@ export const Header = () => {
       style={{
         borderBottom: "1px solid #E2E8F0",
         boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
-      }}>
+      }}
+    >
       <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5">
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black text-white"
-            style={{ background: "#1A3560", fontFamily: "Syne, sans-serif" }}>
+            style={{ background: "#6366f1", fontFamily: "Syne, sans-serif" }}
+          >
             ✦
           </div>
           <span
             className="font-bold text-lg"
             style={{
-              color: "#1A3560",
+              color: "#000000",
               fontFamily: "Syne, sans-serif",
               letterSpacing: "-0.02em",
-            }}>
+            }}
+          >
             FlowAI
           </span>
         </Link>
-        {/* Desktop nav */}
+
         <nav className="hidden md:flex items-center gap-8">
           {navLinks.map(({ label, href }) => (
             <button
@@ -57,7 +59,8 @@ export const Header = () => {
               style={{
                 color: "#64748B",
                 fontFamily: "Plus Jakarta Sans, sans-serif",
-              }}>
+              }}
+            >
               {label}
             </button>
           ))}
@@ -69,11 +72,12 @@ export const Header = () => {
               <Button
                 className="rounded-xl text-sm font-semibold"
                 style={{
-                  background: "linear-gradient(135deg, #00D4FF, #0090CC)",
-                  color: "#050B15",
+                  background: "linear-gradient(135deg,  #8b5cf6, #6366f1)",
+                  color: "#ffffff",
                   boxShadow: "0 0 20px rgba(0, 212, 255, 0.25)",
                   fontFamily: "Plus Jakarta Sans, sans-serif",
-                }}>
+                }}
+              >
                 Эхлэх
               </Button>
             </SignInButton>
@@ -88,7 +92,8 @@ export const Header = () => {
                   color: "#E8F4FF",
                   background: "transparent",
                   fontFamily: "Plus Jakarta Sans, sans-serif",
-                }}>
+                }}
+              >
                 Dashboard
               </Button>
             </Link>
@@ -103,7 +108,8 @@ export const Header = () => {
             background: mobileOpen ? "#F8FAFC" : "transparent",
           }}
           onClick={() => setMobileOpen((v) => !v)}
-          aria-label={mobileOpen ? "Цэс хаах" : "Цэс нээх"}>
+          aria-label={mobileOpen ? "Цэс хаах" : "Цэс нээх"}
+        >
           {mobileOpen ? (
             <X className="w-5 h-5" />
           ) : (
@@ -116,7 +122,8 @@ export const Header = () => {
       {mobileOpen && (
         <div
           className="md:hidden bg-white px-6 pb-6 pt-2 flex flex-col gap-1"
-          style={{ borderTop: "1px solid #E2E8F0" }}>
+          style={{ borderTop: "1px solid #E2E8F0" }}
+        >
           {navLinks.map(({ label, href }) => (
             <button
               key={label}
@@ -128,13 +135,15 @@ export const Header = () => {
                 border: "none",
                 background: "transparent",
                 cursor: "pointer",
-              }}>
+              }}
+            >
               {label}
             </button>
           ))}
           <div
             className="mt-3 pt-4 flex flex-col gap-2"
-            style={{ borderTop: "1px solid #E2E8F0" }}>
+            style={{ borderTop: "1px solid #E2E8F0" }}
+          >
             <SignedOut>
               <Link href="/sign-in" onClick={() => setMobileOpen(false)}>
                 <Button
@@ -144,7 +153,8 @@ export const Header = () => {
                     color: "#1A3560",
                     borderColor: "#E2E8F0",
                     fontFamily: "Plus Jakarta Sans, sans-serif",
-                  }}>
+                  }}
+                >
                   Нэвтрэх
                 </Button>
               </Link>
@@ -154,7 +164,8 @@ export const Header = () => {
                   style={{
                     background: "#1A3560",
                     fontFamily: "Plus Jakarta Sans, sans-serif",
-                  }}>
+                  }}
+                >
                   Туршиж үзэх
                 </Button>
               </Link>
@@ -166,7 +177,8 @@ export const Header = () => {
                   style={{
                     background: "#1A3560",
                     fontFamily: "Plus Jakarta Sans, sans-serif",
-                  }}>
+                  }}
+                >
                   Dashboard
                 </Button>
               </Link>
