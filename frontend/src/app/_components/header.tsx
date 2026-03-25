@@ -118,7 +118,6 @@ export const Header = () => {
         </button>
       </div>
 
-      {/* Mobile menu */}
       {mobileOpen && (
         <div
           className="md:hidden bg-white px-6 pb-6 pt-2 flex flex-col gap-1"

@@ -198,7 +198,6 @@ export const FinanceReport = ({
               </div>
             </div>
 
-            {/* Баруун тал — PieChart */}
             <div className="flex flex-col items-center justify-center">
               <ResponsiveContainer width="100%" height={260}>
                 <PieChart>
@@ -210,8 +209,7 @@ export const FinanceReport = ({
                     outerRadius={110}
                     dataKey="value"
                     paddingAngle={2}
-                    stroke="none"
-                  >
+                    stroke="none">
                     {expenseData.map((_: any, i: number) => (
                       <Cell key={i} fill={COLORS[i % COLORS.length]} />
                     ))}
@@ -230,8 +228,7 @@ export const FinanceReport = ({
                 {expenseData.map((cat: any, i: number) => (
                   <div
                     key={i}
-                    className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400"
-                  >
+                    className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400">
                     <span
                       className="w-2.5 h-2.5 rounded-full shrink-0"
                       style={{ background: COLORS[i % COLORS.length] }}
@@ -253,8 +250,7 @@ export const FinanceReport = ({
                 <button
                   onClick={() => setMonthIndex((p) => Math.max(p - 1, 0))}
                   disabled={monthIndex === 0}
-                  className="text-indigo-600 disabled:text-gray-300 font-bold text-lg"
-                >
+                  className="text-indigo-600 disabled:text-gray-300 font-bold text-lg">
                   ←
                 </button>
                 <span className="font-semibold text-sm min-w-35 text-center">
@@ -267,8 +263,7 @@ export const FinanceReport = ({
                     )
                   }
                   disabled={monthIndex === monthlyGroups.length - 1}
-                  className="text-indigo-600 disabled:text-gray-300 font-bold text-lg"
-                >
+                  className="text-indigo-600 disabled:text-gray-300 font-bold text-lg">
                   →
                 </button>
               </div>
@@ -318,8 +313,7 @@ export const FinanceReport = ({
                           tx.type === "income"
                             ? "bg-emerald-50/60 dark:bg-emerald-900/10 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
                             : "bg-red-50/40 dark:bg-red-900/10 hover:bg-red-50 dark:hover:bg-red-900/20"
-                        }`}
-                      >
+                        }`}>
                         <td className="py-2.5 px-3 text-slate-500 dark:text-slate-400 whitespace-nowrap">
                           {tx.date?.slice(0, 10)}
                         </td>
@@ -344,12 +338,10 @@ export const FinanceReport = ({
                       <tr>
                         <td
                           colSpan={4}
-                          className="text-center py-3 bg-white dark:bg-slate-800"
-                        >
+                          className="text-center py-3 bg-white dark:bg-slate-800">
                           <button
                             onClick={() => setShowAll(!showAll)}
-                            className="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 text-sm font-medium"
-                          >
+                            className="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 text-sm font-medium">
                             {showAll
                               ? "Хураах ▲"
                               : `Бүгдийг харах (${currentTransactions.length} гүйлгээ) ▼`}
@@ -362,8 +354,7 @@ export const FinanceReport = ({
                     <tr>
                       <td
                         className="py-3 px-3 text-slate-700 dark:text-slate-200"
-                        colSpan={2}
-                      >
+                        colSpan={2}>
                         Нийт ({currentTransactions.length} гүйлгээ)
                       </td>
                       <td className="text-emerald-600 dark:text-emerald-400 text-right px-3">
