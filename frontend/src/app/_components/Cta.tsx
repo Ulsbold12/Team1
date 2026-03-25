@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Cta() {
   return (
-    <section id="pricing" className="py-24 bg-white">
+    <section id="pricing" className="py-24 bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6">
         <div
           className="relative overflow-hidden rounded-3xl px-8 py-20 text-center"
@@ -29,7 +29,7 @@ export default function Cta() {
                 background: "rgba(26, 18, 149, 0.15)",
                 border: "1px solid rgba(13, 0, 250, 0.3)",
                 color: "#ffffff",
-                fontFamily: "Plus Jakarta Sans, sans-serif",
+                fontFamily: "Inter, sans-serif",
               }}
             >
               ✦ &nbsp;14 хоногийн үнэгүй туршилт — карт шаардлагагүй
@@ -37,10 +37,7 @@ export default function Cta() {
 
             <h2
               className="text-4xl md:text-6xl font-black leading-tight mb-6 text-white"
-              style={{
-                fontFamily: "Syne, sans-serif",
-                letterSpacing: "-0.03em",
-              }}
+              style={{ fontFamily: "Inter, sans-serif", letterSpacing: "-0.03em" }}
             >
               Өсөлтөө
               <br />
@@ -51,10 +48,7 @@ export default function Cta() {
 
             <p
               className="mx-auto max-w-xl mb-12 text-base leading-relaxed"
-              style={{
-                color: "rgba(255,255,255,0.7)",
-                fontFamily: "Plus Jakarta Sans, sans-serif",
-              }}
+              style={{ color: "rgba(255,255,255,0.7)", fontFamily: "Inter, sans-serif" }}
             >
               FlowAI ашиглан санхүүгийн тайлангаа цаг хэмнэн гаргадаг мянга
               мянган Монгол бизнес эрхлэгчтэй нэгдэж, татварын тооцоогоо
@@ -64,16 +58,19 @@ export default function Cta() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/sign-up">
                 <button
-                  className="flex items-center gap-2 px-10 py-4 rounded-xl text-base font-bold transition-all hover:opacity-90"
+                  className="group relative flex items-center gap-2.5 px-10 py-4 rounded-2xl text-base font-bold overflow-hidden transition-all duration-300 hover:scale-[1.03]"
                   style={{
-                    background: "#996afe00",
-                    color: "#ffffff",
-                    boxShadow: "0 4px 20px rgba(255, 255, 255, 0.4)",
-                    fontFamily: "Plus Jakarta Sans, sans-serif",
+                    background: "#ffffff",
+                    color: "#3c3fe8",
+                    boxShadow: "0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10)",
+                    fontFamily: "Inter, sans-serif",
                   }}
                 >
-                  Эхлэх
-                  <ArrowRight className="w-4 h-4" />
+                  <span className="relative z-10">Эхлэх</span>
+                  <ArrowRight className="relative z-10 w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-[0.06] transition-opacity duration-300 bg-indigo-600"
+                  />
                 </button>
               </Link>
             </div>
