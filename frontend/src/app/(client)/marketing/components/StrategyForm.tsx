@@ -6,8 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Lightbulb, ImagePlus, X } from "lucide-react";
+import { Lightbulb, ImagePlus, X, Zap } from "lucide-react";
 import { ImageItem } from "./constants";
+
+const DEMO_DATA = {
+  productName: "FlowAI",
+  description: "Жижиг бизнест зориулсан AI платформ. Маркетинг контент автоматаар үүсгэж, банкны хуулгыг шинжилж, татварын тайлан гаргадаг бүгд-нэгдсэн систем.",
+  targetAudience: "Монголын жижиг, дунд бизнес эрхлэгчид болон стартапууд",
+};
 
 interface StrategyFormProps {
   productName: string;
@@ -32,16 +38,32 @@ export function StrategyForm({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
 
+  function handleDemo() {
+    onChange("productName", DEMO_DATA.productName);
+    onChange("description", DEMO_DATA.description);
+    onChange("targetAudience", DEMO_DATA.targetAudience);
+  }
+
   return (
     <Card className="rounded-2xl shadow p-0">
       <CardHeader className="px-6 pt-6 pb-2">
         <div className="flex items-start justify-between gap-2">
           <CardTitle className="text-2xl font-bold text-slate-900 dark:text-white">Стратеги боловсруулах</CardTitle>
-          {lastSaved && (
-            <span className="text-xs text-slate-400 dark:text-gray-500 shrink-0 mt-1">
-              Хадгалсан: {lastSaved.toLocaleDateString("mn-MN", { month: "short", day: "numeric" })}
-            </span>
-          )}
+          <div className="flex items-center gap-2 shrink-0 mt-1">
+            {lastSaved && (
+              <span className="text-xs text-slate-400 dark:text-gray-500">
+                Хадгалсан: {lastSaved.toLocaleDateString("mn-MN", { month: "short", day: "numeric" })}
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={handleDemo}
+              disabled={loading}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-900/50 transition-colors disabled:opacity-50">
+              <Zap className="size-3" />
+              Demo
+            </button>
+          </div>
         </div>
         <p className="text-slate-500 dark:text-gray-400 text-sm mt-1">
           Маркетинг AI-тай ярьж тантай тохирсон 30 хоногийн контент төлөвлөгөө гаргаарай

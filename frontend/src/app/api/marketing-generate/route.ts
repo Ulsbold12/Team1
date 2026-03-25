@@ -25,8 +25,10 @@ async function translateToMongolian(text: string): Promise<string> {
   }
 }
 
-// kept for compatibility — now a no-op since translation handles grammar in one step
-async function fixMongolianGrammar(text: string, _client: OpenAI): Promise<string> {
+async function fixMongolianGrammar(
+  text: string,
+  _client: OpenAI,
+): Promise<string> {
   return text;
 }
 
@@ -195,7 +197,6 @@ Start date: ${todayISO}`,
       }),
     );
 
-    // Step 3: Fix grammar on all translated strings in parallel
     const [fixedAdvice, ...fixedContents] = await Promise.all([
       fixMongolianGrammar(translatedAdvice, openai),
       ...translatedPosts.map((post: { content: string }) =>
@@ -218,7 +219,6 @@ Start date: ${todayISO}`,
       }),
     );
 
-    // Step 4: Strip any exclamation marks — Mongolians don't use them in casual writing
     const cleanAdvice = fixedAdvice.replace(/!/g, ".");
     const cleanPosts = fixedPosts.map(
       (post: {
