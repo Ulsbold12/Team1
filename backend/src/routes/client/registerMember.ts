@@ -115,7 +115,7 @@ export const registerMember: RequestHandler = async (req, res) => {
           where: { code: optKey },
         });
         //recording activity
-        await prisma.auditLog.create({
+        await tx.auditLog.create({
           data: {
             clientId: clerkId as string,
             target: "INVITE_CODE",
