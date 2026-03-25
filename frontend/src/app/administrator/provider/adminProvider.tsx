@@ -51,7 +51,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const [lastAccessTime, setLastAccessTime] = useState("");
   const [auditLog, setAuditlog] = useState<AuditLogtype[]>([]);
   const [showSideBar, setShowSideBar] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [fetchError, setFetchError] = useState(false);
 
   useEffect(() => {
