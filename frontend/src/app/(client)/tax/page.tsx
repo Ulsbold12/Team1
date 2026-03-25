@@ -12,6 +12,7 @@ import {
   Loader2,
   Calendar,
   TrendingUp,
+  Zap,
 } from "lucide-react";
 import { apiFetch } from "@/lib/apiFetch";
 
@@ -125,6 +126,14 @@ export default function TaxPage() {
   const [manualNetProfit, setManualNetProfit] = useState<number | "">("");
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
+
+  function handleDemo() {
+    setManualRevenue(45_000_000);
+    setManualNetProfit(12_000_000);
+    setEmployeeCount(3);
+    setAvgSalary(1_500_000);
+    setSent(false);
+  }
 
   useEffect(() => {
     getToken().then((token) => {
@@ -263,9 +272,18 @@ export default function TaxPage() {
             НӨАТ · ААН · НД — санхүүгийн өгөгдлөөс автоматаар тооцоолно
           </p>
         </div>
-        <div className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border ${deadlineBadge}`}>
-          <Calendar className="w-3.5 h-3.5" />
-          {deadlineLabel}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleDemo}
+            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-900/50 transition-colors">
+            <Zap className="w-3 h-3" />
+            Demo
+          </button>
+          <div className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border ${deadlineBadge}`}>
+            <Calendar className="w-3.5 h-3.5" />
+            {deadlineLabel}
+          </div>
         </div>
       </div>
 
