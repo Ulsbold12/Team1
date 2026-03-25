@@ -37,14 +37,22 @@ const navItems = [
 export function AppSidebar() {
   const pathname = usePathname();
   const { user } = useUser();
-  const fullName = user ? `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() : "";
+  const fullName = user
+    ? `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim()
+    : "";
   const planName = (user?.publicMetadata?.plan as string) ?? "";
 
   return (
     <Sidebar>
       <SidebarHeader className="p-6">
         <div className="flex items-center gap-3">
-          <Image src="/flow.png" alt="FlowAI" width={56} height={56} className="rounded-lg shrink-0" />
+          <Image
+            src="/flow.png"
+            alt="FlowAI"
+            width={90}
+            height={90}
+            className="rounded-lg shrink-0"
+          />
           <div className="flex flex-col">
             <span className="text-sidebar-foreground text-base font-bold leading-none">
               Flow AI
@@ -70,8 +78,7 @@ export function AppSidebar() {
                         : pathname === item.href ||
                           pathname.startsWith(item.href + "/")
                     }
-                    className="data-[active=true]:bg-[#5048e5]/10 data-[active=true]:text-[#5048e5]"
-                  >
+                    className="data-[active=true]:bg-[#5048e5]/10 data-[active=true]:text-[#5048e5]">
                     <Link href={item.href}>
                       <item.icon />
                       <span>{item.label}</span>
@@ -94,11 +101,19 @@ export function AppSidebar() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span>{(user?.firstName?.[0] ?? user?.emailAddresses?.[0]?.emailAddress?.[0] ?? "?").toUpperCase()}</span>
+              <span>
+                {(
+                  user?.firstName?.[0] ??
+                  user?.emailAddresses?.[0]?.emailAddress?.[0] ??
+                  "?"
+                ).toUpperCase()}
+              </span>
             )}
           </div>
           <div className="flex flex-col overflow-hidden">
-            <p className="text-xs font-bold truncate">{fullName || user?.emailAddresses?.[0]?.emailAddress}</p>
+            <p className="text-xs font-bold truncate">
+              {fullName || user?.emailAddresses?.[0]?.emailAddress}
+            </p>
             <p className="text-[10px] text-sidebar-foreground/50 truncate">
               {planName || user?.emailAddresses?.[0]?.emailAddress}
             </p>
