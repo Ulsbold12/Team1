@@ -9,12 +9,20 @@ const openai = new OpenAI({
 async function translateToMongolian(text: string): Promise<string> {
   try {
     const res = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
       messages: [
         {
           role: "system",
-          content:
-            "Translate the following text to natural, grammatically correct Mongolian (Cyrillic script). Preserve all hashtags, emojis, line breaks, and formatting. Do NOT add exclamation marks. Return ONLY the translated text.",
+          content: `You are a professional Mongolian copywriter. Translate the following social media text into fluent, natural Mongolian (Cyrillic script) as if a native Mongolian speaker wrote it — not a direct translation.
+
+Rules:
+- Use natural Mongolian sentence structure (SOV word order)
+- Use correct Mongolian grammar: suffixes, cases, verb conjugations
+- Preserve all hashtags (do NOT translate hashtags), emojis, and line breaks
+- Do NOT add exclamation marks (Mongolians don't use "!" in casual writing)
+- Avoid loan words when a natural Mongolian equivalent exists
+- Keep the tone calm, direct, and conversational — not salesy
+- Return ONLY the translated text, nothing else`,
         },
         { role: "user", content: text },
       ],
@@ -59,7 +67,7 @@ export async function POST(request: NextRequest) {
           content: `You are a social media marketer creating posts for a Mongolian brand. Write all posts in natural, engaging English — they will be translated into Mongolian afterward, so write clearly and avoid idioms or slang that don't translate well.
 
 ## GOAL
-Generate 5 ready-to-publish social media posts for the given product. Posts must feel human, specific, and platform-native — not like ad copy or a brochure.
+Generate 15 ready-to-publish Facebook posts for the given product. Posts must feel human, specific, and platform-native — not like ad copy or a brochure.
 
 ---
 
@@ -77,35 +85,24 @@ Generate 5 ready-to-publish social media posts for the given product. Posts must
 
 ## PLATFORM RULES
 
-### LinkedIn (1 post) — 150–200 words
-- Open with a specific observation or relatable situation, not a question
-- Share a concrete insight, number, or before/after scenario
-- End with a genuine question that invites comments
-- Professional but human — like a founder talking to their network
-- 3–5 hashtags at the bottom
-
-### Facebook (2 posts) — 80–130 words
+### Facebook (15 posts) — 80–130 words each
 - First line must stop the scroll — bold statement or short relatable moment
 - Middle: one short story, tip, or real situation
 - End: a comment-bait question OR a simple link CTA
 - 1–2 emojis, placed naturally
 - 2–3 hashtags
 
-### Twitter/X (2 posts) — STRICT max 220 characters (leaving room for translation expansion)
-- One idea. One punch. Done.
-- No feature lists
-- First line must stand alone
-- 1 hashtag max
-
 ---
 
-## CONTENT TYPES — use each exactly once
+## CONTENT TYPES — cycle through all 5 types, 3 times each (15 posts total)
 
 1. **Problem/Solution** — name a specific pain point, show how the product fixes it
 2. **Before/After** — describe what life looks like before vs after using the product, from the brand's perspective. No fake customer voice.
 3. **Educational tip** — one genuinely useful tip related to the product's domain
 4. **Feature spotlight** — ONE specific feature + ONE concrete real-world benefit
 5. **Call-to-action** — drive a specific next step: sign up, DM, try free, visit site
+
+Each repetition of the same content type must use a different angle, story, or product aspect — no two posts should feel alike.
 
 ---
 
@@ -142,7 +139,7 @@ What's the longest you've kept a pair of earphones alive? 👇 #EarphoneTips
 Return ONLY valid JSON. No markdown, no extra text.
 
 {
-  "advice": "3–5 sentences of strategic advice in English, specific to this product and audience. Name which platform to prioritize, what content angle works best, and one concrete first-week action.",
+  "advice": "Write 6–8 sentences of practical Facebook marketing advice tailored to this product and audience. Cover: (1) what content angle works best for this specific product on Facebook, (2) best posting times for a Mongolian audience, (3) how to use Facebook comments and replies to boost organic reach (the algorithm rewards engagement), (4) one specific first-week action — e.g. which post type to boost first and why, (5) a tip on using Facebook Page insights to see which posts perform best and adjust, (6) whether Facebook Groups, Stories, or Reels would help this brand and how. Be specific and actionable — no generic advice.",
   "posts": [
     {
       "platform": "LinkedIn" | "Facebook" | "Twitter",
@@ -153,8 +150,8 @@ Return ONLY valid JSON. No markdown, no extra text.
   ]
 }
 
-Generate exactly 5 posts. Spread scheduledDate evenly across 30 days starting from the user's start date.
-Distribution: 1 LinkedIn, 2 Facebook, 2 Twitter.`,
+Generate exactly 15 Facebook posts. Spread scheduledDate evenly across 30 days starting from the user's start date (roughly every 2 days).
+All posts must have "platform": "Facebook".`,
         },
         {
           role: "user",
