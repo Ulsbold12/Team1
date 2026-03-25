@@ -33,7 +33,7 @@ export const Header = () => {
     >
       <div className="container mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
-          <Image src="/flow.png" alt="FlowAI" width={32} height={32} className="rounded-lg" />
+          <Image src="/flow.png" alt="FlowAI" width={48} height={48} className="rounded-lg" />
           <span
             className="font-bold text-lg"
             style={{

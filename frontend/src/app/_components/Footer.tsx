@@ -9,7 +9,7 @@ const Footer = () => {
     >
       <div className="container mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-2.5">
-          <Image src="/flow.png" alt="FlowAI" width={32} height={32} className="rounded-lg" />
+          <Image src="/flow.png" alt="FlowAI" width={48} height={48} className="rounded-lg" />
           <span
             className="font-bold text-lg"
             style={{

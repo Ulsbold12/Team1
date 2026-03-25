@@ -44,7 +44,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader className="p-6">
         <div className="flex items-center gap-3">
-          <Image src="/flow.png" alt="FlowAI" width={40} height={40} className="rounded-lg shrink-0" />
+          <Image src="/flow.png" alt="FlowAI" width={56} height={56} className="rounded-lg shrink-0" />
           <div className="flex flex-col">
             <span className="text-sidebar-foreground text-base font-bold leading-none">
               Flow AI
