@@ -49,8 +49,8 @@ export function AppSidebar() {
           <Image
             src="/flow-removebg-preview.png"
             alt="FlowAI"
-            width={140}
-            height={140}
+            width={90}
+            height={90}
             className="rounded-lg shrink-0"
           />
           <div className="flex flex-col">
