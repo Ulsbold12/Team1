@@ -9,7 +9,7 @@ const Footer = () => {
       <div className="container mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-2.5">
           <Image
-            src="/flow.png"
+            src="/flow-removebg-preview.png"
             alt="FlowAI"
             width={140}
             height={140}

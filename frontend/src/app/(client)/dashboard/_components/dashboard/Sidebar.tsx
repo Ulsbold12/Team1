@@ -47,7 +47,7 @@ export function AppSidebar() {
       <SidebarHeader className="p-6">
         <div className="flex items-center gap-3">
           <Image
-            src="/flow.png"
+            src="/flow-removebg-preview.png"
             alt="FlowAI"
             width={140}
             height={140}
