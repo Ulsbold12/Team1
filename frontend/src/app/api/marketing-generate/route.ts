@@ -6,8 +6,29 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-//read the user data and find org patronage.
-//if patronge=basic,
+async function translateToMongolian(text: string): Promise<string> {
+  try {
+    const res = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content:
+            "Translate the following text to natural, grammatically correct Mongolian (Cyrillic script). Preserve all hashtags, emojis, line breaks, and formatting. Do NOT add exclamation marks. Return ONLY the translated text.",
+        },
+        { role: "user", content: text },
+      ],
+    });
+    return res.choices[0].message.content || text;
+  } catch {
+    return text;
+  }
+}
+
+// kept for compatibility — now a no-op since translation handles grammar in one step
+async function fixMongolianGrammar(text: string, _client: OpenAI): Promise<string> {
+  return text;
+}
 
 export async function POST(request: NextRequest) {
   try {

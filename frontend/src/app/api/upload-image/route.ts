@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { put } from "@vercel/blob";
 
 export const runtime = "nodejs";
 
@@ -12,8 +11,28 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const blob = await put(file.name, file, { access: "public" });
-    return NextResponse.json({ url: blob.url });
+    const apiKey = process.env.IMGBB_API_KEY;
+    if (!apiKey) throw new Error("IMGBB_API_KEY not set");
+
+    const arrayBuffer = await file.arrayBuffer();
+    const base64 = Buffer.from(arrayBuffer).toString("base64");
+
+    const body = new FormData();
+    body.append("key", apiKey);
+    body.append("image", base64);
+    body.append("name", file.name);
+
+    const res = await fetch("https://api.imgbb.com/1/upload", {
+      method: "POST",
+      body,
+    });
+
+    const data = await res.json();
+    if (!res.ok || !data.data?.url) {
+      throw new Error(data.error?.message || "ImgBB upload failed");
+    }
+
+    return NextResponse.json({ url: data.data.url });
   } catch (e) {
     console.error("Upload error:", e);
     return NextResponse.json({ error: String(e) }, { status: 500 });

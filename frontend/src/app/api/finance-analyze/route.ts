@@ -1,11 +1,8 @@
-// import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
-import { useUser } from "@clerk/nextjs";
 
 export async function POST(request: NextRequest) {
   try {
-    const { user } = useUser();
     if (!process.env.OPENAI_API_KEY) {
       return NextResponse.json(
         { error: "OPENAI_API_KEY тохируулагдаагүй байна." },
@@ -17,7 +14,7 @@ export async function POST(request: NextRequest) {
       apiKey: process.env.OPENAI_API_KEY,
     });
     const body = await request.json();
-    const { transactions, clientId } = body;
+    const { transactions } = body;
 
     if (!transactions || transactions.length === 0) {
       return NextResponse.json(
@@ -105,33 +102,10 @@ export async function POST(request: NextRequest) {
 
     const aiResult = JSON.parse(responseText);
 
-    const usageRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/limiting`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          clientId: clientId as string,
-        }),
-      },
-    );
-
-    const usageData = await usageRes.json();
-    console.log(usageData);
-
-    // if limit reached, stop here
-    if (usageRes.status === 429) {
-      return NextResponse.json({ error: usageData.message }, { status: 429 });
-    }
-
     return NextResponse.json(aiResult, { status: 200 });
   } catch (error) {
-    console.error("Алдаа:", error);
-    return NextResponse.json(
-      { error: "Сервер дээр алдаа гарлаа." },
-      { status: 500 },
-    );
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error("finance-analyze алдаа:", msg);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

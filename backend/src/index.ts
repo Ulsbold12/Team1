@@ -29,6 +29,7 @@ import {
   createPost,
   updatePost,
   deletePost,
+  deleteAllPosts,
   getPendingPosts,
   markPublished,
   requireApiKey,
@@ -49,7 +50,6 @@ import {
   stripeWebhook,
   createPortal,
 } from "./routes/billing";
-import { aiLimiting } from "./routes/client/aiLimiting";
 import { ActivityStatus } from "./middleware/activitystatus";
 const app = express();
 app.use(
@@ -84,23 +84,18 @@ app.post("/api/company/members", requireAuth, UpdateMember);
 //finance routes
 
 app.get("/api/finance", requireAuth, getFinance);
-app.post("/api/finance", requireAuth, aiLimiting, createFinance);
+app.post("/api/finance", requireAuth, createFinance);
 app.get("/api/finance/analysis", requireAuth, getAnalyses);
-app.post("/api/finance/analysis", requireAuth, aiLimiting, saveAnalysis);
+app.post("/api/finance/analysis", requireAuth, saveAnalysis);
 //automation marketin routes?
 app.get("/api/posts", requireAuth, getPosts);
-app.post("/api/posts", requireAuth, aiLimiting, createPost);
+app.post("/api/posts", requireAuth, createPost);
 app.put("/api/posts/:id", requireAuth, updatePost);
-// app.delete("/api/posts", requireAuth, deleteAllPosts);
+app.delete("/api/posts", requireAuth, deleteAllPosts);
 app.delete("/api/posts/:id", requireAuth, deletePost);
 app.post("/api/posts/:id/publish-now", requireAuth, publishNow);
 app.get("/api/marketing/strategy", requireAuth, getMarketingStrategy);
-app.post(
-  "/api/marketing/strategy",
-  requireAuth,
-  aiLimiting,
-  saveMarketingStrategy,
-);
+app.post("/api/marketing/strategy", requireAuth, saveMarketingStrategy);
 app.get("/api/facebook/pending-posts", requireApiKey, getPendingPosts);
 app.post("/api/facebook/posts/:id/publish", requireApiKey, markPublished);
 
