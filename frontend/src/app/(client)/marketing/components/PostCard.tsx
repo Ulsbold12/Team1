@@ -24,6 +24,7 @@ export function PostCard({ post, images = [], onSaved }: PostCardProps) {
   const [editingImage, setEditingImage] = useState<ImageItem | null>(null);
   const { getToken } = useAuth();
 
+  
   const allImages = [...images, ...editedImages];
 
   useEffect(() => {
@@ -58,10 +59,29 @@ export function PostCard({ post, images = [], onSaved }: PostCardProps) {
     setSaving(true);
     try {
       const token = await getToken();
-      const selectedBlobUrls = allImages
+
+      // Upload any selected edited images that only have a data URL (no blob URL yet)
+      const resolvedImages = await Promise.all(
+        allImages.map(async (img, i) => {
+          if (selectedIndexes.has(i) && !img.blobUrl && img.preview.startsWith("data:")) {
+            try {
+              const fetchRes = await fetch(img.preview);
+              const blob = await fetchRes.blob();
+              const file = new File([blob], img.name, { type: blob.type || "image/png" });
+              const formData = new FormData();
+              formData.append("file", file);
+              const uploadRes = await fetch("/api/upload-image", { method: "POST", body: formData });
+              const uploadData = await uploadRes.json();
+              if (uploadData.url) return { ...img, blobUrl: uploadData.url as string };
+            } catch {}
+          }
+          return img;
+        }),
+      );
+
+      const selectedBlobUrls = resolvedImages
         .filter((img, i) => selectedIndexes.has(i) && img.blobUrl && img.blobUrl.startsWith("http"))
         .map((img) => img.blobUrl as string);
-      console.log("[PostCard save] images:", images.map(img => ({ blobUrl: img.blobUrl, uploading: img.uploading })), "selected:", selectedBlobUrls);
       const platformMap: Record<string, string> = {
         Facebook: "FACEBOOK",
         LinkedIn: "LINKEDIN",
