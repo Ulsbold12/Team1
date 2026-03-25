@@ -2,11 +2,11 @@ const banks = ["Хаан банк", "Голомт банк", "Хас банк", 
 
 export default function TrustedBy() {
   return (
-    <section className="bg-white" style={{ borderTop: "1px solid #E2E8F0", borderBottom: "1px solid #E2E8F0" }}>
+    <section className="bg-white dark:bg-gray-900 border-t border-b border-slate-200 dark:border-gray-700">
       <div className="container mx-auto px-6 py-14">
         <p
-          className="text-center text-xs font-semibold tracking-[0.15em] uppercase mb-8"
-          style={{ color: "#94A3B8", fontFamily: "Plus Jakarta Sans, sans-serif" }}
+          className="text-center text-xs font-semibold tracking-[0.15em] uppercase mb-8 text-slate-400 dark:text-slate-500"
+          style={{ fontFamily: "Inter, sans-serif" }}
         >
           Монголын тэргүүлэх банкуудтай холбогддог
         </p>
@@ -15,24 +15,15 @@ export default function TrustedBy() {
           {banks.map((bank) => (
             <div
               key={bank}
-              className="px-5 py-2.5 rounded-full text-sm font-medium"
-              style={{
-                background: "#F8FAFC",
-                border: "1px solid #E2E8F0",
-                color: "#475569",
-                fontFamily: "Plus Jakarta Sans, sans-serif",
-              }}
+              className="px-5 py-2.5 rounded-full text-sm font-medium bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 text-slate-600 dark:text-slate-300"
+              style={{ fontFamily: "Inter, sans-serif" }}
             >
               {bank}
             </div>
           ))}
         </div>
 
-        {/* Stats */}
-        <div
-          className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-12"
-          style={{ borderTop: "1px solid #E2E8F0" }}
-        >
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-12 border-t border-slate-200 dark:border-gray-700">
           {[
             { n: "500+", l: "Идэвхтэй бизнес" },
             { n: "10,000+", l: "Тайлан үүсгэгдсэн" },
@@ -42,13 +33,13 @@ export default function TrustedBy() {
             <div key={l} className="text-center">
               <div
                 className="text-3xl font-black mb-1"
-                style={{ color: "#F59E0B", fontFamily: "Syne, sans-serif" }}
+                style={{ color: "#F59E0B", fontFamily: "Inter, sans-serif" }}
               >
                 {n}
               </div>
               <div
-                className="text-sm"
-                style={{ color: "#64748B", fontFamily: "Plus Jakarta Sans, sans-serif" }}
+                className="text-sm text-slate-500 dark:text-slate-400"
+                style={{ fontFamily: "Inter, sans-serif" }}
               >
                 {l}
               </div>

@@ -1,6 +1,7 @@
 "use client";
-import { ArrowUp, Bot, Sparkles, X } from "lucide-react";
+import { ArrowUp, X } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { apiFetch } from "@/lib/apiFetch";
 
 type Message = {
@@ -59,7 +60,7 @@ export default function ChatBubble() {
           <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-violet-600 to-indigo-600 shrink-0">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-2xl bg-white/20 flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-white" />
+                <Image src="/logoblack.svg" alt="FlowAI" width={20} height={20} className="invert" />
               </div>
               <div>
                 <p className="text-white font-bold text-sm leading-none">FlowAI Assistant</p>
@@ -79,7 +80,7 @@ export default function ChatBubble() {
             {chat.length === 0 && !loading && (
               <div className="flex-1 flex flex-col items-center justify-center gap-4 py-8">
                 <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-violet-500/20 to-indigo-500/20 border border-violet-500/20 flex items-center justify-center">
-                  <Bot className="w-7 h-7 text-violet-400" />
+                  <Image src="/logoblack.svg" alt="FlowAI" width={36} height={36} className="invert opacity-80" />
                 </div>
                 <div className="text-center">
                   <p className="text-white/80 font-semibold text-sm">Сайн байна уу!</p>
@@ -103,7 +104,7 @@ export default function ChatBubble() {
               <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                 {msg.role === "assistant" && (
                   <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center mr-2 mt-0.5 shrink-0">
-                    <Sparkles className="w-3 h-3 text-white" />
+                    <Image src="/logoblack.svg" alt="FlowAI" width={14} height={14} className="invert" />
                   </div>
                 )}
                 <div
@@ -121,7 +122,7 @@ export default function ChatBubble() {
             {loading && (
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shrink-0">
-                  <Sparkles className="w-3 h-3 text-white" />
+                  <Image src="/logoblack.svg" alt="FlowAI" width={14} height={14} className="invert" />
                 </div>
                 <div className="px-4 py-3 rounded-2xl rounded-tl-sm bg-white/[0.06] border border-white/[0.06] flex gap-1.5 items-center">
                   <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce" style={{ animationDelay: "0ms" }} />
@@ -168,7 +169,7 @@ export default function ChatBubble() {
         {open ? (
           <X className="w-5 h-5 text-white/70" />
         ) : (
-          <Sparkles className="w-6 h-6 text-white" />
+          <Image src="/logoblack.svg" alt="FlowAI" width={28} height={28} className="invert" />
         )}
       </button>
     </div>

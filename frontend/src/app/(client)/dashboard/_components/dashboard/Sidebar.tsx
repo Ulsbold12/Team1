@@ -45,22 +45,20 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="p-6">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-0.5">
           <Image
-            src="/flow-removebg-preview.png"
+            src="/logoblack.svg"
             alt="FlowAI"
-            width={90}
-            height={90}
-            className="rounded-lg shrink-0"
+            width={40}
+            height={40}
+            className="rounded-lg shrink-0 dark:invert"
           />
-          <div className="flex flex-col">
-            <span className="text-sidebar-foreground text-base font-bold leading-none">
-              Flow AI
-            </span>
-            <span className="text-sidebar-foreground/50 text-xs font-medium">
-              SaaS Insights
-            </span>
-          </div>
+          <span
+            className="text-sidebar-foreground text-lg font-bold"
+            style={{ fontFamily: "Inter, sans-serif", letterSpacing: "-0.02em" }}
+          >
+            FlowAI
+          </span>
         </div>
       </SidebarHeader>
 

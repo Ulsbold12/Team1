@@ -1,57 +1,55 @@
 import Link from "next/link";
 import Image from "next/image";
 
+const footerLinks = [
+  { label: "Нууцлалын бодлого", href: "#" },
+  { label: "Үйлчилгээний нөхцөл", href: "#" },
+  { label: "Күүки бодлого", href: "#" },
+  { label: "+976 88888888", href: "#" },
+];
+
 const Footer = () => {
   return (
     <footer
       id="contact"
-      style={{ background: "#F8FAFC", borderTop: "1px solid #E2E8F0" }}>
-      <div className="container mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="flex items-center gap-2.5">
+      className="w-full bg-white dark:bg-gray-900 border-t border-slate-200 dark:border-gray-700"
+      style={{ boxShadow: "0 -1px 3px rgba(0,0,0,0.06)" }}
+    >
+      <div className="container mx-auto px-6 h-16 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-0.5">
           <Image
-            src="/flow-removebg-preview.png"
+            src="/logoblack.svg"
             alt="FlowAI"
-            width={140}
-            height={140}
-            className="rounded-lg"
+            width={40}
+            height={40}
+            className="rounded-lg dark:invert"
           />
           <span
-            className="font-bold text-lg"
-            style={{
-              color: "#1A3560",
-              fontFamily: "Syne, sans-serif",
-              letterSpacing: "-0.02em",
-            }}>
+            className="font-bold text-lg text-black dark:text-white"
+            style={{ fontFamily: "Inter, sans-serif", letterSpacing: "-0.02em" }}
+          >
             FlowAI
           </span>
-        </div>
+        </Link>
 
-        <div
-          className="flex flex-wrap items-center gap-6 text-sm"
-          style={{ fontFamily: "Plus Jakarta Sans, sans-serif" }}>
-          {[
-            { label: "Нууцлалын бодлого", href: "#" },
-            { label: "Үйлчилгээний нөхцөл", href: "#" },
-            { label: "Күүки бодлого", href: "#" },
-            { label: "+976 88888888", href: "#" },
-          ].map(({ label, href }) => (
+        <nav className="hidden md:flex items-center gap-8">
+          {footerLinks.map(({ label, href }) => (
             <Link
               key={label}
               href={href}
-              className="transition-colors hover:text-slate-900"
-              style={{ color: "#64748B" }}>
+              className="text-sm font-medium transition-colors text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400"
+              style={{ fontFamily: "Inter, sans-serif" }}
+            >
               {label}
             </Link>
           ))}
-        </div>
+        </nav>
 
         <p
-          className="text-sm text-center"
-          style={{
-            color: "#94A3B8",
-            fontFamily: "Plus Jakarta Sans, sans-serif",
-          }}>
-          © {new Date().getFullYear()} FlowAI. Бүх эрх хамгаалагдсан.
+          className="text-sm text-slate-400 dark:text-slate-500"
+          style={{ fontFamily: "Inter, sans-serif" }}
+        >
+          © {new Date().getFullYear()} FlowAI
         </p>
       </div>
     </footer>

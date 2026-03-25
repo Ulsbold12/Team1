@@ -20,7 +20,7 @@ export default function DashboardPage() {
     <div className="flex-1 overflow-y-auto bg-muted/30 text-foreground no-scrollbar">
       {/* Hero banner */}
       <div
-        className="relative overflow-hidden px-8 pt-8 pb-10"
+        className="relative overflow-hidden px-8 pt-8 pb-10 dark:brightness-75"
         style={{ background: "linear-gradient(135deg, #5048e5 0%, #7c3aed 50%, #4f46e5 100%)" }}
       >
         <div className="absolute -top-10 -right-10 w-64 h-64 rounded-full opacity-10"
