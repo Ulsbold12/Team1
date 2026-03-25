@@ -41,13 +41,13 @@ type AuditLogtype = {
 };
 export const AdminContext = createContext({} as AdminContextType);
 export const AdminProvider = ({ children }: { children: ReactNode }) => {
-  const [companies, setCompanies] = useState<OrganizationInterface[]>([]);
+  const [companies, setCompanies] = useState<OrganizationInterface[]>(mockOrganizations);
   const [owners, setOwners] = useState<ClientType[]>([]);
   const [singleorg, setSingleorg] = useState<OrganizationInterface | null>(
     null,
   );
   const [users, setUsers] = useState<ClientType[]>([]);
-  const [allusers, setAllUsers] = useState<ClientType[]>([]);
+  const [allusers, setAllUsers] = useState<ClientType[]>(mockClients);
   const [lastAccessTime, setLastAccessTime] = useState("");
   const [auditLog, setAuditlog] = useState<AuditLogtype[]>([]);
   const [showSideBar, setShowSideBar] = useState(false);
@@ -61,18 +61,22 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   async function fetchCompaniesData() {
-    const res = await adminApi.get("/api/admin/companies");
-    const data = res.data.companyData;
-    setCompanies(Array.isArray(data) ? data : []);
+    try {
+      const res = await adminApi.get("/api/admin/companies");
+      const data = res.data.companyData;
+      if (Array.isArray(data) && data.length > 0) setCompanies(data);
+    } catch {
+      // keep mock data
+    }
   }
   async function fetchAllOwners() {
-    const res = await adminApi.get("/api/admin/clients");
-    const data = res.data.usersData;
-    setAllUsers(Array.isArray(data) ? data : []);
-  }
-  function loadMockData() {
-    setCompanies(mockOrganizations);
-    setAllUsers(mockClients);
+    try {
+      const res = await adminApi.get("/api/admin/clients");
+      const data = res.data.usersData;
+      if (Array.isArray(data) && data.length > 0) setAllUsers(data);
+    } catch {
+      // keep mock data
+    }
   }
   async function fetchCompanyById(orgId: string) {
     try {
@@ -142,16 +146,10 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     setLoading(true);
-    setFetchError(false);
     Promise.all([fetchCompaniesData(), fetchAllOwners(), fetchAuditLog()])
-      .catch(() => {
-        setFetchError(true);
-        loadMockData();
-      })
       .finally(() => setLoading(false));
   }, [lastAccessTime]);
 
-  console.log("adminprivoder", companies);
   return (
     <AdminContext.Provider
       value={{
