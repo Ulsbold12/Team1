@@ -17,14 +17,14 @@ export function TopBar() {
       </div>
 
       <div className="flex items-center gap-2">
-        <Button
+        {/* <Button
           variant="ghost"
           size="icon"
           className="relative text-muted-foreground"
           aria-label="Мэдэгдэлүүд">
           <Bell className="w-5 h-5" />
           <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-background" />
-        </Button>
+        </Button> */}
         <Button
           variant="ghost"
           size="icon"
