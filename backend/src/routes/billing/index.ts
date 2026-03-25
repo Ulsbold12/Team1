@@ -67,7 +67,7 @@ export async function createCheckout(req: Request, res: Response) {
             clientId: userId as string, // real user triggered this
             action: "CREATE",
             target: "PATRONAGE",
-            details: { orgId: org.id, customerId },
+            details: JSON.stringify({ orgId: org.id, customerId }),
           },
         });
       });
@@ -127,10 +127,7 @@ export async function stripeWebhook(req: Request, res: Response) {
             clientId: "SYSTEM",
             action: "UPDATE",
             target: "PATRONAGE",
-            details: {
-              orgId,
-              patronage: "PRO",
-            },
+            details: JSON.stringify({ orgId, patronage: "PRO" }),
           },
         });
       });
@@ -150,7 +147,7 @@ export async function stripeWebhook(req: Request, res: Response) {
           clientId: "SYSTEM",
           action: "UPDATE",
           target: "PATRONAGE",
-          details: { subscriptionId: sub.id, patronage: "BASIC" },
+          details: JSON.stringify({ subscriptionId: sub.id, patronage: "BASIC" }),
         },
       });
     });

@@ -112,7 +112,7 @@ app.post("/api/admin/companies", AdminAuth, createCompany);
 app.delete("/api/admin/companies/:orgId", AdminAuth, deleteCompany);
 app.put("/api/admin/companies/:orgId/plan", AdminAuth, async (req, res) => {
   try {
-    const { orgId } = req.params;
+    const orgId = req.params.orgId as string;
     const { patronage } = req.body as { patronage: string };
     if (!["BASIC", "PRO"].includes(patronage)) {
       return res.status(400).json({ success: false, message: "Invalid plan" });
