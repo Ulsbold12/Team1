@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const Footer = () => {
   return (
@@ -8,12 +9,7 @@ const Footer = () => {
     >
       <div className="container mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-2.5">
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black text-white"
-            style={{ background: "#6366f1", fontFamily: "Syne, sans-serif" }}
-          >
-            ✦
-          </div>
+          <Image src="/flow.png" alt="FlowAI" width={32} height={32} className="rounded-lg" />
           <span
             className="font-bold text-lg"
             style={{

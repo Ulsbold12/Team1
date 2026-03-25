@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
-  Sparkles,
   Home,
   Landmark,
   Megaphone,
@@ -44,9 +44,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader className="p-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-[#5048e5] flex items-center justify-center text-white shrink-0">
-            <Sparkles className="w-5 h-5" />
-          </div>
+          <Image src="/flow.png" alt="FlowAI" width={40} height={40} className="rounded-lg shrink-0" />
           <div className="flex flex-col">
             <span className="text-sidebar-foreground text-base font-bold leading-none">
               Flow AI

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
@@ -32,12 +33,7 @@ export const Header = () => {
     >
       <div className="container mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-black text-white"
-            style={{ background: "#6366f1", fontFamily: "Syne, sans-serif" }}
-          >
-            ✦
-          </div>
+          <Image src="/flow.png" alt="FlowAI" width={32} height={32} className="rounded-lg" />
           <span
             className="font-bold text-lg"
             style={{
