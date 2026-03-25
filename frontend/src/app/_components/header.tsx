@@ -162,7 +162,7 @@ export const Header = () => {
             <SignedIn>
               <Link href="/dashboard" onClick={() => setMobileOpen(false)}>
                 <Button
-                  className="w-full rounded-xl text-sm font-semibold text-white"
+                  className="w-full rounded-xl text-sm font-semibold text-black"
                   style={{
                     background: "#1A3560",
                     fontFamily: "Plus Jakarta Sans, sans-serif",
