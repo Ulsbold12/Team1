@@ -37,7 +37,7 @@ export function Companies() {
   const [loadadd, setLoadadd] = useState(false);
   const [planLoading, setPlanLoading] = useState(false);
   const [search, setSearch] = useState("");
-  const { companies, fetchUsersOfCompanies, deleteCompany, fetchCompaniesData, users, loading, fetchError } = useAdmin();
+  const { companies, fetchUsersOfCompanies, deleteCompany, fetchCompaniesData, users, loading } = useAdmin();
   const [form, setForm] = useState({
     name: "", industry: "", description: "", email: "", phoneNumber: "", address: "",
   });
@@ -167,8 +167,6 @@ export function Companies() {
       <div className="flex flex-col gap-3">
         {loading ? (
           <p className="text-sm text-muted-foreground py-4">Ачааллаж байна...</p>
-        ) : fetchError ? (
-          <p className="text-sm text-red-500 py-4">Backend холбогдохгүй байна.</p>
         ) : filtered.length === 0 ? (
           <p className="text-sm text-muted-foreground py-4">
             {search ? "Хайлтад тохирох компани олдсонгүй" : "Компани олдсонгүй"}

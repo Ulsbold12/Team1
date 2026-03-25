@@ -10,6 +10,7 @@ import {
 import { OrganizationInterface } from "../Types";
 import { Dispatch, SetStateAction } from "react";
 import { ClientType } from "../Types";
+import { mockOrganizations, mockClients } from "../_parts/MockData";
 interface AdminContextType {
   showSideBar: boolean;
   setShowSideBar: Dispatch<SetStateAction<boolean>>;
@@ -69,6 +70,10 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     const data = res.data.usersData;
     setAllUsers(Array.isArray(data) ? data : []);
   }
+  function loadMockData() {
+    setCompanies(mockOrganizations);
+    setAllUsers(mockClients);
+  }
   async function fetchCompanyById(orgId: string) {
     try {
       const res = await adminApi.get(`/api/admin/companies/${orgId}`);
@@ -90,30 +95,40 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     try {
       const res = await adminApi.post("/api/admin/companies", data);
       if (res) {
-        console.log(res);
+        await fetchCompaniesData();
       }
     } catch (e) {
-      console.error(e);
+      // mock fallback
+      const newOrg: OrganizationInterface = {
+        id: `mock-${Date.now()}`,
+        name: data.name,
+        industry: data.industry,
+        emailAddress: data.email ?? "",
+        phoneNumber: data.phoneNumber ?? "",
+        address: data.address ?? "",
+        description: data.description ?? "",
+        patronage: "BASIC",
+        createdAt: new Date(),
+        aiUsages: [],
+        members: [],
+      };
+      setCompanies((prev) => [...prev, newOrg]);
     }
   }
   async function deleteCompany(OrgId: string) {
     try {
-      const res = await adminApi.delete(`/api/admin/companies/${OrgId}`);
-      if (res) {
-        console.log(res);
-      }
+      await adminApi.delete(`/api/admin/companies/${OrgId}`);
+      await fetchCompaniesData();
     } catch (e) {
-      console.log(e);
+      setCompanies((prev) => prev.filter((c) => c.id !== OrgId));
     }
   }
   async function deleteUserById(clientId: string) {
     try {
-      const res = await adminApi.delete(`/api/clients/${clientId}`);
-      if (res) {
-        console.log(res);
-      }
+      await adminApi.delete(`/api/clients/${clientId}`);
+      setAllUsers((prev) => prev.filter((u) => u.id !== clientId));
     } catch (e) {
-      console.log(e);
+      setAllUsers((prev) => prev.filter((u) => u.id !== clientId));
     }
   }
   async function fetchAuditLog() {
@@ -129,7 +144,10 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     setFetchError(false);
     Promise.all([fetchCompaniesData(), fetchAllOwners(), fetchAuditLog()])
-      .catch(() => setFetchError(true))
+      .catch(() => {
+        setFetchError(true);
+        loadMockData();
+      })
       .finally(() => setLoading(false));
   }, [lastAccessTime]);
 

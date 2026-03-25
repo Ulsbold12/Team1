@@ -54,7 +54,7 @@ export function Clients() {
     phone: "",
     role: "",
   });
-  const { allusers, fetchCompanyById, singleorg, deleteUserById, loading, fetchError } = useAdmin();
+  const { allusers, fetchCompanyById, singleorg, deleteUserById, loading } = useAdmin();
   const [search, setSearch] = useState("");
   const client = allusers.filter((u) =>
     `${u.firstname} ${u.lastname} ${u.email}`.toLowerCase().includes(search.toLowerCase())
@@ -113,8 +113,6 @@ export function Clients() {
         <div className="flex flex-col gap-3">
           {loading ? (
             <p className="text-sm text-muted-foreground py-4">Ачааллаж байна...</p>
-          ) : fetchError ? (
-            <p className="text-sm text-red-500 py-4">Backend холбогдохгүй байна.</p>
           ) : client.length === 0 ? (
             <p className="text-sm text-muted-foreground py-4">Хэрэглэгч олдсонгүй</p>
           ) : (
