@@ -46,7 +46,7 @@ const Footer = () => {
         </nav>
 
         <p
-          className="text-sm text-slate-400 dark:text-slate-500"
+          className="text-sm text-slate-400 dark:text-slate-300"
           style={{ fontFamily: "Inter, sans-serif" }}
         >
           © {new Date().getFullYear()} FlowAI

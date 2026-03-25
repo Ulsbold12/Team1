@@ -56,30 +56,28 @@ const Intro = () => {
           </p>
 
           <div className="flex gap-4 mb-10">
-            <Link href="/sign-up">
-              <button
-                className="group relative flex items-center gap-2.5 px-7 py-3.5 rounded-2xl text-sm font-bold text-white overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl"
-                style={{
-                  background: "linear-gradient(135deg, #6366f1, #8b5cf6, #3c3fe8)",
-                  boxShadow: "0 4px 24px rgba(99,102,241,0.45)",
-                  fontFamily: "Inter, sans-serif",
-                }}
-              >
-                <span className="relative z-10">Үнэгүй эхлэх</span>
-                <ArrowRight className="relative z-10 w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" />
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ background: "linear-gradient(135deg, #4f46e5, #7c3aed, #2563eb)" }}
-                />
-              </button>
+            <Link
+              href="/sign-up"
+              className="group relative flex items-center gap-2.5 px-7 py-3.5 rounded-2xl text-sm font-bold text-white overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl"
+              style={{
+                background: "linear-gradient(135deg, #6366f1, #8b5cf6, #3c3fe8)",
+                boxShadow: "0 4px 24px rgba(99,102,241,0.45)",
+                fontFamily: "Inter, sans-serif",
+              }}
+            >
+              <span className="relative z-10">Үнэгүй эхлэх</span>
+              <ArrowRight className="relative z-10 w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{ background: "linear-gradient(135deg, #4f46e5, #7c3aed, #2563eb)" }}
+              />
             </Link>
-            <Link href="#features">
-              <button
-                className="flex items-center gap-2 px-7 py-3.5 rounded-2xl text-sm font-semibold transition-all duration-200 border border-slate-200 dark:border-gray-700 text-slate-600 dark:text-slate-300 hover:border-indigo-300 dark:hover:border-indigo-600 hover:text-indigo-600 dark:hover:text-indigo-400 bg-white dark:bg-gray-800"
-                style={{ fontFamily: "Inter, sans-serif" }}
-              >
-                Дэлгэрэнгүй
-              </button>
+            <Link
+              href="#features"
+              className="flex items-center gap-2 px-7 py-3.5 rounded-2xl text-sm font-semibold transition-all duration-200 border border-slate-200 dark:border-gray-700 text-slate-600 dark:text-slate-300 hover:border-indigo-300 dark:hover:border-indigo-600 hover:text-indigo-600 dark:hover:text-indigo-400 bg-white dark:bg-gray-800"
+              style={{ fontFamily: "Inter, sans-serif" }}
+            >
+              Дэлгэрэнгүй
             </Link>
           </div>
 
@@ -117,7 +115,7 @@ const Intro = () => {
               <div className="w-3 h-3 rounded-full bg-yellow-400" />
               <div className="w-3 h-3 rounded-full bg-green-400" />
               <span
-                className="ml-3 text-xs font-medium text-slate-400 dark:text-slate-500"
+                className="ml-3 text-xs font-medium text-slate-400 dark:text-slate-300"
                 style={{ fontFamily: "Inter, sans-serif" }}
               >
                 FlowAI · Банкны хуулга шинжилгээ
@@ -135,7 +133,7 @@ const Intro = () => {
                 >
                   Хаан_Банк_2024_12.xlsx
                 </div>
-                <div className="text-xs mt-0.5 text-slate-400 dark:text-slate-500">
+                <div className="text-xs mt-0.5 text-slate-400 dark:text-slate-300">
                   AI шинжилгэж байна…
                 </div>
               </div>
@@ -184,7 +182,7 @@ const Intro = () => {
                 </span>
               ))}
               <span
-                className="ml-auto text-xs text-slate-400 dark:text-slate-500"
+                className="ml-auto text-xs text-slate-400 dark:text-slate-300"
                 style={{ fontFamily: "Inter, sans-serif" }}
               >
                 2024 оны 12-р сар

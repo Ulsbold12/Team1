@@ -19,7 +19,7 @@ const features = [
             <div className="text-xs font-semibold text-slate-800 dark:text-slate-200">
               Голомт_Банк_2024.xlsx
             </div>
-            <div className="text-xs text-slate-400 dark:text-slate-500">245 гүйлгээ илрүүлсэн</div>
+            <div className="text-xs text-slate-400 dark:text-slate-300">245 гүйлгээ илрүүлсэн</div>
           </div>
         </div>
         {[
@@ -90,7 +90,7 @@ const features = [
         <div className="text-xs leading-relaxed text-slate-500 dark:text-slate-400">
           "2024 оны 12-р сард бидний борлуулалт 24% өслөө! 🎉 Та бидний үйлчилгээний талаар..."
         </div>
-        <div className="flex gap-4 mt-3 text-xs text-slate-400 dark:text-slate-500">
+        <div className="flex gap-4 mt-3 text-xs text-slate-400 dark:text-slate-300">
           <span>👍 142</span>
           <span>💬 28</span>
           <span>↗ 19</span>

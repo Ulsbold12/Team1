@@ -5,7 +5,7 @@ export default function TrustedBy() {
     <section className="bg-white dark:bg-gray-900 border-t border-b border-slate-200 dark:border-gray-700">
       <div className="container mx-auto px-6 py-14">
         <p
-          className="text-center text-xs font-semibold tracking-[0.15em] uppercase mb-8 text-slate-400 dark:text-slate-500"
+          className="text-center text-xs font-semibold tracking-[0.15em] uppercase mb-8 text-slate-400 dark:text-slate-300"
           style={{ fontFamily: "Inter, sans-serif" }}
         >
           Монголын тэргүүлэх банкуудтай холбогддог
