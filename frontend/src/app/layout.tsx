@@ -13,6 +13,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "FlowAI",
   description: "AI-powered business platform",
+  icons: {
+    icon: "/logo1.svg",
+  },
 };
 
 export default function RootLayout({
@@ -23,11 +26,13 @@ export default function RootLayout({
   return (
     <ClerkProvider
       signInFallbackRedirectUrl="/dashboard"
-      signUpFallbackRedirectUrl="/onboarding">
+      signUpFallbackRedirectUrl="/onboarding"
+    >
       <html lang="en" suppressHydrationWarning>
         <body
           className={`${inter.variable} antialiased`}
-          style={{ fontFamily: "Inter, sans-serif" }}>
+          style={{ fontFamily: "Inter, sans-serif" }}
+        >
           <ThemeProvider>
             <TooltipProvider>{children}</TooltipProvider>
           </ThemeProvider>
