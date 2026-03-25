@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Platform, Post, SavedPost, ImageItem, PLATFORM_COLORS } from "./constants";
 import { apiFetch } from "@/lib/apiFetch";
 import { ImageEditorModal } from "./ImageEditorModal";
+import { toast } from "sonner";
 
 interface PostCardProps {
   post: Post;
@@ -38,6 +39,36 @@ export function PostCard({ post, images = [], onSaved }: PostCardProps) {
       const newIndex = images.length + next.length - 1;
       setSelectedIndexes((s) => new Set([...s, newIndex]));
       return next;
+    });
+  }
+
+  async function handleStartGenerate(imgPreview: string, imgName: string, prompt: string) {
+    const toastId = toast.loading("AI зураг үүсгэж байна...");
+    try {
+      const base64 = await toBase64Str(imgPreview);
+      const res = await fetch("/api/marketing-image-edit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: base64, prompt }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Алдаа гарлаа");
+      handleEdited(data.image, `edited_${imgName}`);
+      toast.success("Зураг бэлэн боллоо!", { id: toastId });
+    } catch {
+      toast.error("Зураг үүсгэхэд алдаа гарлаа", { id: toastId });
+    }
+  }
+
+  async function toBase64Str(src: string): Promise<string> {
+    if (src.startsWith("data:")) return src;
+    const res = await fetch(src);
+    const blob = await res.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
     });
   }
 
@@ -187,6 +218,7 @@ export function PostCard({ post, images = [], onSaved }: PostCardProps) {
           imagePreview={editingImage.preview}
           imageName={editingImage.name}
           onEdited={handleEdited}
+          onStartGenerate={handleStartGenerate}
         />
       )}
     </div>

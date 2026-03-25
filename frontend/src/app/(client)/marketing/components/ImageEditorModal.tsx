@@ -18,6 +18,7 @@ interface ImageEditorModalProps {
   imagePreview: string;
   imageName: string;
   onEdited: (dataUrl: string, name: string) => void;
+  onStartGenerate?: (imagePreview: string, imageName: string, prompt: string) => void;
 }
 
 async function toBase64(src: string): Promise<string> {
@@ -38,6 +39,7 @@ export function ImageEditorModal({
   imagePreview,
   imageName,
   onEdited,
+  onStartGenerate,
 }: ImageEditorModalProps) {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
@@ -46,6 +48,12 @@ export function ImageEditorModal({
 
   async function handleGenerate() {
     if (!prompt.trim()) return;
+    if (onStartGenerate) {
+      onStartGenerate(imagePreview, imageName, prompt);
+      onOpenChange(false);
+      setPrompt("");
+      return;
+    }
     setLoading(true);
     setResult(null);
     setError(null);

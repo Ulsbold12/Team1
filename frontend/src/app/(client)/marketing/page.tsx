@@ -41,7 +41,9 @@ export default function MarketingPage() {
   }, [userId]);
 
   useEffect(() => {
+    if (!userId) return;
     getToken().then((token) => {
+      if (!token) { setSavedPostsLoading(false); return; }
       fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts`, {
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -58,7 +60,7 @@ export default function MarketingPage() {
         .catch(console.error)
         .finally(() => setSavedPostsLoading(false));
     });
-  }, [getToken]);
+  }, [getToken, userId]);
 
   useEffect(() => {
     getToken().then((token) => {

@@ -112,25 +112,33 @@ export const publishNow: RequestHandler = async (req, res) => {
       });
     }
 
-    // Upload images first if any
+    // Upload images first if any — binary upload (ImgBB hotlink-г тойрч гарахын тулд)
     const images: string[] = Array.isArray(post.images) ? (post.images as string[]) : [];
     const photoIds: string[] = [];
 
     for (const imageUrl of images) {
-      const photoRes = await fetch(
-        `https://graph.facebook.com/v23.0/${pageId}/photos`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            url: imageUrl,
-            published: false,
-            access_token: accessToken,
-          }),
-        },
-      );
-      const photoData = await photoRes.json();
-      if (photoData.id) photoIds.push(photoData.id);
+      try {
+        // Зургийг backend-ээс татаж аваад binary-аар Facebook-д upload хийнэ
+        const imgFetch = await fetch(imageUrl);
+        if (!imgFetch.ok) continue;
+        const imgBuffer = await imgFetch.arrayBuffer();
+        const imgBlob = new Blob([imgBuffer]);
+
+        const formData = new FormData();
+        formData.append("source", imgBlob, "image.jpg");
+        formData.append("published", "false");
+        formData.append("access_token", accessToken);
+
+        const photoRes = await fetch(
+          `https://graph.facebook.com/v23.0/${pageId}/photos`,
+          { method: "POST", body: formData },
+        );
+        const photoData = await photoRes.json();
+        if (photoData.id) photoIds.push(photoData.id);
+        else console.error("FB photo upload failed:", photoData);
+      } catch (imgErr) {
+        console.error("Image upload error:", imgErr);
+      }
     }
 
     const feedBody: Record<string, unknown> = {
