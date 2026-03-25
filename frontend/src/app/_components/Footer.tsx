@@ -11,8 +11,8 @@ const Footer = () => {
           <Image
             src="/flow.png"
             alt="FlowAI"
-            width={80}
-            height={80}
+            width={140}
+            height={140}
             className="rounded-lg"
           />
           <span

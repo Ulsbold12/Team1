@@ -35,8 +35,8 @@ export const Header = () => {
           <Image
             src="/flow.png"
             alt="FlowAI"
-            width={90}
-            height={90}
+            width={140}
+            height={140}
             className="rounded-lg"
           />
           <span
