@@ -2,7 +2,10 @@ import axios from "axios";
 
 export const adminApi = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
-  headers: { "Content-Type": "application/json" },
+  headers: {
+    "Content-Type": "application/json",
+    "ngrok-skip-browser-warning": "true",
+  },
 });
 
 adminApi.interceptors.request.use((config) => {
