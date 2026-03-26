@@ -60,7 +60,7 @@ function CountdownDisplay({ expiresAt }: { expiresAt: Date }) {
 
 const AdminPage = () => {
   const [members, setMembers] = useState<ClientType[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [codeloading, setCodeloading] = useState(false);
   const [company, setCompany] = useState<OrganizationInterface | null>(null);
   const [code, setCode] = useState<InvCode | "">("");
@@ -75,16 +75,21 @@ const AdminPage = () => {
       try {
         setLoadingA(true);
         const token = await getToken();
-        const res = await apiFetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/company`,
-          {
+        const [companyRes, membersRes] = await Promise.all([
+          apiFetch(`${process.env.NEXT_PUBLIC_API_URL}/api/company`, {
             headers: { Authorization: `Bearer ${token}` },
-          },
-        );
+          }),
+          apiFetch(`${process.env.NEXT_PUBLIC_API_URL}/api/company/members`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
 
-        const data = await res.json();
-        setCompany(data.company);
-        setLoadingA(false);
+        const companyData = await companyRes.json();
+        setCompany(companyData.company);
+
+        const membersData = await membersRes.json();
+        if (membersData.success) setMembers(membersData.data ?? []);
+        setLoading(false);
       } catch (e) {
         console.error(e);
       } finally {
