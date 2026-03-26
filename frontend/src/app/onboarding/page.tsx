@@ -35,28 +35,6 @@ export default function OnboardingPage() {
     optKey: "",
   });
 
-  useEffect(() => {
-    try {
-      const getMe = async () => {
-        const token = await getToken();
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/onboarding`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-        if (res) {
-          console.log("response:", res);
-        }
-      };
-      getMe();
-    } catch (e) {
-      console.log(e);
-    }
-  }, []);
   const redirecting = useRef(false);
 
   useEffect(() => {
