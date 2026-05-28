@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon --exec tsx src/index.ts",
-    "build": "npx prisma generate && npx prisma migrate deploy && tsc"
+    "build": "npx prisma generate && tsc && cp -r src/prisma/generated dist/prisma/generated && npx prisma migrate deploy"
   },
   "keywords": [],
   "author": "",
