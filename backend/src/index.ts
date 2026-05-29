@@ -2,54 +2,17 @@ import express from "express";
 import cors from "cors";
 import "dotenv/config";
 import { clerkMiddleware } from "@clerk/express";
-import { requireAuth } from "./middleware/requireAuth";
-import {
-  createCompany,
-  deleteCompany,
-  deleteUser,
-  getAuditLog,
-  getUsersofOrgbyId,
-  readCompanydataById,
-} from "./routes/admin";
-
-import {
-  registerMember,
-  getCodeForMember,
-  registerPatron,
-} from "./routes/client";
-import { getMembersInfo, DeleteMember, UpdateMember } from "./routes/company";
-import {
-  getFinance,
-  createFinance,
-  saveAnalysis,
-  getAnalyses,
-} from "./routes/finance";
-import {
-  getPosts,
-  createPost,
-  updatePost,
-  deletePost,
-  deleteAllPosts,
-  getPendingPosts,
-  markPublished,
-  requireApiKey,
-  publishNow,
-} from "./routes/posts";
-import {
-  getMarketingStrategy,
-  saveMarketingStrategy,
-} from "./routes/marketing";
+import { stripeWebhook } from "./routes/billing";
+import adminRouter from "./routes/admin/admin.router";
+import clientRouter from "./routes/client/client.router";
+import companyRouter from "./routes/company/company.router";
+import financeRouter from "./routes/finance/finance.router";
+import postsRouter from "./routes/posts/posts.router";
+import marketingRouter from "./routes/marketing/marketing.router";
+import facebookRouter from "./routes/posts/facebook.router";
+import { getAuditLog } from "./routes/admin/auditLog";
+import billingRouter from "./routes/billing/billing.router";
 import { Chat } from "./routes/ai/chat";
-import { getCompanyData, getUsersData, adminAccess } from "./routes/admin";
-import { AdminAuth } from "./middleware/adminAuth";
-import { registerOrganization } from "./routes/client/regitserOrganization";
-import { getCompany, updateCompany } from "./routes/company/updateOrganization";
-import {
-  getBillingStatus,
-  createCheckout,
-  stripeWebhook,
-  createPortal,
-} from "./routes/billing";
 import { ActivityStatus } from "./middleware/activitystatus";
 const app = express();
 app.use(
@@ -67,79 +30,33 @@ app.post(
 );
 
 app.use(express.json());
-
 app.get("/health", (_req, res) => res.json({ ok: true }));
-
+app.get("/", (_req, res) => res.json({ message: "Hello World", status: 200 }));
 app.use(clerkMiddleware());
 app.use(ActivityStatus);
 //onboarding routes
-app.post("/api/onboarding", requireAuth, registerPatron);
-app.post("/api/onboarding/member", requireAuth, registerMember);
-app.get("/api/onboarding/getcode", requireAuth, getCodeForMember);
-app.post("/api/onboarding/org", requireAuth, registerOrganization);
+app.use("/api/onboarding", clientRouter);
 //org executive personnel routes
-app.get("/api/company/members", requireAuth, getMembersInfo);
-app.delete("/api/company/members", requireAuth, DeleteMember);
-app.post("/api/company/members", requireAuth, UpdateMember);
+app.use("/api/company", companyRouter);
 //finance routes
-
-app.get("/api/finance", requireAuth, getFinance);
-app.post("/api/finance", requireAuth, createFinance);
-app.get("/api/finance/analysis", requireAuth, getAnalyses);
-app.post("/api/finance/analysis", requireAuth, saveAnalysis);
-//automation marketin routes?
-app.get("/api/posts", requireAuth, getPosts);
-app.post("/api/posts", requireAuth, createPost);
-app.put("/api/posts/:id", requireAuth, updatePost);
-app.delete("/api/posts", requireAuth, deleteAllPosts);
-app.delete("/api/posts/:id", requireAuth, deletePost);
-app.post("/api/posts/:id/publish-now", requireAuth, publishNow);
-app.get("/api/marketing/strategy", requireAuth, getMarketingStrategy);
-app.post("/api/marketing/strategy", requireAuth, saveMarketingStrategy);
-app.get("/api/facebook/pending-posts", requireApiKey, getPendingPosts);
-app.post("/api/facebook/posts/:id/publish", requireApiKey, markPublished);
-
-app.get("/api/company", requireAuth, getCompany);
-app.put("/api/company", requireAuth, updateCompany);
-app.get("/api/billing/status", requireAuth, getBillingStatus);
-app.post("/api/billing/checkout", requireAuth, createCheckout);
-app.post("/api/billing/portal", requireAuth, createPortal);
+app.use("/api/finance", financeRouter);
+//posts tracking
+app.use("/api/posts", postsRouter);
+//marketing strategy
+app.use("/api/marketing/strategy", marketingRouter);
+//automation-marketing
+app.use("/api/facebook", facebookRouter);
+//billing
+app.use("/api/billing", billingRouter);
 //admin routers
-app.post("/api/admin", adminAccess);
-app.get("/api/admin/companies", AdminAuth, getCompanyData);
-app.get("/api/admin/companies/:orgId", AdminAuth, readCompanydataById);
-app.post("/api/admin/companies", AdminAuth, createCompany);
-app.delete("/api/admin/companies/:orgId", AdminAuth, deleteCompany);
-app.put("/api/admin/companies/:orgId/plan", AdminAuth, async (req, res) => {
-  try {
-    const orgId = req.params.orgId as string;
-    const { patronage } = req.body as { patronage: string };
-    if (!["BASIC", "PRO"].includes(patronage)) {
-      return res.status(400).json({ success: false, message: "Invalid plan" });
-    }
-    const updated = await (
-      await import("./lib/prisma")
-    ).default.organization.update({
-      where: { id: orgId },
-      data: { patronage: patronage as "BASIC" | "PRO" },
-    });
-    return res.status(200).json({ success: true, updated });
-  } catch (e) {
-    return res.status(500).json({ success: false });
-  }
-});
-app.delete("/api/admin/clients/:clientId", AdminAuth, deleteUser);
-app.get("/api/admin/clients", AdminAuth, getUsersData);
-app.get("/api/admin/companies/:orgId/members", AdminAuth, getUsersofOrgbyId);
-
+// app.use("/api/admin", adminRouter);
 //activities log fetch request
 app.get("/api/auditlog", getAuditLog);
-
 //ai limiting
-
 app.post("/api/chat", Chat);
-
 const PORT = process.env.PORT || 8888;
 app.listen(PORT, () => {
   console.log(`Backend running on port ${PORT}`);
 });
+
+export default app;

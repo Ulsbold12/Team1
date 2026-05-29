@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import { Request, Response } from "express";
-import prisma from "../../lib/prisma";
+import { prisma } from "../../lib/prisma";
 
 function getStripe() {
   if (!process.env.STRIPE_SECRET_KEY)

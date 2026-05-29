@@ -1,5 +1,5 @@
 import type { RequestHandler } from "express";
-import prisma from "../../lib/prisma";
+import { prisma } from "../../lib/prisma";
 import { clerkClient } from "../../lib/clerkClient";
 //check if admin token valid
 //check if admin id matches.

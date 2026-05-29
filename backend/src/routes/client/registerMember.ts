@@ -1,8 +1,8 @@
 import type { RequestHandler } from "express";
-import prisma from "../../lib/prisma";
+import { prisma } from "../../lib/prisma";
 import { customAlphabet } from "nanoid";
 import { clerkClient } from "../../lib/clerkClient";
-import { Prisma } from "../../prisma/generated";
+import { Prisma } from "../../prisma/generated/client";
 
 export const getCodeForMember: RequestHandler = async (req, res) => {
   try {

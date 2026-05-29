@@ -1,8 +1,6 @@
 import type { RequestHandler } from "express";
-import prisma from "../../lib/prisma";
-import { customAlphabet } from "nanoid";
+import { prisma } from "../../lib/prisma";
 
-//admin controlled audit log
 
 
 export const getAuditLog: RequestHandler = async (_, res) => {

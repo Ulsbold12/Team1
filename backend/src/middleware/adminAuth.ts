@@ -1,5 +1,5 @@
 import type { RequestHandler } from "express";
-import prisma from "../lib/prisma";
+import {prisma} from "../lib/prisma";
 import jwt from "jsonwebtoken";
 export const AdminAuth: RequestHandler = async (req, res, next) => {
   try {

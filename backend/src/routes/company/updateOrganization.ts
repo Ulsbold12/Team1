@@ -1,5 +1,5 @@
 import type { RequestHandler } from "express";
-import prisma from "../../lib/prisma";
+import { prisma } from "../../lib/prisma";
 
 export const updateCompany: RequestHandler = async (req, res) => {
   try {
@@ -69,5 +69,26 @@ export const getCompany: RequestHandler = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Fetch failed" });
+  }
+};
+
+export const updateOrgPlan: RequestHandler = async (req, res) => {
+  try {
+    const orgId = req.params.orgId as string;
+    const { patronage } = req.body as { patronage: string };
+    if (!["BASIC", "PRO"].includes(patronage)) {
+      return res.status(400).json({ success: false, message: "Invalid plan" });
+    }
+    const updated = await prisma.organization.update({
+      where: {
+        id: orgId as string,
+      },
+      data: {
+        patronage: patronage as "BASIC" | "PRO",
+      },
+    });
+    return res.status(200).json({ success: true, updated });
+  } catch (e) {
+    return res.status(500).json({ success: false });
   }
 };

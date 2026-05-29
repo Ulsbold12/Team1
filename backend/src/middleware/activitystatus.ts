@@ -1,5 +1,5 @@
 import type { RequestHandler } from "express";
-import prisma from "../lib/prisma";
+import { prisma } from "../lib/prisma";
 import { getAuth } from "@clerk/express";
 
 export const ActivityStatus: RequestHandler = async (req, _res, next) => {

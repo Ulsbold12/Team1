@@ -1,5 +1,5 @@
 import type { RequestHandler } from "express";
-import prisma from "../../lib/prisma";
+import { prisma } from "../../lib/prisma";
 
 export const addFinance: RequestHandler = async (req, res) => {
   const { financeData } = req.body; //frontoos financedata gesen object avna shu

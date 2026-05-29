@@ -1,5 +1,5 @@
 import type { RequestHandler } from "express";
-import prisma from "../../lib/prisma";
+import {prisma} from "../../lib/prisma";
 
 export const getMembersInfo: RequestHandler = async (req, res) => {
   const clerkId = req.clerkUserId!;

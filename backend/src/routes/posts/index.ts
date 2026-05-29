@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 import { Request, Response } from "express";
-import prisma from "../../lib/prisma";
+import { prisma } from "../../lib/prisma";
 
 // n8n API key шалгах middleware
 function requireApiKey(req: Request, res: Response, next: Function) {
