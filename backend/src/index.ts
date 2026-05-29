@@ -117,7 +117,9 @@ app.put("/api/admin/companies/:orgId/plan", AdminAuth, async (req, res) => {
     if (!["BASIC", "PRO"].includes(patronage)) {
       return res.status(400).json({ success: false, message: "Invalid plan" });
     }
-    const updated = await (await import("./lib/prisma")).default.organization.update({
+    const updated = await (
+      await import("./lib/prisma")
+    ).default.organization.update({
       where: { id: orgId },
       data: { patronage: patronage as "BASIC" | "PRO" },
     });
@@ -136,6 +138,7 @@ app.get("/api/auditlog", getAuditLog);
 //ai limiting
 
 app.post("/api/chat", Chat);
+
 const PORT = process.env.PORT || 8888;
 app.listen(PORT, () => {
   console.log(`Backend running on port ${PORT}`);
