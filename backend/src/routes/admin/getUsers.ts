@@ -27,31 +27,23 @@ export const deleteUser: RequestHandler = async (req, res) => {
         .status(404)
         .json({ message: "orgId not found", success: false });
     }
-    const theOrgAssociated = await prisma.client.findUnique({
+    const existing = await prisma.client.findUnique({
       where: { id: clientId as string },
-      include: { ofOrg: true },
     });
-    const org = await prisma.organization.findUnique({
-      where: { id: theOrgAssociated?.id },
-    });
-    if (org?.patronage === "BASIC") {
-      const deletedOrg = await prisma.organization.delete({
-        where: { id: org.id },
-      });
-      return deletedOrg;
+    if (!existing) {
+      return res.status(404).json({ message: "user not found", success: false });
     }
-    const deleted = await prisma.client.delete({
-      where: {
-        id: clientId as string,
-      },
-    });
-    await clerkClient.users.deleteUser(clientId as string);
-    //deleting user from clerk
-    if (!deleted) {
-      return res
-        .status(403)
-        .json({ message: "org to delete not successful", success: false });
+
+    try {
+      await clerkClient.users.deleteUser(clientId as string);
+    } catch (clerkError) {
+      // best-effort — proceed to remove the local record even if the
+      // Clerk-side user is already gone or fails to delete
+      console.error("Clerk user delete failed:", clerkError);
     }
+
+    await prisma.client.delete({ where: { id: clientId as string } });
+
     return res.status(200).json({
       success: true,
       message: `deleted, ${clientId} successfully`,
@@ -61,6 +53,53 @@ export const deleteUser: RequestHandler = async (req, res) => {
     return res
       .status(500)
       .json({ message: "seomthign wehfguibw", success: false });
+  }
+};
+
+const EDITABLE_ROLES = ["EXECUTIVE", "MANAGEMENT", "MEMBER"] as const;
+
+export const updateUserByAdmin: RequestHandler = async (req, res) => {
+  try {
+    const { clientId } = req.params;
+    if (!clientId) {
+      return res
+        .status(404)
+        .json({ message: "clientId not found", success: false });
+    }
+    const existing = await prisma.client.findUnique({ where: { id: clientId as string } });
+    if (!existing) {
+      return res.status(404).json({ message: "user not found", success: false });
+    }
+
+    const { firstname, lastname, email, phoneNumber, role } = req.body as {
+      firstname?: string;
+      lastname?: string;
+      email?: string;
+      phoneNumber?: string;
+      role?: string;
+    };
+
+    if (role && !EDITABLE_ROLES.includes(role as (typeof EDITABLE_ROLES)[number])) {
+      return res.status(400).json({ message: "invalid role", success: false });
+    }
+
+    const updated = await prisma.client.update({
+      where: { id: clientId as string },
+      data: {
+        ...(firstname !== undefined ? { firstname } : {}),
+        ...(lastname !== undefined ? { lastname } : {}),
+        ...(email !== undefined ? { email } : {}),
+        ...(phoneNumber !== undefined ? { phoneNumber } : {}),
+        ...(role !== undefined ? { role: role as (typeof EDITABLE_ROLES)[number] } : {}),
+      },
+    });
+
+    return res.status(200).json({ success: true, updated });
+  } catch (e) {
+    console.log(e);
+    return res
+      .status(500)
+      .json({ message: "failed to update user", success: false });
   }
 };
 

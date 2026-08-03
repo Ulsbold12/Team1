@@ -14,14 +14,21 @@ export const AdminAuth: RequestHandler = async (req, res, next) => {
     if (!accessToken) {
       return res.status(404).json("yahara accessToken ni bdaggu c yum");
     }
-    const decoded = jwt.verify(accessToken, `${process.env.ACCESSTOKEN}`) as {
-      adminId: string;
-      username: string;
-    };
-
-    if (!decoded) {
-      return res.status(403).json({ success: false, message: "token obso" });
+    let decoded: { adminId: string; username: string };
+    try {
+      decoded = jwt.verify(accessToken, `${process.env.ACCESSTOKEN}`) as {
+        adminId: string;
+        username: string;
+      };
+    } catch (jwtError) {
+      if (jwtError instanceof jwt.TokenExpiredError) {
+        return res
+          .status(401)
+          .json({ success: false, message: "token expired" });
+      }
+      return res.status(401).json({ success: false, message: "token obso" });
     }
+
     const adminId = decoded?.adminId;
     const admin = await prisma.administrator.findUnique({
       where: { id: adminId },

@@ -12,7 +12,7 @@ export const UpdateMember: RequestHandler = async (req, res) => {
       where: {
         id: clerkId,
         role: "EXECUTIVE",
-        ofOrg: orgId,
+        orgId: orgId,
       },
     });
     if (!isAdmitabbleRole) {
@@ -53,7 +53,7 @@ export const DeleteMember: RequestHandler = async (req, res) => {
       where: {
         id: clerkId,
         role: "EXECUTIVE",
-        ofOrg: orgId,
+        orgId: orgId,
       },
     });
     if (!isAdmitabbleRole) {
@@ -68,12 +68,18 @@ export const DeleteMember: RequestHandler = async (req, res) => {
     if (!member) {
       return res.status(404).json({ message: "member id not found" });
     }
-    const deleted = await prisma.client.findUnique({ where: { id: memberId } });
-    if (!deleted) {
-      return res
-        .status(404)
-        .json({ message: "failed to delete member", success: false });
+
+    try {
+      await clerkClient.users.deleteUser(memberId as string);
+    } catch (clerkError) {
+      console.error("Clerk user delete failed:", clerkError);
     }
+    await prisma.client.delete({ where: { id: memberId as string } });
+
+    return res.status(200).json({
+      success: true,
+      message: `member ${memberId} deleted`,
+    });
   } catch (e) {
     console.log(e);
     return res

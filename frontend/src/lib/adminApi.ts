@@ -25,9 +25,21 @@ export const getCompanies = () => adminApi.get("/api/admin/companies");
 
 export const getClients = () => adminApi.get("/api/admin/clients");
 
+export const deleteClient = (id: string) =>
+  adminApi.delete(`/api/admin/clients/${id}`);
+
+export type UpdateClientPayload = Partial<{
+  firstname: string;
+  lastname: string;
+  email: string;
+  phoneNumber: string;
+  role: string;
+}>;
+
+export const updateClient = (id: string, data: UpdateClientPayload) =>
+  adminApi.put(`/api/admin/clients/${id}`, data);
+
 export const deleteCompany = (id: string) =>
   adminApi.delete(`/api/admin/companies/${id}`);
 
-export const getAuditLog = () => {
-  adminApi.get("/auditLog");
-};
+export const getAuditLog = () => adminApi.get("/api/auditlog");

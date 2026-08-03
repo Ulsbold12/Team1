@@ -7,6 +7,7 @@ import {
   createCompany,
   deleteCompany,
   deleteUser,
+  updateUserByAdmin,
   getAuditLog,
   getUsersofOrgbyId,
   readCompanydataById,
@@ -16,6 +17,7 @@ import {
   registerMember,
   getCodeForMember,
   registerPatron,
+  aiLimiting,
 } from "./routes/client";
 import { getMembersInfo, DeleteMember, UpdateMember } from "./routes/company";
 import {
@@ -52,9 +54,21 @@ import {
 } from "./routes/billing";
 import { ActivityStatus } from "./middleware/activitystatus";
 const app = express();
+
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  ...(process.env.ALLOWED_ORIGINS?.split(",").map((o) => o.trim()) ?? []),
+  "http://localhost:3000",
+].filter((origin): origin is string => Boolean(origin));
+
 app.use(
   cors({
-    origin: (origin, callback) => callback(null, true),
+    origin: (origin, callback) => {
+      // no Origin header (server-to-server, curl, mobile app) — allow
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error(`Origin ${origin} not allowed by CORS`));
+    },
     credentials: true,
   }),
 );
@@ -127,15 +141,22 @@ app.put("/api/admin/companies/:orgId/plan", AdminAuth, async (req, res) => {
   }
 });
 app.delete("/api/admin/clients/:clientId", AdminAuth, deleteUser);
+app.put("/api/admin/clients/:clientId", AdminAuth, updateUserByAdmin);
 app.get("/api/admin/clients", AdminAuth, getUsersData);
 app.get("/api/admin/companies/:orgId/members", AdminAuth, getUsersofOrgbyId);
 
 //activities log fetch request
-app.get("/api/auditlog", getAuditLog);
+app.get("/api/auditlog", AdminAuth, getAuditLog);
 
-//ai limiting
+//ai limiting — records one usage credit and enforces the BASIC-plan monthly
+//cap; called directly by /api/chat and by the frontend's Next.js AI routes
+//(finance-analyze, marketing-generate, marketing-image-edit) before they hit
+//OpenAI/GenAI, since those run in a separate app without their own DB access.
+app.post("/api/ai/usage/check", requireAuth, aiLimiting, (_req, res) => {
+  res.json({ success: true });
+});
 
-app.post("/api/chat", Chat);
+app.post("/api/chat", requireAuth, aiLimiting, Chat);
 const PORT = process.env.PORT || 8888;
 app.listen(PORT, () => {
   console.log(`Backend running on port ${PORT}`);

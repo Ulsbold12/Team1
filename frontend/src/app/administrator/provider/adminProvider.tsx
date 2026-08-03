@@ -25,7 +25,11 @@ interface AdminContextType {
   fetchAuditLog: () => Promise<void>;
   createCompany: (data: OrganizationInterface) => Promise<void>;
   deleteCompany: (id: string) => Promise<void>;
-  deleteUserById: (clientId: string) => Promise<void>;
+  deleteUserById: (clientId: string) => Promise<boolean>;
+  updateUserById: (
+    clientId: string,
+    data: Partial<Pick<ClientType, "firstname" | "lastname" | "email" | "phoneNumber" | "role">>,
+  ) => Promise<boolean>;
   auditLog: AuditLogtype[] | [];
   loading: boolean;
   fetchError: boolean;
@@ -64,18 +68,20 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     try {
       const res = await adminApi.get("/api/admin/companies");
       const data = res.data.companyData;
-      if (Array.isArray(data) && data.length > 0) setCompanies(data);
-    } catch {
-      // keep mock data
+      setCompanies(Array.isArray(data) ? data : []);
+    } catch (e) {
+      console.error(e);
+      setFetchError(true);
     }
   }
   async function fetchAllOwners() {
     try {
       const res = await adminApi.get("/api/admin/clients");
       const data = res.data.usersData;
-      if (Array.isArray(data) && data.length > 0) setAllUsers(data);
-    } catch {
-      // keep mock data
+      setAllUsers(Array.isArray(data) ? data : []);
+    } catch (e) {
+      console.error(e);
+      setFetchError(true);
     }
   }
   async function fetchCompanyById(orgId: string) {
