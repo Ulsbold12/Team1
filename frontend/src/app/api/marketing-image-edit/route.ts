@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI, { toFile } from "openai";
+import { checkAiUsageAllowed } from "@/lib/aiUsage";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -7,6 +8,11 @@ const openai = new OpenAI({
 
 export async function POST(request: NextRequest) {
   try {
+    const usage = await checkAiUsageAllowed();
+    if (!usage.allowed) {
+      return NextResponse.json({ error: usage.message }, { status: usage.status });
+    }
+
     const body = await request.json();
     const { image, prompt, mask } = body;
 

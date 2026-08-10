@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon --exec tsx src/index.ts",
-    "build": "npx prisma generate && tsc && cp -r src/prisma/generated dist/prisma/generated && npx prisma migrate deploy"
+    "build": "npx prisma generate && tsc && cp -r src/prisma/generated dist/prisma/generated && npx prisma migrate deploy",
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "",
@@ -37,6 +38,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.3.3",
     "nodemon": "^3.1.14",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "vitest": "^4.1.10"
   }
 }

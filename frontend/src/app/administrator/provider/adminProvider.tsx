@@ -10,7 +10,6 @@ import {
 import { OrganizationInterface } from "../Types";
 import { Dispatch, SetStateAction } from "react";
 import { ClientType } from "../Types";
-import { mockOrganizations, mockClients } from "../_parts/MockData";
 interface AdminContextType {
   showSideBar: boolean;
   setShowSideBar: Dispatch<SetStateAction<boolean>>;
@@ -23,8 +22,8 @@ interface AdminContextType {
   fetchUsersOfCompanies: (orgId: string) => Promise<void>;
   fetchCompanyById: (orgId: string) => Promise<void>;
   fetchAuditLog: () => Promise<void>;
-  createCompany: (data: OrganizationInterface) => Promise<void>;
-  deleteCompany: (id: string) => Promise<void>;
+  createCompany: (data: OrganizationInterface) => Promise<boolean>;
+  deleteCompany: (id: string) => Promise<boolean>;
   deleteUserById: (clientId: string) => Promise<boolean>;
   updateUserById: (
     clientId: string,
@@ -45,13 +44,13 @@ type AuditLogtype = {
 };
 export const AdminContext = createContext({} as AdminContextType);
 export const AdminProvider = ({ children }: { children: ReactNode }) => {
-  const [companies, setCompanies] = useState<OrganizationInterface[]>(mockOrganizations);
+  const [companies, setCompanies] = useState<OrganizationInterface[]>([]);
   const [owners, setOwners] = useState<ClientType[]>([]);
   const [singleorg, setSingleorg] = useState<OrganizationInterface | null>(
     null,
   );
   const [users, setUsers] = useState<ClientType[]>([]);
-  const [allusers, setAllUsers] = useState<ClientType[]>(mockClients);
+  const [allusers, setAllUsers] = useState<ClientType[]>([]);
   const [lastAccessTime, setLastAccessTime] = useState("");
   const [auditLog, setAuditlog] = useState<AuditLogtype[]>([]);
   const [showSideBar, setShowSideBar] = useState(false);
@@ -101,44 +100,50 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
-  async function createCompany(data: any) {
+  async function createCompany(data: any): Promise<boolean> {
     try {
-      const res = await adminApi.post("/api/admin/companies", data);
-      if (res) {
-        await fetchCompaniesData();
-      }
+      await adminApi.post("/api/admin/companies", data);
+      await fetchCompaniesData();
+      return true;
     } catch (e) {
-      // mock fallback
-      const newOrg: OrganizationInterface = {
-        id: `mock-${Date.now()}`,
-        name: data.name,
-        industry: data.industry,
-        emailAddress: data.email ?? "",
-        phoneNumber: data.phoneNumber ?? "",
-        address: data.address ?? "",
-        description: data.description ?? "",
-        patronage: "BASIC",
-        createdAt: new Date(),
-        aiUsages: [],
-        members: [],
-      };
-      setCompanies((prev) => [...prev, newOrg]);
+      console.error(e);
+      return false;
     }
   }
-  async function deleteCompany(OrgId: string) {
+  async function deleteCompany(OrgId: string): Promise<boolean> {
     try {
       await adminApi.delete(`/api/admin/companies/${OrgId}`);
-      await fetchCompaniesData();
-    } catch (e) {
       setCompanies((prev) => prev.filter((c) => c.id !== OrgId));
+      return true;
+    } catch (e) {
+      console.error(e);
+      return false;
     }
   }
-  async function deleteUserById(clientId: string) {
+  async function deleteUserById(clientId: string): Promise<boolean> {
     try {
-      await adminApi.delete(`/api/clients/${clientId}`);
+      await adminApi.delete(`/api/admin/clients/${clientId}`);
       setAllUsers((prev) => prev.filter((u) => u.id !== clientId));
+      return true;
     } catch (e) {
-      setAllUsers((prev) => prev.filter((u) => u.id !== clientId));
+      console.error(e);
+      return false;
+    }
+  }
+  async function updateUserById(
+    clientId: string,
+    data: Partial<Pick<ClientType, "firstname" | "lastname" | "email" | "phoneNumber" | "role">>,
+  ): Promise<boolean> {
+    try {
+      const res = await adminApi.put(`/api/admin/clients/${clientId}`, data);
+      const updated = res.data?.updated;
+      setAllUsers((prev) =>
+        prev.map((u) => (u.id === clientId ? { ...u, ...(updated ?? data) } : u)),
+      );
+      return true;
+    } catch (e) {
+      console.error(e);
+      return false;
     }
   }
   async function fetchAuditLog() {
@@ -173,6 +178,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
         createCompany,
         deleteCompany,
         deleteUserById,
+        updateUserById,
         auditLog,
         loading,
         fetchError,

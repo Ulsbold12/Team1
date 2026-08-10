@@ -26,6 +26,7 @@ import {
   MoreVertical,
   MapPin,
   Search,
+  Pencil,
 } from "lucide-react";
 import { ClientType } from "../Types";
 import {
@@ -46,15 +47,25 @@ const roleColors: Record<string, string> = {
 };
 
 export function Clients() {
-  const [sheetMode, setSheetMode] = useState<"read" | null>(null);
+  const [sheetMode, setSheetMode] = useState<"read" | "edit" | null>(null);
   const [selectedUser, setSelectedUser] = useState<ClientType | null>(null);
   const [editForm, setEditForm] = useState({
-    name: "",
+    firstname: "",
+    lastname: "",
     email: "",
-    phone: "",
-    role: "",
+    phoneNumber: "",
+    role: "" as ClientType["role"] | "",
   });
-  const { allusers, fetchCompanyById, singleorg, deleteUserById, loading } = useAdmin();
+  const [saving, setSaving] = useState(false);
+  const {
+    allusers,
+    fetchCompanyById,
+    singleorg,
+    deleteUserById,
+    updateUserById,
+    loading,
+    fetchError,
+  } = useAdmin();
   const [search, setSearch] = useState("");
   const client = allusers.filter((u) =>
     `${u.firstname} ${u.lastname} ${u.email}`.toLowerCase().includes(search.toLowerCase())
@@ -65,9 +76,32 @@ export function Clients() {
     setSheetMode("read");
   };
 
+  const openEdit = (user: ClientType) => {
+    setSelectedUser(user);
+    setEditForm({
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      phoneNumber: user.phoneNumber ?? "",
+      role: user.role,
+    });
+    setSheetMode("edit");
+  };
+
   const closeSheet = () => {
     setSheetMode(null);
     setSelectedUser(null);
+  };
+
+  const handleEditSubmit = async () => {
+    if (!selectedUser) return;
+    setSaving(true);
+    const ok = await updateUserById(selectedUser.id, {
+      ...editForm,
+      role: editForm.role || undefined,
+    });
+    setSaving(false);
+    if (ok) closeSheet();
   };
 
   const isRecentlyActive = (date: Date): boolean => {
@@ -100,6 +134,11 @@ export function Clients() {
           Manage all registered users
         </p>
       </div>
+      {fetchError && (
+        <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          Хэрэглэгчдийн жагсаалтыг серверээс татаж чадсангүй. Дахин ачаална уу.
+        </div>
+      )}
       <div className="relative">
         <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
         <Input
@@ -169,16 +208,23 @@ export function Clients() {
                       })}
                     </p>
                   </div>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="h-8 w-8 shrink-0"
-                    onClick={() => {
-                      setSelectedUser(user);
-                      setSheetMode("read");
-                    }}>
-                    <MoreVertical size={16} />
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0">
+                        <MoreVertical size={16} />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => openRead(user)} className="gap-2 cursor-pointer">
+                        <User size={14} />
+                        Дэлгэрэнгүй
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => openEdit(user)} className="gap-2 cursor-pointer">
+                        <Pencil size={14} />
+                        Засах
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               ))}
             </>
@@ -270,9 +316,9 @@ export function Clients() {
                     <div className="flex gap-2 justify-end mt-2">
                       <Button
                         variant="destructive"
-                        onClick={() => {
-                          deleteUserById(selectedUser.id as string);
-                          closeSheet();
+                        onClick={async () => {
+                          const ok = await deleteUserById(selectedUser.id);
+                          if (ok) closeSheet();
                         }}>
                         Тийм, устга
                       </Button>
@@ -284,6 +330,74 @@ export function Clients() {
           )}
         </SheetContent>
       </Sheet>
+
+      {/* Sheet: Edit User */}
+      <Sheet open={sheetMode === "edit"} onOpenChange={closeSheet}>
+        <SheetContent className="w-105 p-6">
+          <SheetHeader>
+            <SheetTitle>Хэрэглэгч засах</SheetTitle>
+          </SheetHeader>
+          <div className="mt-6 flex flex-col gap-4">
+            <FormField label="Нэр">
+              <Input
+                value={editForm.firstname}
+                onChange={(e) => setEditForm((p) => ({ ...p, firstname: e.target.value }))}
+              />
+            </FormField>
+            <FormField label="Овог">
+              <Input
+                value={editForm.lastname}
+                onChange={(e) => setEditForm((p) => ({ ...p, lastname: e.target.value }))}
+              />
+            </FormField>
+            <FormField label="Имэйл">
+              <Input
+                type="email"
+                value={editForm.email}
+                onChange={(e) => setEditForm((p) => ({ ...p, email: e.target.value }))}
+              />
+            </FormField>
+            <FormField label="Утас">
+              <Input
+                value={editForm.phoneNumber}
+                onChange={(e) => setEditForm((p) => ({ ...p, phoneNumber: e.target.value }))}
+              />
+            </FormField>
+            <FormField label="Эрх">
+              <select
+                className="border border-border rounded-md h-9 px-3 text-sm bg-background"
+                value={editForm.role}
+                onChange={(e) =>
+                  setEditForm((p) => ({ ...p, role: e.target.value as ClientType["role"] }))
+                }>
+                <option value="EXECUTIVE">EXECUTIVE</option>
+                <option value="MANAGEMENT">MANAGEMENT</option>
+                <option value="MEMBER">MEMBER</option>
+              </select>
+            </FormField>
+            <div className="flex gap-2 pt-2">
+              <Button
+                onClick={handleEditSubmit}
+                disabled={saving}
+                className="flex-1 bg-[#5048e5] hover:bg-[#4038d4] text-white">
+                {saving ? "Хадгалж байна..." : "Хадгалах"}
+              </Button>
+              <Button variant="ghost" onClick={closeSheet}>
+                Цуцлах
+              </Button>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
+    </div>
+  );
+}
+
+function FormField({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <Label className="text-xs text-muted-foreground">{label}</Label>
+      {children}
     </div>
   );
 }
